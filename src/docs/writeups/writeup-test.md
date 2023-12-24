@@ -1,0 +1,54 @@
+---
+title: 'test'
+description: 'this is literally a TEST POST PLEASE im begging do not look'
+author: 'pls'
+date: '2023-12-14'
+published: false
+---
+
+[a link to somewhere](https://www.google.com.au)
+
+# heading 1
+
+## heading 2
+
+### heading 3
+
+#### heading 4
+
+##### heading 5
+
+###### heading 6
+
+> this is a blockquote example
+
+and
+
+<aside>
+this is an aside example.
+</aside>
+
+```typescript
+// this is test code!
+
+let hello: string = "heyy";
+```
+
+```php
+<?php echo '1' ?>
+```
+
+line
+
+spacing
+
+test
+
+---
+
+![1](h/h.png)
+
+`inline` code / `/ ` \
+
+ --> note that backslashes will probably need to be escaped else vite cant fucking compile.
+

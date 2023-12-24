@@ -1,0 +1,33 @@
+@import "/styles/prism-catppuccin.css";
+
+
+/* -- UNIFONT -- */
+
+/*
+* this takes such an unfortunate amount of time to load lol
+* */
+@font-face {
+    font-family: "Unifont";
+    src: url(/fonts/unifont.otf) format("opentype");
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+    overflow-y: scroll;
+    /* Show vertical scrollbar */
+}
+
+::-webkit-scrollbar {
+    -webkit-appearance: none;
+    width: 10px;
+    height: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    border-radius: 7px;
+    background-color: rgba(255, 255, 255, .2);
+    box-shadow: 0 0 1px rgba(255, 255, 255, .5);
+}
