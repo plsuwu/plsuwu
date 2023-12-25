@@ -13,7 +13,7 @@ type PageLink = Page | ParentPage;
 export const pages: PageLink[] = [
     { name: "home", href: "/" },
     {
-        name: "docs",
+        name: "posts",
         children: [
             { name: "writeups", href: "/writeups" },
             // { name: "notes", href: "/notes" }, // TODO: separate 'notes' page
