@@ -38,10 +38,8 @@
 			<div class="mx-auto flex flex-col p-8 text-sm sm:text-xl lg:space-y-0">
 				<div class="my-6 text-3xl font-semibold text-cat-overlay2 lg:my-0">hello,</div>
 				<div class="text-sm lg:text-lg">
-					<div class="my-2">my name is zac.</div>
-
 					<div class="mb-6">
-						<span> this is more or less a blog of sorts and has been built mostly with</span>
+						<span> this is more or less a blog or portfolio of sorts, built using</span>
 						<ul class="my-1 list-inside indent-6 text-cat-overlay2">
 							<li>[<span class="text-cat-peach">*</span>] &nbsp; sveltekit (typescript),</li>
 							<li>[<span class="text-cat-blue">*</span>] &nbsp; tailwindcss, &</li>
@@ -50,9 +48,8 @@
 						and then SEALED away in a docker container on google cloud.
 
 						<div class="my-4">
-							i am prioritizing building functionality over adding the entirety of my writeup
-							backlog, so i am currently just hosting a smaller selection of writeups for challenges
-							i have done from sites/competitions, including
+							i currently host a small slice of writeups i have done for various challenges
+							from sites & competitions such as
 							<span>
 								{#each profiles as site, idx}
 									{idx > 0 && idx === profiles.length - 1 ? 'and ' : ''}
@@ -67,7 +64,7 @@
 							</span>
 						</div>
 						<div class="mt-8">
-							u can find this project alongside a handful of my things that i have done @
+							u may find this project alongside a handful of my things that i have done @
 							<a
 								class="text-cat-blue transition-all duration-200 ease-out visited:text-cat-mauve hover:opacity-50"
 								href="https://github.com/plsuwu"
