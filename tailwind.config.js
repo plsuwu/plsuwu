@@ -55,6 +55,12 @@ export default {
                         "background-color": "#1e1e2e",
                         "padding": "4px",
                         "border-radius": "10px",
+                        "font-size": "0.75rem",
+                        "line-height": "1rem",
+                        '@media (min-width: 1024px)': {
+                            "font-size": "0.875rem",
+                            "line-height": "1.25rem"
+                        },
                     },
                     ul: {
                         "list-style": "disc inside",

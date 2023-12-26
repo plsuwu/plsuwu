@@ -11,9 +11,9 @@
 	import PhArrowRight from 'virtual:icons/ph/arrow-right';
 </script>
 
-<div class="mx-auto mt-28 flex w-full flex-col lg:mt-0">
+<div class="mx-auto mt-14 flex w-full flex-col lg:mt-0">
 	<div class="w-full self-center bg-cat-mantle pb-12 pt-5 shadow-inner">
-		<div class="mt-8 text-center font-bold text-cat-text lg:mb-12 lg:mt-8">
+		<div class="mt-6 text-center font-bold text-cat-text lg:mb-12 lg:mt-8">
 			<BanOne />
 		</div>
 		<div class=" mt-12 rounded-xl bg-cat-crust text-cat-text lg:mt-0 2xl:mx-72">
@@ -21,7 +21,7 @@
 				<div class="my-4 text-center text-4xl font-bold text-cat-overlay0 lg:text-3xl w-full">uwu</div>
 				<div class=" my-4 text-sm w-full text-cat-overlay0 md:text-xl flex">
                         <div class="w-full flex  justify-between">
-					<div class="text-start text-lg md:text-xl">recent writeups:</div>
+					<div class="text-start text-lg md:text-xl">recent posts:</div>
 					<div class="text-end">
 						<a
 							href="/writeups"

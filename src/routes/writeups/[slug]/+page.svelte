@@ -10,10 +10,10 @@
 	$: component = data.component as unknown as C;
 </script>
 
-<div class="mt-28 lg:mt-0 w-full flex flex-col">
-	<div class="self-center shadow-inner w-full bg-cat-mantle py-10">
-		<div class="text-cat-text text-center font-bold my-10">
-			<div class="text-6xl lg:text-3xl text-center my-8 font-bold text-cat-overlay0">
+<div class="mt-14 lg:mt-0 w-full flex flex-col">
+	<div class="self-center shadow-inner w-full bg-cat-mantle py-4">
+		<div class="text-cat-text text-center font-bold">
+			<div class="text-3xl text-center font-bold text-cat-overlay0">
 				<!-- {data.frontmatter.title} -->
 			</div>
 			<div class="flex flex-col w-full">
@@ -38,10 +38,10 @@
 		</div>
 
 		<div
-			class="mt-12 text-cat-text min-w-3xl max-w-6xl 2xl:max-w-[1920px] rounded-xl mx-auto bg-cat-crust"
+			class="mt-4 text-cat-text min-w-3xl max-w-6xl 2xl:max-w-[1920px] rounded-xl mx-auto bg-cat-crust"
 		>
 			<!-- todo: need to triple check custom prose style -->
-			<div class="text-lg lg:text-sm p-12 space-y-8 mx-8 text-justify prose">
+			<div class="text-sm p-4 lg:p-12 space-y-8 lg:mx-8 text-justify prose">
 				<svelte:component this={component} />
 
 				<slot />
