@@ -7,13 +7,12 @@ published: true
 tags: ["capture the flag", "0x0539", "web"]
 ---
 
-# confusing passwords
+# Confusing Passwords
 
-[challenge](https://0x0539.net/play/minas_tirith/confusing_passwords)
+> [challenge page available @ 0x539.net](https://0x0539.net/play/minas_tirith/confusing_passwords)
 
 <aside>
-👻  Admin Login
-Prove [you're] an admin to access the flag.
+<strong>Description</strong>: This login system will give you the flag... as long as you can prove you're an admin!
 </aside>
 
 ## overview

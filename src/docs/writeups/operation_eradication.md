@@ -16,7 +16,7 @@ Luckily, we found what looks like a configuration file, that seems to have crede
 </aside>
 
 
-We are given an HTTP service instance - `http://chal.ctf.games:30236/` - alongside a file with no extension named simply `operation_eradication`.
+The challenge gives us a containerized HTTP server instance - `http://chal.ctf.games:30236/` - alongside a file with no extension, named simply `operation_eradication`.
 Passing it as an arg for the `file` command, we're told it's just plaintext ASCII. Viewing it's contents, we are shown the following:
 
 ```toml

@@ -12,7 +12,6 @@ tags: ["capture the flag", "tryhackme", "web", "networks"]
 <aside>
 <strong>Description</strong>: Based on the Mr. Robot show, can you root this box?
 </aside>
-<br>
 
 ## Recon
 

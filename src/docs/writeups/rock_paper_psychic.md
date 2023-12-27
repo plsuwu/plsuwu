@@ -13,15 +13,15 @@ tags: ["capture the flag", "huntress", "reversing"]
 <strong>Description</strong>: Wanna play a game of rock, paper, scissors against a computer that can read your mind? Sounds fun, right?
 </aside>
 
-We are presented with a `.7z` archive, which extracts to an `.exe`-format binary. After extracting, I tried a few simple classics (buffer overflow/format string stuff) & some other stuff from similarly-named CTF challenges;
-unfortunately it wasn't going to be _quite_ that easy.
+The challenge presents us with a 7z archive, which extracts to an `.exe` binary. I executed the binary and tried a few easy classics (buffer overflow/format string stuff) and some pretty
+cheesy exploits from similarly-named CTF challenges - unfortunately it's not going to be _quite_ that easy.
 
 Loading the binary into IDA, we are able to perform a quick search for the term `flag` and make a quick note of relevant functions or symbols:
 
 ![Interesting functions](/img/rock_paper_psychic_img/Untitled.png)
 > IDAs' function search results
 
-Checking out our `printFlag` function, I’m not entirely sure what’s going (not at all helped by the mangled Nim disassembly), but we can glean a bit of info regardless:
+Checking out our `printFlag` function, I have a pretty solid interpretation of what I'm looking at, but the mangled Nim disasm took me a bit off-guard:
 
 - The program seems to have been written in Nim,
 - The binary itself calls the `printFlag` function when a player wins.

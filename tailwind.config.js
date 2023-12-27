@@ -89,7 +89,7 @@ export default {
                         "border-bottom": "4px solid #6c7086",
                         "margin-bottom": "3rem",
                         //"max-width": "fit-content",
-                        "line-height": "2.25rem",
+                        "line-height": "3rem",
                         '@media (min-width: 1024px)': {
                             "margin-bottom": "5rem"
                         },
