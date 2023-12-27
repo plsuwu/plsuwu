@@ -3,6 +3,8 @@ import { slugFromPath } from '$lib/slugFromPath';
 import { error } from '@sveltejs/kit';
 import type { MdsvexResolver } from '$lib/types';
 
+
+
 export const load: PageLoad = async ({ params }) => {
     const modules = import.meta.glob(`/src/docs/*/**/*.{md,svx,svelte.md}`);
 

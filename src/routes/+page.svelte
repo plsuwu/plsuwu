@@ -18,7 +18,7 @@
 		</div>
 		<div class=" mt-12 rounded-xl bg-cat-crust text-cat-text lg:mt-0 2xl:mx-72">
 			<div class="space-y-8 p-8 text-justify text-lg lg:text-xl w-full">
-				<div class="my-4 text-center text-4xl font-bold text-cat-overlay0 lg:text-3xl w-full">uwu</div>
+				<div class="my-4 text-center text-4xl font-bold text-cat-overlay0 lg:text-3xl w-full">pls' blog</div>
 				<div class=" my-4 text-sm w-full text-cat-overlay0 md:text-xl flex">
                         <div class="w-full flex  justify-between">
 					<div class="text-start text-lg md:text-xl">recent posts:</div>

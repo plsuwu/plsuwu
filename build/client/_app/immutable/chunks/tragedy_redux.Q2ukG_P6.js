@@ -1,0 +1,97 @@
+import{s as Hs,n as ts}from"./scheduler.rijuCTql.js";import{S as Ns,i as Bs,g as t,s as o,H as L,h as p,I as c,c as l,j as A,z as H,f as n,k as N,a as e}from"./index.7JfBVtF2.js";function Os(Ms){let r,ps="Tragedy Redux",B,i,os="👻 We found this file as part of an attack chain that seemed to manipulate file contents to stage a payload. Can you make any sense of it?",O,u,ls="Unzipping the challenge, we are given a single file - running <code>file tragedy_redux</code> on this indicates that it’s a Zip archive:",S,k,R,Ts=`<code class="language-bash">$ <span class="token function">ls</span> <span class="token parameter variable">-la</span>
+total <span class="token number">56</span>
+drwxr-xr-x  <span class="token number">2</span> pls pls  <span class="token number">4096</span> Oct <span class="token number">16</span> <span class="token number">20</span>:00 <span class="token builtin class-name">.</span>
+drwxr-xr-x <span class="token number">18</span> pls pls  <span class="token number">4096</span> Oct <span class="token number">16</span> <span class="token number">19</span>:59 <span class="token punctuation">..</span>
+-rw-------  <span class="token number">1</span> pls pls <span class="token number">24518</span> Oct <span class="token number">15</span> <span class="token number">23</span>:29 tragedy_redux
+-rwxr-xr-x  <span class="token number">1</span> pls pls <span class="token number">21810</span> Oct <span class="token number">16</span> <span class="token number">19</span>:59 tragedy_redux.7z
+
+$ <span class="token function">file</span> tragedy_redux
+tragedy_redux: Zip archive data, made by v4.5, extract using at least v2.0, last modified, last modified Sun, Jan 01 <span class="token number">1980</span> 00:00:00, uncompressed size <span class="token number">1453</span>, <span class="token assign-left variable">method</span><span class="token operator">=</span>deflate</code>`,I,d,cs="Extracting the contents, we are given some <code>XML</code> documents and a handful of references to Microsoft Word and Visual Basic:",D,m,F,Es=`<code class="language-bash">$ <span class="token function">unzip</span> tragedy_redux
+Archive:  tragedy_redux
+<span class="token function">file</span> <span class="token comment">#1:  bad zipfile offset (local header sig):  0</span>
+  inflating: _rels/.rels
+  inflating: word/document.xml
+  inflating: word/_rels/document.xml.rels
+  inflating: word/vbaProject.bin
+  inflating: word/theme/theme1.xml
+  inflating: word/_rels/vbaProject.bin.rels
+  inflating: word/vbaData.xml
+  inflating: word/settings.xml
+  inflating: word/styles.xml
+  inflating: word/webSettings.xml
+  inflating: word/fontTable.xml
+  inflating: docProps/core.xml
+  inflating: docProps/app.xml</code>`,j,h,rs="My assumption here is that this is a VBA Macro for Word, though loading this into Word’s VB editor throws an error, and loading <code>word/vbaProject.bin</code> by itself yields bad UTF-8 characters and the script cannot be run.",V,f,is='<img src="/img/tragedy_redux_img/Untitled.png" alt="Untitled"/>',G,b,us='<img src="/img/tragedy_redux_img/Untitled%201.png" alt="Untitled"/>',W,g,ks='The right hand side contains what seems like a file header - <code>ÐÏà¡±á</code>. This is the <a href="https://sceweb.sce.uhcl.edu/abeysekera/itec3831/labs/FILE%20SIGNATURES%20TABLE.pdf" rel="nofollow">mangled hex file header for Object Linking and Embedding (OLE) Compound Files</a>. There are also numerous references to the <code>OLE</code> file format scattered throughout the compiled <code>tragedy_redux</code> code - now under the assumption that this script has been compiled or something, a quick Google search returns a <a href="https://fishtech.group/cybersecurity/extracting-and-analyzing-malicious-word-macros-for-threat-hunting/" rel="nofollow">method to extract and analyze the script’s contents</a> using <a href="https://blog.didierstevens.com/programs/oledump-py/" rel="nofollow">OLEDump.py.</a>',z,w,ds="Downloading OLEDump.py’s Zip archive, extracting it, and then running it on <code>vbaProject.bin</code> yields the following output:",J,y,Y,Ps=`<code class="language-bash">$ python <span class="token punctuation">..</span>/oledump.py vbaProject.bin
+  <span class="token number">1</span>:       <span class="token number">410</span> <span class="token string">'PROJECT'</span>
+  <span class="token number">2</span>:        <span class="token number">71</span> <span class="token string">'PROJECTwm'</span>
+  <span class="token number">3</span>: M    <span class="token number">6164</span> <span class="token string">'VBA/NewMacros'</span>
+  <span class="token number">4</span>: m     <span class="token number">954</span> <span class="token string">'VBA/ThisDocument'</span>
+  <span class="token number">5</span>:      <span class="token number">3067</span> <span class="token string">'VBA/_VBA_PROJECT'</span>
+  <span class="token number">6</span>:      <span class="token number">3003</span> <span class="token string">'VBA/__SRP_0'</span>
+  <span class="token number">7</span>:       <span class="token number">226</span> <span class="token string">'VBA/__SRP_1'</span>
+  <span class="token number">8</span>:      <span class="token number">2334</span> <span class="token string">'VBA/__SRP_2'</span>
+  <span class="token number">9</span>:       <span class="token number">526</span> <span class="token string">'VBA/__SRP_3'</span>
+ <span class="token number">10</span>:       <span class="token number">571</span> <span class="token string">'VBA/dir'</span></code>`,U,v,ms="Files containing VBA macros are shown through the <code>M</code> flag in the above output; we can run OLEDump.py with the <code>-s &lt;stream-no.&gt;</code>  argument against <code>vbaProject.bin</code>, which must be identified with the <code>-v</code> argument here to decompress the macro - otherwise we get raw hex content. I’m going to also pipe the output to <code>tee</code> and write it to a file so I can open it in an IDE:",Z,_,$,Cs=`<code class="language-visual-basic"><span class="token operator">$</span> python <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token operator">/</span>oledump<span class="token punctuation">.</span>py <span class="token operator">-</span>s <span class="token number">3</span> <span class="token operator">-</span>v vbaProject<span class="token punctuation">.</span>bin | tee vbaDecomp<span class="token punctuation">.</span>txt
+Attribute VB_Name <span class="token operator">=</span> <span class="token string">"NewMacros"</span>
+<span class="token keyword">Function</span> Pears<span class="token punctuation">(</span>Beets<span class="token punctuation">)</span>
+    Pears <span class="token operator">=</span> Chr<span class="token punctuation">(</span>Beets <span class="token operator">-</span> <span class="token number">17</span><span class="token punctuation">)</span>
+<span class="token keyword">End</span> <span class="token keyword">Function</span>
+
+<span class="token keyword">Function</span> Strawberries<span class="token punctuation">(</span>Grapes<span class="token punctuation">)</span>
+    Strawberries <span class="token operator">=</span> Left<span class="token punctuation">(</span>Grapes<span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">)</span>
+<span class="token keyword">End</span> <span class="token keyword">Function</span>
+
+<span class="token keyword">Function</span> Almonds<span class="token punctuation">(</span>Jelly<span class="token punctuation">)</span>
+    Almonds <span class="token operator">=</span> Right<span class="token punctuation">(</span>Jelly<span class="token punctuation">,</span> Len<span class="token punctuation">(</span>Jelly<span class="token punctuation">)</span> <span class="token operator">-</span> <span class="token number">3</span><span class="token punctuation">)</span>
+<span class="token keyword">End</span> <span class="token keyword">Function</span>
+
+<span class="token keyword">Function</span> Nuts<span class="token punctuation">(</span>Milk<span class="token punctuation">)</span>
+    <span class="token keyword">Do</span>
+    OatMilk <span class="token operator">=</span> OatMilk <span class="token operator">+</span> Pears<span class="token punctuation">(</span>Strawberries<span class="token punctuation">(</span>Milk<span class="token punctuation">)</span><span class="token punctuation">)</span>
+    Milk <span class="token operator">=</span> Almonds<span class="token punctuation">(</span>Milk<span class="token punctuation">)</span>
+    <span class="token keyword">Loop</span> <span class="token keyword">While</span> Len<span class="token punctuation">(</span>Milk<span class="token punctuation">)</span> <span class="token operator">></span> <span class="token number">0</span>
+    Nuts <span class="token operator">=</span> OatMilk
+<span class="token keyword">End</span> <span class="token keyword">Function</span>
+
+<span class="token keyword">Function</span> Bears<span class="token punctuation">(</span>Cows<span class="token punctuation">)</span>
+    Bears <span class="token operator">=</span> StrReverse<span class="token punctuation">(</span>Cows<span class="token punctuation">)</span>
+<span class="token keyword">End</span> <span class="token keyword">Function</span>
+
+<span class="token keyword">Function</span> Tragedy<span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+    <span class="token keyword">Dim</span> Apples <span class="token keyword">As</span> <span class="token keyword">String</span>
+    <span class="token keyword">Dim</span> Water <span class="token keyword">As</span> <span class="token keyword">String</span>
+
+    <span class="token keyword">If</span> ActiveDocument<span class="token punctuation">.</span>Name <span class="token operator">&lt;</span><span class="token operator">></span> Nuts<span class="token punctuation">(</span><span class="token string">"131134127127118131063117128116"</span><span class="token punctuation">)</span> <span class="token keyword">Then</span>
+        <span class="token keyword">Exit</span> <span class="token keyword">Function</span>
+    <span class="token keyword">End</span> <span class="token keyword">If</span>
+
+    Apples <span class="token operator">=</span> <span class="token string">"1291281361181311321211181251250490621181271160490910881071321061041160... # and so on
+    Water = Nuts(Apples)
+
+    GetObject(Nuts("</span><span class="token number">136122127126120126133132075</span><span class="token string">")).Get(Nuts("</span><span class="token number">104122127068067112097131128116118132132</span>"<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">.</span>Create Water<span class="token punctuation">,</span> Tea<span class="token punctuation">,</span> Coffee<span class="token punctuation">,</span> Napkin
+
+<span class="token keyword">End</span> <span class="token keyword">Function</span>
+
+<span class="token keyword">Sub</span> AutoOpen<span class="token punctuation">(</span><span class="token punctuation">)</span>
+    Tragedy
+<span class="token keyword">End</span> <span class="token keyword">Sub</span></code>`,q,x,hs="Visual Basic looks insane and confusing, but the functions here are (reasonably) simple:",Q,M,fs="<li><code>Pears(Beets)</code> takes a number as an argument, subtracts 17, and returns the corresponding ASCII character.</li> <li><code>Strawberries(Grapes)</code> takes a string and returns <em>only</em> its first 3 characters</li> <li><code>Almonds(Jelly)</code> takes a string and returns everything <em>except</em> its first 3 characters</li> <li><code>Nuts(Milk)</code> loops through a string in 3-character sections, subtracts 17 from the ASCII value of each character, and then concatenates them together.</li> <li><code>Bears(Cows)</code> accepts a string and returns it in reverse</li>",X,T,bs="Ultimately, the program here is using the number strings to perform a series of decryptions. <code>Tea</code>, <code>Coffee</code>and <code>Napkin</code> aren’t instantiated in this section of the script, but even after removing these I found myself unable to get this to run as a Visual Basic script, so I instead converted the script to python:",K,E,ss,Ls=`<code class="language-python"><span class="token keyword">def</span> <span class="token function">pears</span><span class="token punctuation">(</span>beets<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">return</span> <span class="token builtin">chr</span><span class="token punctuation">(</span>beets <span class="token operator">-</span> <span class="token number">17</span><span class="token punctuation">)</span>
+
+<span class="token keyword">def</span> <span class="token function">strawberries</span><span class="token punctuation">(</span>grapes<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">return</span> grapes<span class="token punctuation">[</span><span class="token punctuation">:</span><span class="token number">3</span><span class="token punctuation">]</span>
+
+<span class="token keyword">def</span> <span class="token function">almonds</span><span class="token punctuation">(</span>jelly<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">return</span> jelly<span class="token punctuation">[</span><span class="token number">3</span><span class="token punctuation">:</span><span class="token punctuation">]</span>
+
+<span class="token keyword">def</span> <span class="token function">nuts</span><span class="token punctuation">(</span>milk<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    oat_milk <span class="token operator">=</span> <span class="token string">""</span>
+    <span class="token keyword">while</span> <span class="token builtin">len</span><span class="token punctuation">(</span>milk<span class="token punctuation">)</span> <span class="token operator">></span> <span class="token number">0</span><span class="token punctuation">:</span>
+        oat_milk <span class="token operator">+=</span> pears<span class="token punctuation">(</span><span class="token builtin">int</span><span class="token punctuation">(</span>strawberries<span class="token punctuation">(</span>milk<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+        milk <span class="token operator">=</span> almonds<span class="token punctuation">(</span>milk<span class="token punctuation">)</span>
+    <span class="token keyword">return</span> oat_milk
+
+<span class="token comment"># the other strings didn't deobfuscate into anything particularly useful</span>
+apples <span class="token operator">=</span> <span class="token string">"1291281361181311321211181251250490621181271160490910881071321061041160740901261..."</span> <span class="token comment"># u get the picture</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span>nuts<span class="token punctuation">(</span>apples<span class="token punctuation">)</span><span class="token punctuation">)</span></code>`,ns,P,gs="The script here converts the <code>apples</code> string into <code>powershell -enc JGZsYWc9ImZsYWd7NjNkY2M4MmMzMDE5Nzc2OGY0ZDQ1OGRhMTJmNjE4YmN9Ig==</code>; decoding the base64 portion of this output gives us the flag:",as,C,es,As=`<code class="language-bash">$ <span class="token builtin class-name">echo</span> <span class="token string">'JGZsYWc9ImZsYWd7NjNkY2M4MmMzMDE5Nzc2OGY0ZDQ1OGRhMTJmNjE4YmN9Ig=='</span> <span class="token operator">|</span> base64 <span class="token parameter variable">-d</span>
+<span class="token variable">$flag</span><span class="token operator">=</span><span class="token string">"flag&#123;6******************************c&#125;"</span></code>`;return{c(){r=t("h1"),r.textContent=ps,B=o(),i=t("aside"),i.textContent=os,O=o(),u=t("p"),u.innerHTML=ls,S=o(),k=t("pre"),R=new L(!1),I=o(),d=t("p"),d.innerHTML=cs,D=o(),m=t("pre"),F=new L(!1),j=o(),h=t("p"),h.innerHTML=rs,V=o(),f=t("p"),f.innerHTML=is,G=o(),b=t("p"),b.innerHTML=us,W=o(),g=t("p"),g.innerHTML=ks,z=o(),w=t("p"),w.innerHTML=ds,J=o(),y=t("pre"),Y=new L(!1),U=o(),v=t("p"),v.innerHTML=ms,Z=o(),_=t("pre"),$=new L(!1),q=o(),x=t("p"),x.textContent=hs,Q=o(),M=t("ul"),M.innerHTML=fs,X=o(),T=t("p"),T.innerHTML=bs,K=o(),E=t("pre"),ss=new L(!1),ns=o(),P=t("p"),P.innerHTML=gs,as=o(),C=t("pre"),es=new L(!1),this.h()},l(s){r=p(s,"H1",{"data-svelte-h":!0}),c(r)!=="svelte-1m3t94e"&&(r.textContent=ps),B=l(s),i=p(s,"ASIDE",{"data-svelte-h":!0}),c(i)!=="svelte-1pa12vn"&&(i.textContent=os),O=l(s),u=p(s,"P",{"data-svelte-h":!0}),c(u)!=="svelte-1ypp1vx"&&(u.innerHTML=ls),S=l(s),k=p(s,"PRE",{class:!0});var a=A(k);R=H(a,!1),a.forEach(n),I=l(s),d=p(s,"P",{"data-svelte-h":!0}),c(d)!=="svelte-5y64iy"&&(d.innerHTML=cs),D=l(s),m=p(s,"PRE",{class:!0});var ws=A(m);F=H(ws,!1),ws.forEach(n),j=l(s),h=p(s,"P",{"data-svelte-h":!0}),c(h)!=="svelte-1o1cbsg"&&(h.innerHTML=rs),V=l(s),f=p(s,"P",{"data-svelte-h":!0}),c(f)!=="svelte-1rbs7nu"&&(f.innerHTML=is),G=l(s),b=p(s,"P",{"data-svelte-h":!0}),c(b)!=="svelte-ooin1a"&&(b.innerHTML=us),W=l(s),g=p(s,"P",{"data-svelte-h":!0}),c(g)!=="svelte-38tv3n"&&(g.innerHTML=ks),z=l(s),w=p(s,"P",{"data-svelte-h":!0}),c(w)!=="svelte-1rl83rc"&&(w.innerHTML=ds),J=l(s),y=p(s,"PRE",{class:!0});var ys=A(y);Y=H(ys,!1),ys.forEach(n),U=l(s),v=p(s,"P",{"data-svelte-h":!0}),c(v)!=="svelte-15xslbu"&&(v.innerHTML=ms),Z=l(s),_=p(s,"PRE",{class:!0});var vs=A(_);$=H(vs,!1),vs.forEach(n),q=l(s),x=p(s,"P",{"data-svelte-h":!0}),c(x)!=="svelte-3v0wbp"&&(x.textContent=hs),Q=l(s),M=p(s,"UL",{"data-svelte-h":!0}),c(M)!=="svelte-hpd6dp"&&(M.innerHTML=fs),X=l(s),T=p(s,"P",{"data-svelte-h":!0}),c(T)!=="svelte-388t3n"&&(T.innerHTML=bs),K=l(s),E=p(s,"PRE",{class:!0});var _s=A(E);ss=H(_s,!1),_s.forEach(n),ns=l(s),P=p(s,"P",{"data-svelte-h":!0}),c(P)!=="svelte-gyh4p6"&&(P.innerHTML=gs),as=l(s),C=p(s,"PRE",{class:!0});var xs=A(C);es=H(xs,!1),xs.forEach(n),this.h()},h(){R.a=null,N(k,"class","language-bash"),F.a=null,N(m,"class","language-bash"),Y.a=null,N(y,"class","language-bash"),$.a=null,N(_,"class","language-visual-basic"),ss.a=null,N(E,"class","language-python"),es.a=null,N(C,"class","language-bash")},m(s,a){e(s,r,a),e(s,B,a),e(s,i,a),e(s,O,a),e(s,u,a),e(s,S,a),e(s,k,a),R.m(Ts,k),e(s,I,a),e(s,d,a),e(s,D,a),e(s,m,a),F.m(Es,m),e(s,j,a),e(s,h,a),e(s,V,a),e(s,f,a),e(s,G,a),e(s,b,a),e(s,W,a),e(s,g,a),e(s,z,a),e(s,w,a),e(s,J,a),e(s,y,a),Y.m(Ps,y),e(s,U,a),e(s,v,a),e(s,Z,a),e(s,_,a),$.m(Cs,_),e(s,q,a),e(s,x,a),e(s,Q,a),e(s,M,a),e(s,X,a),e(s,T,a),e(s,K,a),e(s,E,a),ss.m(Ls,E),e(s,ns,a),e(s,P,a),e(s,as,a),e(s,C,a),es.m(As,C)},p:ts,i:ts,o:ts,d(s){s&&(n(r),n(B),n(i),n(O),n(u),n(S),n(k),n(I),n(d),n(D),n(m),n(j),n(h),n(V),n(f),n(G),n(b),n(W),n(g),n(z),n(w),n(J),n(y),n(U),n(v),n(Z),n(_),n(q),n(x),n(Q),n(M),n(X),n(T),n(K),n(E),n(ns),n(P),n(as),n(C))}}}const Is={title:"Tragedy Redux",description:"We found this file as part of an attack chain that seemed to manipulate file contents to stage a payload. Can you make any sense of it?",author:"huntress",date:"2023-10-16",published:!0};class Ds extends Ns{constructor(r){super(),Bs(this,r,null,Os,Hs,{})}}export{Ds as default,Is as metadata};

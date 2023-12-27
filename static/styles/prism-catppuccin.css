@@ -234,9 +234,9 @@ pre[class*="language-"] {
 
 /* Toolbar plugin overrides */
 /* Space out all buttons and move them away from the right edge of the code block */
-div.code-toolbar > .toolbar.toolbar > .toolbar-item {
+/*div.code-toolbar > .toolbar.toolbar > .toolbar-item {
 	margin-right: 0.4em;
-}
+}*/
 
 /* Styling the buttons */
 div.code-toolbar > .toolbar.toolbar > .toolbar-item > button,

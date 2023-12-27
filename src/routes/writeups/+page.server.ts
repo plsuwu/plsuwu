@@ -1,3 +1,9 @@
+/* also TODO:
+ * I think we should transform this into an API request so we can fetch markdown docs from
+ * objects in a bucket or something - this way we are able to simply upload docs and have it
+ * them available, without having to pull the entire webapp from github and rebuild everything.
+*/
+
 import type { PageServerLoad } from './$types';
 import { slugFromPath } from '$lib/slugFromPath';
 import type { MdsvexFile, BlogPost } from '$lib/types'

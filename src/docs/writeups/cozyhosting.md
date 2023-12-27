@@ -4,6 +4,7 @@ description: "A very simple HTB seasonal."
 author: "hackthebox"
 date: "2023-09-04"
 published: true
+tags: ["capture the flag", "hackthebox", "web", "networks"]
 ---
 
 # Cozyhosting
@@ -12,13 +13,14 @@ published: true
 👻 A very simple HTB seasonal.
 </aside>
 
-## Reconnaissance
+## Recon
 
-We can run `rustscan` to enumerate open ports. Here, we return hits for `80` (`http`) and `22ssh`), which is fairly run-of-the-mill for a server hosting some kind of webapp.
+Using `rustscan`, we can perform a very quick port scan to pick up any open ports (which we can pass on to `nmap` for further evaluation if need be). The scan returns open ports on `80` and `22` (HTTP & SSH),
+which is a pretty standard setup for a server hosting some kind of webapp.
 
 ### HTTP service
 
-A quick look over the HTTP service on port 80, we see it responds with a `Whitelabel Error Page` when encountering any non-2xx status code.
+A quick look over the HTTP service on port 80, we see it responds with a `Whitelabel Error Page` when a request yields an error status code.
 
 ![whitelabel_error.png](/img/cozyhosting_img/whitelabel_error.png)
 

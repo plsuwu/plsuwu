@@ -4,15 +4,16 @@ description: "We found this file as part of an attack chain that seemed to manip
 author: "huntress"
 date: "2023-10-16"
 published: true
+tags: ["capture the flag", "huntress", "malware", "reversing", "obfuscation"]
 ---
 
 # Tragedy Redux
 
 <aside>
-👻 We found this file as part of an attack chain that seemed to manipulate file contents to stage a payload. Can you make any sense of it?
+<strong>Description:</strong> "We found this file as part of an attack chain that seemed to manipulate file contents to stage a payload. Can you make any sense of it?"
 </aside>
 
-Unzipping the challenge, we are given a single file - running `file tragedy_redux` on this indicates that it’s a Zip archive:
+Unzipping the challenge archive, we are given a single file to work with - running `file` on it tells us that it’s a Zip archive:
 
 ```bash
 $ ls -la
@@ -26,7 +27,8 @@ $ file tragedy_redux
 tragedy_redux: Zip archive data, made by v4.5, extract using at least v2.0, last modified, last modified Sun, Jan 01 1980 00:00:00, uncompressed size 1453, method=deflate
 ```
 
-Extracting the contents, we are given some `XML` documents and a handful of references to Microsoft Word and Visual Basic:
+Performing a second extraction, we are given some XML documents and references to Microsoft Word & Visual Basic - alongside an error that indicates this might not
+be what we think it is - `bad zipfile offset (local header sig):  0`
 
 ```bash
 $ unzip tragedy_redux
@@ -47,15 +49,24 @@ file #1:  bad zipfile offset (local header sig):  0
   inflating: docProps/app.xml
 ```
 
-My assumption here is that this is a VBA Macro for Word, though loading this into Word’s VB editor throws an error, and loading `word/vbaProject.bin` by itself yields bad UTF-8 characters and the script cannot be run.
+Seems like this isn't ACTUALLY a Zip archive.
+
+My assumption then is that this is a VBA Macro for MS Word, though loading this into Word’s VB editor tool throws an error:
 
 ![Untitled](/img/tragedy_redux_img/Untitled.png)
 
+And attempting to load `word/vbaProject.bin` by itself yields another error:
+
 ![Untitled](/img/tragedy_redux_img/Untitled%201.png)
 
-The right hand side contains what seems like a file header - `ÐÏà¡±á`. This is the [mangled hex file header for Object Linking and Embedding (OLE) Compound Files](https://sceweb.sce.uhcl.edu/abeysekera/itec3831/labs/FILE%20SIGNATURES%20TABLE.pdf). There are also numerous references to the `OLE` file format scattered throughout the compiled `tragedy_redux` code - now under the assumption that this script has been compiled or something, a quick Google search returns a [method to extract and analyze the script’s contents](https://fishtech.group/cybersecurity/extracting-and-analyzing-malicious-word-macros-for-threat-hunting/) using [OLEDump.py.](https://blog.didierstevens.com/programs/oledump-py/)
+I make another guess that the standalone `.bin` would contain file header info - in this case, `ÐÏà¡±á`; I make a lot of assumptions, but at the end of the day I suppose that's kind of what this is all
+about. Regardless, that seems pretty cursed, even for file headers, so I thought it was a bit unlikely. Turns out this was a pretty solid guess as it IS header info - its a mangled hex-to-ASCII conversion for an [Object Linking and Embedding (OLE) Compound File](https://sceweb.sce.uhcl.edu/abeysekera/itec3831/labs/FILE%20SIGNATURES%20TABLE.pdf).
+There are also numerous references to the `OLE` file format scattered throughout the compiled `tragedy_redux` code, too, which is a very promising outcome.
 
-Downloading OLEDump.py’s Zip archive, extracting it, and then running it on `vbaProject.bin` yields the following output:
+I couldn't figure out a way to actually _run_ the code (doesn't seem like a great way to distribute a malware stager), but with the `OLE` keyword as part of my vocab I was able to pretty quickly find a
+simple method to [extract the OLE archive](https://fishtech.group/cybersecurity/extracting-and-analyzing-malicious-word-macros-for-threat-hunting/) by way of a python script - [OLEDump.py.](https://blog.didierstevens.com/programs/oledump-py/)
+
+Downloading OLEDump.py and passing the `vbaProject.bin` file to it yields the following output:
 
 ```bash
 $ python ../oledump.py vbaProject.bin
@@ -71,9 +82,11 @@ $ python ../oledump.py vbaProject.bin
  10:       571 'VBA/dir'
 ```
 
-Files containing VBA macros are shown through the `M` flag in the above output; we can run OLEDump.py with the `-s <stream-no.>`  argument against `vbaProject.bin`, which must be identified with the `-v` argument here to decompress the macro - otherwise we get raw hex content. I’m going to also pipe the output to `tee` and write it to a file so I can open it in an IDE:
+As described in the article prior, files containing VBA macros are denoted via an `M` flag in the second column in the script's output. We are then able to run OLEDump.py with
+the `-s <stream-no.>` argument, passing `vbaProject.bin` once again (specifying the `-v` argument here to indicate that we want to decompress the macro).
+I’m going to also pipe the output to `tee` and write it to a file so I can open it in an IDE, because the script is obfuscated:
 
-```visual-basic
+```vb
 $ python ../oledump.py -s 3 -v vbaProject.bin | tee vbaDecomp.txt
 Attribute VB_Name = "NewMacros"
 Function Pears(Beets)
@@ -109,7 +122,7 @@ Function Tragedy()
         Exit Function
     End If
 
-    Apples = "1291281361181311321211181251250490621181271160490910881071321061041160... # and so on
+    Apples = "1291281361181311321211181251250490621181271160490910881071321061041160..." 'long string, truncated for brevity.
     Water = Nuts(Apples)
 
     GetObject(Nuts("136122127126120126133132075")).Get(Nuts("104122127068067112097131128116118132132")).Create Water, Tea, Coffee, Napkin
@@ -121,41 +134,69 @@ Sub AutoOpen()
 End Sub
 ```
 
-Visual Basic looks insane and confusing, but the functions here are (reasonably) simple:
+Visual Basic is insane, but we can simplify things by doing a little breakdown of each function:
 
-- `Pears(Beets)` takes a number as an argument, subtracts 17, and returns the corresponding ASCII character.
-- `Strawberries(Grapes)` takes a string and returns *only* its first 3 characters
-- `Almonds(Jelly)` takes a string and returns everything *except* its first 3 characters
-- `Nuts(Milk)` loops through a string in 3-character sections, subtracts 17 from the ASCII value of each character, and then concatenates them together.
-- `Bears(Cows)` accepts a string and returns it in reverse
+- `Pears(Beets)` -> Subbtracts 17 from a number and returns its corresponding ASCII character,
+- `Strawberries(Grapes)` -> Returns the first 3 characters in a string,
+- `Almonds(Jelly)` -> Removes the first 3 characters in a string,
+- `Nuts(Milk)` -> Like the script's `main` function - loops through a string which it passes to other functions, concatenating the returned values into a final payload,
+- `Bears(Cows)` -> Returns a reversed string (this function isn't used).
 
-Ultimately, the program here is using the number strings to perform a series of decryptions. `Tea`, `Coffee`and `Napkin` aren’t instantiated in this section of the script, but even after removing these I found myself unable to get this to run as a Visual Basic script, so I instead converted the script to python:
+Essentially, the program here is building out a payload by looping over a number in 3-character sections, subtracting 17 from the section, and then converting the result to ASCII.
+I really wanted to just run this and have it print the payload to stdout, but I couldn't get it to run for whatever reason - I _think_ I discarded all the garbage variables and functions,
+like `Tea`, `Coffee`, `Napkin`, and `Bears()`, but the script adamantly refusing to execute. Maybe it was silently doing the deobfuscation in the background, who knows.
+
+In any case, I gave up and converted the script to python:
 
 ```python
-def pears(beets):
-    return chr(beets - 17)
+# i've added types & comments for clarity
 
-def strawberries(grapes):
-    return grapes[:3]
+def int_to_str(n: int) -> str:
+    """subtract 17 from n and return the associated ascii char"""
+    return chr(n - 17)
 
-def almonds(jelly):
-    return jelly[3:]
+def slice_str(s: str) -> str:
+    """return the first three characters of a string"""
+    return s[:3]
 
-def nuts(milk):
-    oat_milk = ""
-    while len(milk) > 0:
-        oat_milk += pears(int(strawberries(milk)))
-        milk = almonds(milk)
-    return oat_milk
+def discard_chrs(s: str) -> str:
+    """remove the first three characters of a string"""
+    return s[3:]
 
-# the other strings didn't deobfuscate into anything particularly useful
-apples = "1291281361181311321211181251250490621181271160490910881071321061041160740901261..." # u get the picture
-print(nuts(apples))
+def main(s: str) -> str:
+    """
+    deobfuscates and returns a string:
+        1. use the length of `s` to perform a loop:
+            a. pass `s` to `slice_str()`
+            b. convert the returned value to an integer and pass to
+            `int_to_str()`
+            c. append the returned char to `stager_payload`
+            d. pass `s` to `discard_chrs` remove the processed portion of `s`
+        2. loop until the length of `s` is equal to 0
+        3. return `stager_payload` to be printed to stdout.
+    """
+
+    # store the output from each iteration
+    stager_payload = ""
+
+    while len(s) > 0:
+        stager_payload += int_to_str(int(slice_str(s)))
+        s = discard_chrs(s)
+    return stager_payload
+
+payload = "129128136118131132121118125125049062118127116049091088107132106104116074090126" # ... truncated
+print(main(payload))
+```
+> NOTE: This script still functional, regardless of any truncation! It just doesn't output the entire string like below.
+
+The script here converts the `apples` string into a powershell command:
+```powershell
+powershell -enc JGZsYWc9ImZsYWd7NjNkY2M4MmMzMDE5Nzc2OGY0ZDQ1OGRhMTJmNjE4YmN9Ig==
 ```
 
-The script here converts the `apples` string into `powershell -enc JGZsYWc9ImZsYWd7NjNkY2M4MmMzMDE5Nzc2OGY0ZDQ1OGRhMTJmNjE4YmN9Ig==`; decoding the base64 portion of this output gives us the flag:
+Finally, we get the flag by decoding the base64 section of the command.
 
 ```bash
 $ echo 'JGZsYWc9ImZsYWd7NjNkY2M4MmMzMDE5Nzc2OGY0ZDQ1OGRhMTJmNjE4YmN9Ig==' | base64 -d
-$flag="flag{6******************************c}"
+flag="flag{6******************************c}"
 ```

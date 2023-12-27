@@ -4,38 +4,45 @@ description: "Wanna play a game of rock, paper, scissors against a computer that
 author: "huntress"
 date: "2023-10-16"
 published: true
+tags: ["capture the flag", "huntress", "reversing"]
 ---
 
 # Rock, Paper, Psychic
 
 <aside>
-👻 Wanna play a game of rock, paper, scissors against a computer that can read your mind? Sounds fun, right?
+<strong>Description</strong>: Wanna play a game of rock, paper, scissors against a computer that can read your mind? Sounds fun, right?
 </aside>
 
-We are presented with a `.7z` file containing an`.exe` binary. After extracting, I tried a few simple classics (buffer overflow/format string stuff) - though nothing wound up sticking.
+We are presented with a `.7z` archive, which extracts to an `.exe`-format binary. After extracting, I tried a few simple classics (buffer overflow/format string stuff) & some other stuff from similarly-named CTF challenges;
+unfortunately it wasn't going to be _quite_ that easy.
 
-Loading the binary into IDA, we are able to perform a quick search for the term `flag` and make a quick note of any functions or subroutines:
+Loading the binary into IDA, we are able to perform a quick search for the term `flag` and make a quick note of relevant functions or symbols:
 
 ![Interesting functions](/img/rock_paper_psychic_img/Untitled.png)
+> IDAs' function search results
 
-Interesting functions
-
-Checking out our `printFlag` function, I’m not *entirely* sure what’s going on here (on account of the weird Nim machine code), but we can glean a bit of info regardless:
+Checking out our `printFlag` function, I’m not entirely sure what’s going (not at all helped by the mangled Nim disassembly), but we can glean a bit of info regardless:
 
 - The program seems to have been written in Nim,
-- The binary uses this function when a player wins to load a memory address (represented by the variable `TM__V45tF8B8NBcxFcjfe7lhBw_38`, which contains a string) into `$rcx` before running a `copyString` function on it
-    - This operation is run a second time, though on a different address (the string at `TM__V45tF8B8NBcxFcjfe7lhBw_39`).
-- The `fromRC4` function seems to be the recipient of these strings - my assumption is that we’re deciphering RC4-encrypted text, which will probably hold our flag.
+- The binary itself calls the `printFlag` function when a player wins.
+- This function seems to be a loop, which performs two _general_ actions:
+    1. `lea` computes the address of a memory operand, storing the resulting location in the `rcx` register
+    2. a function, `copyString`, is called - I didn't really go into this function, but ultimately it's pretty inconsequential to the function's outcome; I assume this is maybe, like, a
+    memory-safe way to deference pointers or something.
+- The loop runs twice on two strings - `TM__V45tF8B8NBcxFcjfe7lhBw_38` on the first iteration, and `TM__V45tF8B8NBcxFcjfe7lhBw_39` second.
+- Finally, the program calls the function `fromRC4`, which appears to be the recipient of both strings.
+
+To summarize, it seems like the flag is RC4-encrypted, and is stored in the read-only `.rdata` section. Once a player wins, and the program will decrypt the flag and then print it to STDOUT.
 
 ![IDA graph view](/img/rock_paper_psychic_img/Untitled%201.png)
-
-IDA graph view
+> IDA's graph view of the program's call flow
 
 ![Text view](/img/rock_paper_psychic_img/Untitled%202.png)
+> `.text` view
 
-Text view
+Moving to the addresses referenced by `TM__V45tF8B8NBcxFcjfe7lhBw_38` & `TM__V45tF8B8NBcxFcjfe7lhBw_39` in the `.rdata` section - this means the variables are constants (i.e, read-only; not used to store dynamic data).
 
-The addresses of `TM__V45tF8B8NBcxFcjfe7lhBw_38` & `TM__V45tF8B8NBcxFcjfe7lhBw_39` point to sequential sections in `.rdata`, and contain the following values respectively (note that each byte uses one `.rdata` address, so these were technically not represented like this in memory, though this is what we want to use for decryption):
+We see they hold the following values respectively:
 
 ```nasm
 .rdata:000000000041D9E0 TM__V45tF8B8NBcxFcjfe7lhBw_39 db  4Ch ; L
@@ -87,6 +94,7 @@ The addresses of `TM__V45tF8B8NBcxFcjfe7lhBw_38` & `TM__V45tF8B8NBcxFcjfe7lhBw_3
 .rdata:000000000041DAA6                 db    0
 .rdata:000000000041DAA7                 db    0
 ```
+> NOTE: Each byte of these variables were stored in a unique address and so the visual representation we got in IDA was a little different, but the end result is ultimately the same.
 
 Our values used in the decryption process use the strings `P P @gnnhexnyjkwpaghynzfthadollhtrhballsdmhhnbjppewgjkhnlhspwjswqoxtgdykxrhwlabblekxj` and `L L @D1E2A0D9FA89CABED207EDF4F55C688E04EBE20F077351BDAA1E110D5A74805C916AF12F054C` to decipher and print a flag.
 
@@ -99,8 +107,16 @@ Digging a little into the RC4 decryption function, we will find some child funct
 
 ![Untitled](/img/rock_paper_psychic_img/Untitled%204.png)
 
-`genKeystream` seems to just utilize a plaintext value, and it is fairly safe to assume `fromHex` will convert a string from its hex representation to ASCII. My other assumption was that `fromRC4` uses the string prefixed with `P P @` as the “passphrase”/key, and the hexadecimal string labeled `L L @` as its encrypted input.
+`genKeystream` seems to just utilize a plaintext value, and it is fairly safe to assume `fromHex` will convert a string from its hex representation to ASCII. I also am assuming that the
+`L L @...` & `P P @...` portions of each string are use to identify the key from the input, and that we should remove them before trying to descrypt anything.
 
-With these assumptions, we can discard the weirdness at the start of our cipher strings, and we can run this through Cyberchef’s RC4 decrypt function to get our flag:
+With two strings in hand, we _could_ force it and mash them together until something works, but I wanted to try making an educated guess on which string was which; a quick Google search
+returned [this Nim RC4 library on GitHub](https://github.com/OHermesJunior/nimRC4).
+
+The function from this library expects
+- argument one -`TM_..._38` - to be a key,
+- argument two - `TM_...39` to be a hexadecimal string containing the ciphertext.
+
+The example here seems to align pretty well with the function calls and values in this program, so lets try this out and run it through cyberchef:
 
 ![Untitled](/img/rock_paper_psychic_img/Untitled%205.png)

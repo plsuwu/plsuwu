@@ -4,19 +4,20 @@ description: "It seems like this website was compromised. We found this file tha
 author: "huntress"
 date: "2023-10-21"
 published: true
+tags: ["capture the flag", "forensics", "huntress", "reversing", "web", "networks"]
 ---
 
 # Speakfriend
 
 <aside>
-👻 It seems like this website was compromised. We found this file that seems to be related... can you make any sense of these and uncover a flag?
+    <strong>Challenge</strong>: It seems like this website was compromised. We found this file that seems to be related... can you make any sense of these and uncover a flag?
 </aside>
 
-We are given a `main.7z` and a URL to a webpage, though I suspect there is nothing surface-level to see here - a cursory glance through the source and various pages indicates that this assumption is *probably* correct.
+We are given a `main.7z` archive alongside a containerized webserver instance, though I suspect there is nothing surface-level to see here - a cursory glance through the source and various pages indicates that this assumption is *probably* correct.
 
 ![Standard Bootstrap template stuff](/img/speakfriend_img/Untitled.png)
 
-Standard Bootstrap template stuff
+>Standard Bootstrap template stuff
 
 ```html
 $ curl --insecure 'https://chal.ctf.games:32032'
@@ -51,13 +52,17 @@ $ curl --insecure 'https://chal.ctf.games:32032'
  <!-- ...etc .... -->
 ```
 
-Extracting the `7z` archive, we can run some basic file identification with `file` / `strings` / `objdump` commands:
+Extracting the archive, we can run some basic filetype identification commands - `file` / `strings` / `objdump`:
 
 ```bash
 $ file main
 main: ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, \\
 BuildID[sha1]=f020f8b12bc1a0b0f3122413b698344bfbfd1d9d, for GNU/Linux 3.2.0, not stripped
+```
+> `file` output ...
 
+
+```bash
 $ strings main
 /lib64/ld-linux-x86-64.so.2
 libcurl-gnutls.so.4
@@ -91,7 +96,11 @@ _curl_easy_setopt_err_read_cb
 _curl_easy_setopt_err_ioctl_cb
 _curl_easy_setopt_err_sockopt_cb
 # ... etc
+```
+> ... `strings` output ...
 
+
+```bash
 $ objdump -s ./main
 
 ./main:     file format elf64-x86-64
@@ -114,6 +123,7 @@ Contents of section .dynstr:
  14c0 50feffff 48899558 feffff48 b8323739  P...H..X...H.279
  14d0 2d393861 3448ba61 65663033 35336548  -98a4H.aef0353eH
 ```
+> ...and finally, `objdump` output.
 
 Notable are the `curl` and `Mozilla` strings - the `H` strings might also refer to `curl`’s `-H` header argument - so it could be making some kind of request with `curl`, and pretending to be a Firefox client or something?
 
@@ -125,19 +135,23 @@ pls@RUBY~$ ./main
 pls@RUBY~$
 ```
 
-That didn’t do anything lol.
+Anti-climactic - nothing happened at all.
 
-We could try passing some arguments to it, like `-h`, to see if it has a `help` command. This seems to make the program to hang; I have to `ctrl+c` out of it.
+We could try passing some arguments to it - I go with `-h`, to see if it has a `help` command/usage info. This seems to make the program to hang; I end up aborting with `C-c`.
 
 ![Untitled](/img/speakfriend_img/Untitled%201.png)
 
-This is pretty interesting - this is a little hard to visualize, but the binary stays running, so it seems to be doing something, though silently. Considering it seems to include `curl`, and may want to try connecting to an endpoint, lets see whether its producing any network activity with `Wireshark`:
+This is pretty interesting - this is a little hard to visualize, but the binary stays running, so it seems to be doing _something_, even if it's silentl. Suspecting it harbours `curl` and therefore probably
+wants to connect to a server, lets see whether we can intercept anything with `Wireshark`:
 
 ![Untitled](/img/speakfriend_img/Untitled%202.png)
 
-It’s a little tough to say exactly what is what traffic is outbound from what application - running some of these through Shodan returned pretty inconclusive results. Also, the challenge uses TLS, so it’s possible for basically any of these to be relevant. Turning on hostnames was also pretty unhelpful. Really should setup a proper lab after this….
+It’s a little tough to say exactly what is what traffic is outbound from what application as nothing is immediately obvious here. Also, the challenge uses TLS, so it’s possible for basically any of
+these to be relevant, as opposed to the bright green packets of unencrypted HTTP. Turning on hostnames was also pretty unhelpful - I really should set up a proper lab with REMnux - fakenet would be
+really beneficial right now.
 
-So, instead, why don’t we try running a specific IP through it and see if it kind of just functions like `curl`? We can grab the IP of our machine just with the Network tab of Chrome’s Dev Tools, and throw it in as an argument to see if the binary produces any network activity to this IP in Wireshark:
+So, instead, why don’t we try running a specific IP through it and see if it kind of just functions like `curl`? We can grab the IP of the remote machine with the Network tab of Chrome’s Dev Tools, and
+throw it in as an argument to see if the binary produces any network activity when we filter Wireshark results to contain only the target machine's IP:
 
 ![Untitled](/img/speakfriend_img/Untitled%203.png)
 
@@ -146,7 +160,7 @@ pls@RUBY~$ ./main 34.123.197.237:32032
 # ...
 ```
 
-It seems like we make a non-TLS request to the server, which, upon inspection, has been made with some suspicious looking headers:
+Great - it seems like we make an unencrypted request to the server, which, upon further inspection, proves my initial suspicions correct:
 
 ![Untitled](/img/speakfriend_img/Untitled%204.png)
 
@@ -162,7 +176,7 @@ pls@RUBY~$ curl 34.123.197.237:32032 -H 'GET / HTTP/1.1' \\
 curl: (56) Recv failure: Connection reset by peer
 ```
 
-Ok, instead of the IP, let’s try making that request to the URL (using the `--insecure` arg to direct `curl` to disregard certificate validity):
+Unlucky, maybe instead of an IP, we need to make a request to the URL (the server's SSL cert isn't valid, so we need to tell `curl` that it should disregard certificate validity using the `--insecure` arg):
 
 ```bash
 curl https://chal.ctf.games:32032 --insecure -H 'GET / HTTP/1.1' \\
@@ -176,7 +190,7 @@ curl https://chal.ctf.games:32032 --insecure -H 'GET / HTTP/1.1' \\
 <p>You should be redirected automatically to the target URL: <a href="/93bed45b-7b70-4097-9279-98a4aef0353e/c2">/93bed45b-7b70-4097-9279-98a4aef0353e/c2</a>. If not, click the link.
 ```
 
-Add `-L` so `curl` will follow the redirect and we’re done:
+Add `-L` so `curl` will follow the redirect, and the server responds with the flag:
 
 ```sh
 curl  https://chal.ctf.games:32032 --insecure -H 'GET / HTTP/1.1' \\

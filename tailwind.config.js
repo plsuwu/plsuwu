@@ -11,12 +11,12 @@ export default {
         typography: {
             DEFAULT: {
                 css: {
-                    div: {
-                        "line-height": "2em"
-                    },
-                    p: {
+                    "p:not(:last-child)": {
                         "text-align": "left",
-                        "line-height": "2em"
+                        "margin": "0.25rem 1rem",
+                        "margin-top": "2rem",
+                        "font-size": "1rem",
+                        "line-height": "1.75rem",
                     },
 
                     // note -- cascade order for a elem (top to bottom) -> `a:link` & `a:visted` > `a:hover` > `a:active`
@@ -32,26 +32,30 @@ export default {
                         opacity: "0.5"
                     },
 
-                    // <aside/>s can be used as a headline subtext item;
-                    // <blockquote/>s can be for like, an inline comment.
+                    // <aside/> is used as a 'side comment';
+                    // <blockquote/> is used to caption e.g an image.
                     aside: {
                         color: "#cdd6f4",
+                        "text-align": "left",
                         "background-color": "#1e1e2e",
                         "border-left": "4px solid #fab387",
-                        "padding": "0.5rem",
-                        "padding-left": "1rem",
-                        'font-style': 'italic',
+                        "padding": "1.5rem",
+                        "padding-left": "2rem",
+                        "font-size": "1.1rem",
+                        "font-weight": "600"
+                        //'font-style': 'italic',
                     },
-                    blockquote: {
+                    "blockquote p:last-child": {
+                        "text-align": "left",
+                        "padding": "4px",
+                        "padding-left": "1.5rem",
+                        "margin-bottom": "2rem",
                         color: "#9399b2",
                         "background-color": "#1e1e2e",
                         "border-left": "4px solid #9399b2",
-                        "padding": "0.25rem",
-                        "padding-left": "0.5rem",
                         'font-style': 'italic',
                     },
-
-                    code: {
+                    "code": {
                         "background-color": "#1e1e2e",
                         "padding": "4px",
                         "border-radius": "10px",
@@ -59,28 +63,41 @@ export default {
                         "line-height": "1rem",
                         '@media (min-width: 1024px)': {
                             "font-size": "0.875rem",
-                            "line-height": "1.25rem"
+                            "line-height": "1.25rem",
                         },
                     },
                     ul: {
                         "list-style": "disc inside",
                         "padding-left": "2rem",
                         "text-align": "left",
+                        "line-height": "1.75rem"
+                    },
+                    ol: {
+                        "list-style": "numbers inside",
+                        "padding-left": "2rem",
+                        "text-align": "left",
+                        "line-height": "1.75rem"
+
                     },
                     h1: {
-                        "margin": "auto",
-                        "text-align": "center",
-                        "font-size": "2.5em",
+                        "margin": "1rem auto",
+                        "text-align": "left",
+                        "font-size": "3rem",
                         "font-weight": "900",
                         "padding": "6px",
-                        "padding-bottom": "8px",
-                        "border-bottom": "4px solid #bac2de",
-                        "margin-bottom": "4rem",
-                        "max-width": "fit-content"
+                        "padding-bottom": "0px",
+                        "border-bottom": "4px solid #6c7086",
+                        "margin-bottom": "3rem",
+                        //"max-width": "fit-content",
+                        "line-height": "2.25rem",
+                        '@media (min-width: 1024px)': {
+                            "margin-bottom": "5rem"
+                        },
                     },
                     h2: {
                         "font-size": "1.75em",
                         "font-weight": "800",
+                        "margin": "2rem 0",
                         //"padding-bottom": "4px",
                         "border-bottom": "3px solid #6c7086",
                         "max-width": "fit-content"
