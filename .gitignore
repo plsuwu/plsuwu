@@ -1,4 +1,3 @@
-# Logs
 logs
 *.log
 npm-debug.log*
@@ -7,21 +6,17 @@ yarn-error.log*
 lerna-debug.log*
 .pnpm-debug.log*
 
-# Diagnostic reports (https://nodejs.org/api/report.html)
+pnpm*
+package-lock.json
+
 report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
 
-# node-waf configuration
 .lock-wscript
 
-# Compiled binary addons (https://nodejs.org/api/addons.html)
 build/
-
-# Dependency directories
 node_modules/
 jspm_packages/
 .svelte-kit/
-
-# Optional eslint cache
 .eslintcache
 
 # dotenv environment variable files
@@ -31,7 +26,7 @@ jspm_packages/
 .env.production.local
 .env.local
 
-# parcel-bundler cache (https://parceljs.org/)
 .cache
 .parcel-cache
+
 
