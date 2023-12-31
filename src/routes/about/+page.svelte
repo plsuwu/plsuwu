@@ -1,4 +1,6 @@
 <script lang="ts">
+    import Accordion from "$lib/components/Accordion.svelte";
+
     import PhGithubLogo from "virtual:icons/ph/github-logo";
     import PhSoundcloudLogo from "virtual:icons/ph/soundcloud-logo";
 
@@ -47,88 +49,272 @@
                 <div
                     class="my-6 text-3xl font-semibold text-cat-overlay2 lg:my-0"
                 >
-                    hello,
+                    Hello,
                 </div>
                 <div class="text-sm lg:text-lg">
-                    <div class="mb-6">
+                    <div class="my-6">
                         <span>
-                            my name is zac (or, pls). this is more or less a
-                            blog (or even a portfolio of sorts). generally
-                            speaking, i've handbuilt a large majority of this
-                            site using</span
-                        >
-                        <ul class="my-1 list-inside indent-6 text-cat-overlay2">
-                            <li>
-                                [<span class="text-cat-peach">*</span>] &nbsp;
-                                sveltekit (with typescript),
-                            </li>
-                            <li>
-                                [<span class="text-cat-blue">*</span>] &nbsp;
-                                tailwindcss, &
-                            </li>
-                            <li>
-                                [<span class="text-cat-text">*</span>] &nbsp;
-                                mdsvex.
-                            </li>
-                        </ul>
-                        <div class="my-3">
-                            this is all then SEALED away in a docker container
-                            on google cloud.
-                        </div>
+                            I'm Zachary but I also often use the handle `<span
+                                class="font-mono rounded-xl py-1 px-2 bg-cat-mantle"
+                                >pls</span
+                            >` (or a slight variation of it) online. I'm
+                            currently studying an undergraduate computer science
+                            degree;
+                        </span>
 
-                        <div class="my-4">
-                            in terms of site content, i currently have a small
-                            selection of writeups for various capture the flag
-                            challenges from sites & competitions i've done, such
-                            as
-                            <span>
-                                {#each profiles as site, idx}
-                                    {idx > 0 && idx === profiles.length - 1
-                                        ? "and "
-                                        : ""}
-                                    <a
-                                        class="text-cat-blue underline transition-opacity duration-200 ease-out hover:opacity-50"
-                                        href={site.profile}
-                                    >
-                                        <!-- NOTE: separating these 3 elements introduces incorrect dom formatting. DONT do it!! -->
-                                        {site.name}</a
-                                    >{idx < profiles.length - 1 ? ", " : ". "}
-                                {/each}
-                                <div class="my-4">
+                        <div>
+                            my main area of interest - and this site's primary
+                            focus - is in cybersecurity, though I have two areas
+                            I'm particularly interested in:
+                            <ul
+                                class="list-disc list-inside ml-6 md:mr-36 mt-3 space-y-1"
+                            >
+                                <li>
                                     <span
-                                        >i have many more things to add, but i
-                                        am just a guy and i am only able to do
-                                        so much in a day :(</span
-                                    >
-                                </div>
-                            </span>
-                        </div>
-                        <div class="mt-8">
-                            in any capacity, thank u for visiting !!
+                                        class="text-cat-red italic font-semibold"
+                                        >Red teaming</span
+                                    > - identifying vulnerabilities or weaknesses
+                                    in a system or security solution by performing
+                                    simulated attacks,
+                                </li>
+                                <li>
+                                    <span
+                                        class="text-cat-blue italic font-semibold"
+                                        >Malware analysis</span
+                                    > - digging into malicious scripts or binaries
+                                    & determining how a something functions, its
+                                    purpose, and where it might originate from.
+                                </li>
+                            </ul>
                             <div class="my-4">
-                                u may find (if u desire) this project and some
-                                of my other things @
-                                <a
-                                    class="text-cat-blue transition-all duration-200 ease-out visited:text-cat-mauve hover:opacity-50"
-                                    href="https://github.com/plsuwu"
-                                >
-                                    <PhGithubLogo class="inline-flex" />
-                                    <span class="inline-flex underline"
-                                        >my github</span
-                                    >,
-                                </a>
-                                and i also sometimes make music (i have a bachelor's
-                                in music btw) (not to brag) which you can find on
-                                <a
-                                    class="text-cat-blue transition-all duration-200 ease-out visited:text-cat-mauve hover:opacity-50"
-                                    href="https://soundcloud.com/notpls"
-                                >
-                                    <PhSoundcloudLogo class="inline-flex" />
-                                    <span class="inline-flex underline"
-                                        >my soundcloud</span
-                                    >
-                                </a>
+                                Of course, both are very expansive and technical
+                                fields; I would still consider myself a
+                                beginner, though I do feel pretty confident with
+                                the basic toolsets and tradecraft. To that note,
+                                it is also very rewarding to learn new things -
+                                the hands-on, trial-and-error, "try/fail/try
+                                harder" approach to learning new concepts makes
+                                the end product much more rewarding; though
+                                beyond this, it makes the newly-integrated
+                                knowledge more comprehensive and robust.
                             </div>
+                        </div>
+                        <Accordion>
+                            <span slot="head"
+                                >Offensive Security Tools & Skills</span
+                            >
+                            <div
+                                slot="content"
+                                class="bg-cat-mantle rounded-xl"
+                            >
+                                <ul class="list-disc ml-6 p-3 lg:p-6">
+                                    <li>
+                                        Binary exploitation techniques, e.g -
+                                        binary protections (NX, stack canaries,
+                                        PIE, GOT, RELRO, ASLR), shellcode,
+                                        return-oriented programming
+                                    </li>
+                                    <li>
+                                        High-level understanding of Windows and
+                                        *NIX command lines and configurations
+                                    </li>
+                                    <li>
+                                        Common ports and their associated
+                                        "default" services
+                                    </li>
+                                    <li>
+                                        A broad range of offensive tools:
+                                        <ul
+                                            class="ml-4 list-[circle] list-inside text-cat-subtext0"
+                                        >
+                                            <li>nmap, dig, shodan, recon-ng</li>
+                                            <li>
+                                                dirbuster, ffuf, nikto, sqlmap,
+                                                burp
+                                            </li>
+                                            <li>
+                                                enum4linux, smbmap, rpcclient
+                                            </li>
+                                            <li>linpeas</li>
+                                            <li>hydra</li>
+                                            <li>hashcat, john</li>
+                                            <li>curl, netcat, telnet</li>
+                                            <li>impacket</li>
+                                            <li>metasploit</li>
+                                            <li>
+                                                offensive python and shell
+                                                scripting
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <li>
+                                        A range of web technologies <span
+                                            class="text-cat-overlay2"
+                                            >(Javascript, PHP, Wordpress,
+                                            Apache, Docker, etc.)</span
+                                        >
+                                        and a range of (fairly basic) associated
+                                        vulnerabilities
+                                        <span class="text-cat-overlay2"
+                                            >(prototype pollution,
+                                            deserialization, XSS, directory
+                                            traversal, mounted sockets, etc.)</span
+                                        >
+                                    </li>
+                                    <li>
+                                        More generally, HTTP-based
+                                        vulnerabilities <span
+                                            class="text-cat-overlay2"
+                                            >(IDOR, SSRF, method tampering &
+                                            CORS misconfigurations, XML
+                                            injection, DNS rebinding, etc.)
+                                        </span>
+                                    </li>
+                                    <li>
+                                        A range of local privilege escalation
+                                        vectors and techniques
+                                    </li>
+                                    <li>
+                                        Large language model "prompt hacking"
+                                        e.g - defined dictionary attacks,
+                                        payload splitting, token smuggling
+                                    </li>
+                                    <li>Docker breakout/escape techniques</li>
+                                </ul>
+                            </div>
+                        </Accordion>
+                        <Accordion>
+                            <span slot="head"
+                                >Malware & Forensics Tools & Skills</span
+                            >
+                            <div
+                                slot="content"
+                                class="bg-cat-mantle rounded-xl"
+                            >
+                                <ul class="list-disc ml-6 p-3 lg:p-6">
+                                    <li>IDA, Ghidra, Cutter</li>
+                                    <li>WinDBG, x64dbg, GDB (GEF)</li>
+                                    <li>
+                                        Python as a reverse engineering tool
+                                        (program recreation, "debugging"
+                                        binaries with
+                                        pwntoolsclass="bg-cat-mantle
+                                        rounded-xl")
+                                    </li>
+                                    <li>Sysinternals - Procmon, Procdump</li>
+                                    <li>
+                                        Virtual machines, including the use of
+                                        Windows + REMnux to isolate and analyse
+                                        malicious network activity
+                                    </li>
+                                    <li>The Volatility Framework</li>
+                                    <li>
+                                        Code and (dis)assembly deobfuscation;
+                                        reverse engineering purposefully obtuse
+                                        programs
+                                    </li>
+                                    <li>
+                                        Foundational understanding of the x86_64
+                                        instruction set architecture
+                                    </li>
+                                    <li>
+                                        Foundational understanding of NT
+                                        userland{"<->"}kernel communication,
+                                        process hollowing, and DLL injection
+                                    </li>
+                                </ul>
+                            </div></Accordion
+                        >
+                    </div>
+                    <div>
+                        I also have a respectable skillset more generally
+                        applicable to programming and systems knowledge, though
+                        I similarly would consider myself a beginner in many
+                        aspects here as well.
+                        <Accordion>
+                            <span slot="head"
+                                >General Systems & Programming Skills</span
+                            >
+                            <div
+                                slot="content"
+                                class="bg-cat-mantle rounded-xl"
+                            >
+                                <ul class="list-disc ml-6 p-3 lg:p-6">
+                                    <li>
+                                        Programming and scripting languages:
+                                        <ul
+                                            class="list-[circle] ml-4 list-inside text-cat-subtext0"
+                                        >
+                                            <li>Python</li>
+                                            <li>Rust</li>
+                                            <li>x86_64 assembly</li>
+                                            <li>Haskell (fundamental)</li>
+                                            <li>
+                                                Web-based languages, e.g -
+                                                Javascript, Typescript, Node,
+                                                PHP, SQL (MySQL, Postgres)
+                                            </li>
+                                            <li>
+                                                Web frameworks, e.g - Svelte,
+                                                React, TailwindCSS, SCSS
+                                            </li>
+                                            <li>Bash/Powershell</li>
+                                        </ul>
+                                    </li>
+                                    <li>
+                                        Fundamental low-level computation - from
+                                        long-term storage to instruction cycles
+                                    </li>
+                                    <li>
+                                        Fundamental machine learning,
+                                        specifically relating to LLM transformer
+                                        inference and training, e.g -
+                                        parameters, context windows,
+                                        tokenization, quantization, datasets,
+                                        and hardware
+                                    </li>
+                                    <li>
+                                        Networking, TCP/IP & OSI network models
+                                    </li>
+                                    <li>Using & configuring SSH</li>
+                                    <li>
+                                        Cryptography, e.g - TLS, AES, RSA, as
+                                        well as hashing algorithms like bcrypt,
+                                        md5, NTLM
+                                    </li>
+                                    <li>
+                                        Virtual machines,
+                                        containerization/orchestration with
+                                        Docker & Compose
+                                    </li>
+                                    <li>
+                                        Windows and Linux permissions and system
+                                        configuration
+                                    </li>
+                                    <li>
+                                        Configuring and using a variety of IDEs
+                                        and editors, primarily (Neo)Vim and VS
+                                        Code, but also Nano, Visual Studio and a
+                                        handful of others.
+                                    </li>
+                                </ul>
+                            </div>
+                        </Accordion>
+                    </div>
+                    <div class="mt-8">
+                        <div class="my-4 text-center">
+                            You can view some of my other projects and Arch
+                            (btw) dotfiles @
+
+                            <a
+                                class="text-cat-blue transition-all duration-200 ease-out visited:text-cat-mauve hover:opacity-50"
+                                href="https://github.com/plsuwu"
+                            >
+                                <PhGithubLogo class="inline-flex" />
+                                <span class="inline-flex underline"
+                                    >github.com/plsuwu</span
+                                >
+                            </a>
                         </div>
                     </div>
                 </div>
