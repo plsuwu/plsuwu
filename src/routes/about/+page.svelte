@@ -198,8 +198,7 @@
                                         Python as a reverse engineering tool
                                         (program recreation, "debugging"
                                         binaries with
-                                        pwntoolsclass="bg-cat-mantle
-                                        rounded-xl")
+                                        pwntools)
                                     </li>
                                     <li>Sysinternals - Procmon, Procdump</li>
                                     <li>
