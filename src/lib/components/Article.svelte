@@ -7,7 +7,7 @@
 
 
 <a class="group" {href}>
-<article class="transition-colors duration-300 ease-in-out grid grid-cols-8 hover:bg-cat-base/25 bg-cat-base rounded-xl my-2">
+<article class="transition-colors duration-300 ease-in-out grid grid-cols-8 border hover:border-cat-base/25 border-cat-base rounded-xl my-2">
     <div class="col-span-7 p-4 ">
   <slot />
   </div>

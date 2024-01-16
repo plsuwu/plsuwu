@@ -28,14 +28,15 @@
 		</div>
 		<div class="mx-auto w-full rounded-xl bg-cat-crust text-cat-text xl:min-w-[1300px] xl:max-w-[1300px]">
 			<div
-				class="mx-auto flex flex-col px-4 text-sm sm:text-xl lg:space-y-0 lg:p-8 2xl:grid 2xl:grid-cols-3 pt-2 pb-6 xl:min-w-[1300px] xl:max-w-[1300px]"
+				class="flex flex-col px-4 text-sm sm:text-lg lg:space-y-0 lg:p-8 pt-2 pb-6 xl:min-w-[1300px] xl:max-w-[1300px]"
             >
 
-				{#each data.posts as { slug, title, author, description, date }}
+				{#each data.posts as { slug, title, author, tags, description, date }}
 					<div class="lg:mx-2 my-0">
 						<Article {slug}>
 							<ArticleTitle {slug} {title} />
-							<ArticleMeta {author} {date} />
+							<ArticleMeta {date} {author} {tags}/>
+
 							<ArticleDescription {description} />
 						</Article>
 					</div>

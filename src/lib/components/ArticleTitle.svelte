@@ -11,7 +11,7 @@
 </script>
 
 <div
-	class="mb-3 max-w-fit text-xl font-bold italic transition-colors duration-300 ease-in-out group-hover:text-cat-peach lg:text-2xl text-left"
+	class="m-3 mb-0 max-w-fit text-xl font-bold italic transition-colors duration-300 ease-in-out group-hover:text-cat-peach lg:text-2xl text-left"
 	{id}
 >
 	<a {href}>

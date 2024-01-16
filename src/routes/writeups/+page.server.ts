@@ -8,7 +8,7 @@ import type { PageServerLoad } from './$types';
 import { slugFromPath } from '$lib/slugFromPath';
 import type { MdsvexFile, BlogPost } from '$lib/types'
 
-const MAX_POSTS = 10;
+const MAX_POSTS = 25;
 
 export const load: PageServerLoad = async () => {  // {url}
     const modules = import.meta.glob(`/src/docs/*/**/*.{md,svx,svelte.md}`);

@@ -20,26 +20,27 @@
 			<div class="space-y-8 p-8 text-justify text-lg lg:text-xl w-full">
 				<div class="my-4 text-center text-4xl font-bold text-cat-overlay0 lg:text-3xl w-full">pls' blog</div>
 				<div class=" my-4 text-sm w-full text-cat-overlay0 md:text-xl flex">
-                        <div class="w-full flex  justify-between">
-					<div class="text-start text-lg md:text-xl">recent posts:</div>
+                        <div class="mt-6 w-1/3 flex text-center mx-auto justify-between">
+					<div class="text-start text-lg md:text-xl">recent posts&nbsp;</div>
+<div>	| </div>
 					<div class="text-end">
-						<a
+					<a
 							href="/writeups"
-							class="italic my-4 text-end text-base text-cat-surface0 md:text-xl hover:text-cat-peach/50 transition-all duration-200 ease-out"
-							><span>view all</span> <PhArrowRight class="inline-flex" /></a
+							class="italic my-4 text-base text-cat-surface0 md:text-xl hover:text-cat-peach/50 transition-all duration-200 ease-out"
+							><span> view all</span> <PhArrowRight class="inline-flex" /></a
 						>
 					</div>
                 </div>
 				</div>
 				<div>
 					<div
-						class="mx-auto flex flex-col px-4 text-sm sm:text-xl lg:space-y-0 lg:p-8 2xl:grid 2xl:grid-cols-3 pt-2 pb-6 max-w-[1300px]"
+						class="mx-auto flex flex-col px-4 text-sm sm:text-xl lg:space-y-0 lg:p-8 pt-2 pb-6 max-w-[1300px]"
 					>
-						{#each data.posts as { slug, title, author, description, date }}
+						{#each data.posts as { slug, title, author, tags, description, date }}
 							<div class="lg:mx-2 my-0 overflow-hidden">
 								<Article {slug}>
 									<ArticleTitle {slug} {title} />
-									<ArticleMeta {author} {date} />
+									<ArticleMeta {author} {date} {tags} />
 									<ArticleDescription {description} />
 								</Article>
 							</div>
