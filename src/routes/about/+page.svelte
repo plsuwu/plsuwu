@@ -44,11 +44,11 @@
         >
 
         <div class="mb-4">
-            cybersecurity vagueposts (<span class="italic text-cat-overlay0">work in progress</span>).
+            cybersecurity vagueposts.
         </div>
 
-        <div class="mb-8">
-            not good at ui.
+        <div class="mb-8 italic text-cat-overlay0">
+            (sorry about the ui)
         </div>
         <div>
         <span>

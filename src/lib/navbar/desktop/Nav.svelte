@@ -28,10 +28,11 @@
 			document.addEventListener('click', handleClickOutside);
 		}
 	});
+    // don't think we realistically ever trigger this
 	onDestroy(() => {
 		if (typeof window !== 'undefined') {
 			document.removeEventListener('click', handleClickOutside);
-		}
+        }
 	});
 </script>
 

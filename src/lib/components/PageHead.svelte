@@ -18,8 +18,5 @@
 
 <svelte:head>
 	<title>{title}</title>
-	<style>
-		@import url('/styles/prism-catppuccin.css');
-	</style>
 	<meta property="og:title" content={title} />
 </svelte:head>
