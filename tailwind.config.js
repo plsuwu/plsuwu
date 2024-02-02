@@ -13,54 +13,6 @@ export default {
         },
         typography: {
             DEFAULT: {
-                h1: {
-                    "margin": "1rem auto",
-                    "text-align": "left",
-                    "font-size": "3rem",
-                    "font-weight": "900",
-                    "padding": "6px",
-                    "padding-bottom": "0px",
-                    "border-bottom": "4px solid #6c7086",
-                    "margin-bottom": "3rem",
-                    //"max-width": "fit-content",
-                    "line-height": "3rem",
-                    '@media (min-width: 1024px)': {
-                        "margin-bottom": "5rem"
-                    },
-                },
-                h2: {
-                    "font-size": "1.75em",
-                    "font-weight": "800",
-                    "margin": "2rem 0",
-                    //"padding-bottom": "4px",
-                    "border-bottom": "3px solid #6c7086",
-                    "max-width": "fit-content"
-
-                },
-                h3: {
-                    "font-size": "1.5em",
-                    "font-weight": "700",
-                    "border-bottom": "2.5px solid #6c7086",
-                    "max-width": "fit-content"
-                },
-                h4: {
-                    "font-size": "1.4em",
-                    "font-weight": "700",
-                    "color": "#6c7086",
-                    "border-bottom": "1px solid #313244",
-                    "max-width": "fit-content"
-                },
-                h5: {
-                    "font-size": "1.3em",
-                    "font-weight": "600",
-                    "color": "#6c7086"
-                },
-                h6: {
-                    "font-size": "1.25em",
-                    "font-weight": "600",
-                    "color": "#6c7086",
-                    "font-style": "italic"
-                },
                 css: {
                     "p:not(:last-child)": {
                         "text-align": "left",
@@ -90,6 +42,55 @@ export default {
                         "border-left": "4px solid #9399b2",
                         'font-style': 'italic',
                     },
+                    h1: {
+                        "margin": "1rem auto",
+                        "text-align": "left",
+                        "font-size": "3rem",
+                        "font-weight": "900",
+                        "padding": "6px",
+                        "padding-bottom": "0px",
+                        "border-bottom": "4px solid #6c7086",
+                        "margin-bottom": "3rem",
+                        //"max-width": "fit-content",
+                        "line-height": "3rem",
+                        '@media (min-width: 1024px)': {
+                            "margin-bottom": "5rem"
+                        },
+                    },
+                    h2: {
+                        "font-size": "1.75em",
+                        "font-weight": "800",
+                        "margin": "2rem 0",
+                        //"padding-bottom": "4px",
+                        "border-bottom": "3px solid #6c7086",
+                        "max-width": "fit-content"
+
+                    },
+                    h3: {
+                        "font-size": "1.5em",
+                        "font-weight": "700",
+                        "border-bottom": "2.5px solid #6c7086",
+                        "max-width": "fit-content"
+                    },
+                    h4: {
+                        "font-size": "1.4em",
+                        "font-weight": "700",
+                        "color": "#6c7086",
+                        "border-bottom": "1px solid #313244",
+                        "max-width": "fit-content"
+                    },
+                    h5: {
+                        "font-size": "1.3em",
+                        "font-weight": "600",
+                        "color": "#6c7086"
+                    },
+                    h6: {
+                        "font-size": "1.25em",
+                        "font-weight": "600",
+                        "color": "#6c7086",
+                        "font-style": "italic"
+                    },
+
                 }
             }
         }
