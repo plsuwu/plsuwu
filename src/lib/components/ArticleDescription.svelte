@@ -8,8 +8,8 @@
 </script>
 
 <p class="sm:p-4 p-2 pl-1 pb-0">
-	<span class="my-1 text-cat-subtext0 italic text-start">
-    <div class="mb-1 text-cat-overlay0">description: </div>
+	<span class="my-1  italic text-start">
+    <div class="mb-1 ">description: </div>
 		<span class="text-lg">&ldquo;</span>{truncate(description, 64)}<span class="text-lg"
 			>&rdquo;</span
 		></span

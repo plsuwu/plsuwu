@@ -31,16 +31,8 @@
 </script>
 
 <div class="mt-14 w-full flex-col lg:mt-0">
-    <div class="w-full self-center bg-cat-mantle pb-6">
-        <div class="text-center font-bold text-cat-text">
             <div
-                class="py-8 text-center text-3xl font-bold text-cat-overlay0 lg:text-3xl"
-            >
-                about
-            </div>
-        </div>
-        <div
-            class="mx-auto w-full rounded-xl bg-cat-crust text-cat-text lg:max-w-[66%] text-center py-24"
+            class="mx-auto w-full rounded-xl  lg:max-w-[66%] text-center py-24"
         >
 
         <div class="mb-4">
@@ -53,7 +45,7 @@
         <div>
         <span>
             <a
-                class="text-cat-blue transition-all duration-200 ease-out visited:text-cat-mauve hover:opacity-50"
+                class="text-lightpink transition-all duration-200 ease-out hover:brightness-75"
                 href="https://github.com/plsuwu"
             >
                 <PhGithubLogo class="inline-flex" />
@@ -62,4 +54,4 @@
             </div>
         </div>
     </div>
-</div>
+

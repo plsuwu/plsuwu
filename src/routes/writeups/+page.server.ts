@@ -23,6 +23,8 @@ export const load: PageServerLoad = async () => {  // {url}
         const post = await Promise.all(postPromises);
         const publishedPost = post.filter((post) => post.published);
         setCache(publishedPost);
+
+        postArray = publishedPost;
     }
 
     // publishedPost.sort((a, b) => (new Date(a.date) > new Date(b.date) ? -1 : 1));

@@ -6,44 +6,79 @@ export default {
             fontFamily: {
                 "uf-mono": ['Unifont'],
                 "inter": ['Inter']
+            },
+            colors: {
+                "lightpink": "#f0bbda",
             }
         },
         typography: {
             DEFAULT: {
+                h1: {
+                    "margin": "1rem auto",
+                    "text-align": "left",
+                    "font-size": "3rem",
+                    "font-weight": "900",
+                    "padding": "6px",
+                    "padding-bottom": "0px",
+                    "border-bottom": "4px solid #6c7086",
+                    "margin-bottom": "3rem",
+                    //"max-width": "fit-content",
+                    "line-height": "3rem",
+                    '@media (min-width: 1024px)': {
+                        "margin-bottom": "5rem"
+                    },
+                },
+                h2: {
+                    "font-size": "1.75em",
+                    "font-weight": "800",
+                    "margin": "2rem 0",
+                    //"padding-bottom": "4px",
+                    "border-bottom": "3px solid #6c7086",
+                    "max-width": "fit-content"
+
+                },
+                h3: {
+                    "font-size": "1.5em",
+                    "font-weight": "700",
+                    "border-bottom": "2.5px solid #6c7086",
+                    "max-width": "fit-content"
+                },
+                h4: {
+                    "font-size": "1.4em",
+                    "font-weight": "700",
+                    "color": "#6c7086",
+                    "border-bottom": "1px solid #313244",
+                    "max-width": "fit-content"
+                },
+                h5: {
+                    "font-size": "1.3em",
+                    "font-weight": "600",
+                    "color": "#6c7086"
+                },
+                h6: {
+                    "font-size": "1.25em",
+                    "font-weight": "600",
+                    "color": "#6c7086",
+                    "font-style": "italic"
+                },
                 css: {
                     "p:not(:last-child)": {
                         "text-align": "left",
-                        "margin": "0.25rem 1rem",
-                        "margin-top": "2rem",
+                        "margin": "1rem",
                         "font-size": "1rem",
-                        "line-height": "1.75rem",
+                        "line-height": "1rem",
                     },
-
-                    // note -- cascade order for a elem (top to bottom) -> `a:link` & `a:visted` > `a:hover` > `a:active`
-                    a: {
-                        color: "#89b4fa",
-                        "text-decoration-line": "underline",
-                        "transition": "opacity 200ms ease-out"
-                    },
-                    "a:visited": {
-                        color: "#cba6f7",
-                    },
-                    "a:hover": {
-                        opacity: "0.5"
-                    },
-
-                    // <aside/> is used as a 'side comment';
-                    // <blockquote/> is used to caption e.g an image.
                     aside: {
-                        color: "#cdd6f4",
+                        color: "#cdb2d5",
                         "text-align": "left",
-                        "background-color": "#1e1e2e",
-                        "border-left": "4px solid #fab387",
+                        // "background-color": "gray",
+                        "border-left": "4px solid #c872e8",
                         "padding": "1.5rem",
                         "padding-left": "2rem",
-                        "font-size": "1.1rem",
-                        "font-weight": "600"
-                        //'font-style': 'italic',
+                        "font-size": "1rem",
+                        "font-weight": "400",
+                        'font-style': 'italic',
+                        'margin': '2rem 0'
                     },
                     "blockquote p:last-child": {
                         "text-align": "left",
@@ -55,83 +90,10 @@ export default {
                         "border-left": "4px solid #9399b2",
                         'font-style': 'italic',
                     },
-                    "code": {
-                        "background-color": "#1e1e2e",
-                        "padding": "4px",
-                        "border-radius": "10px",
-                        "font-size": "0.75rem",
-                        "line-height": "1rem",
-                        '@media (min-width: 1024px)': {
-                            "font-size": "0.875rem",
-                            "line-height": "1.25rem",
-                        },
-                    },
-                    ul: {
-                        "list-style": "disc inside",
-                        "padding-left": "2rem",
-                        "text-align": "left",
-                        "line-height": "1.75rem"
-                    },
-                    ol: {
-                        "list-style": "numbers inside",
-                        "padding-left": "2rem",
-                        "text-align": "left",
-                        "line-height": "1.75rem"
-
-                    },
-                    h1: {
-                        "margin": "1rem auto",
-                        "text-align": "left",
-                        "font-size": "3rem",
-                        "font-weight": "900",
-                        "padding": "6px",
-                        "padding-bottom": "0px",
-                        "border-bottom": "4px solid #6c7086",
-                        "margin-bottom": "3rem",
-                        //"max-width": "fit-content",
-                        "line-height": "3rem",
-                        '@media (min-width: 1024px)': {
-                            "margin-bottom": "5rem"
-                        },
-                    },
-                    h2: {
-                        "font-size": "1.75em",
-                        "font-weight": "800",
-                        "margin": "2rem 0",
-                        //"padding-bottom": "4px",
-                        "border-bottom": "3px solid #6c7086",
-                        "max-width": "fit-content"
-
-                    },
-                    h3: {
-                        "font-size": "1.5em",
-                        "font-weight": "700",
-                        "border-bottom": "2.5px solid #6c7086",
-                        "max-width": "fit-content"
-                    },
-                    h4: {
-                        "font-size": "1.4em",
-                        "font-weight": "700",
-                        "color": "#6c7086",
-                        "border-bottom": "1px solid #313244",
-                        "max-width": "fit-content"
-                    },
-                    h5: {
-                        "font-size": "1.3em",
-                        "font-weight": "600",
-                        "color": "#6c7086"
-                    },
-                    h6: {
-                        "font-size": "1.25em",
-                        "font-weight": "600",
-                        "color": "#6c7086",
-                        "font-style": "italic"
-                    }
-
-
                 }
             }
         }
+
     },
     plugins: [
         require("@catppuccin/tailwindcss")({

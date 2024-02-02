@@ -12,10 +12,10 @@
 <PageHead />
 
 <div class="m-0 flex min-h-screen flex-col">
-    <div class="mt-3 text-center font-bold text-cat-text lg:mt-5">
+    <div class="mt-3 text-center font-bold lg:mt-5">
         <BanOne />
     </div>
-    <div class="hidden lg:block">
+    <div class="lg:block">
         <Nav />
     </div>
 
