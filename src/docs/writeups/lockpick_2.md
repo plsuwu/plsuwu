@@ -15,7 +15,7 @@ Once again a they've managed to encrypt a large set of our files. It is our poli
 Please recover the files they have encrypted - we have no other option! Unfortunately our CEO is on a no-tech retreat so can't be reached.
 </aside>
 
-Similar to [the first Lockpick challenge](/writeups/lockpick), this challenge hands us an ELF binary with the same general context of "decrypt these files using a ransomware binary".
+Similar to [the first Lockpick challenge](/writeups/lockpick), this challenge hands us an ELF binary with the same general context of "decrypt these files with information from this ransomware binary".
 
 ## Tasks
 
@@ -35,7 +35,13 @@ As this challenge's binary is a little more complex and the questions are a litt
 ## Basic analysis
 
 I want to start by just running it to see what happens, so I will copy it onto a Kali box which *should* have a few pre-installed tools to do some network/system analysis when we detonate. While we are told that the
-binary is packed, the very small size of `.zip` archive itself, the content of the IDA disassembly, and even some basic output from `strings` or `objdump` would be giveaways.
+binary is packed, other aspects such as
+- the very small size of `.zip` archive itself,
+- the content of the IDA disassembly,
+- even just some basic output from `strings` or `objdump`,
+
+Would be giveaways as to a packed binary.
+
 Here, the output from `strings` indicates that the binary is packed with UPX (which is the answer for task 8). I’m going to detonate it with `Wireshark` monitoring the traffic (over an internal VM network with `inetsim`),
 and then I want to unpack it and load into IDA.
 
@@ -174,4 +180,5 @@ which both use different line separator encodings. Ultimately, following Word’
 
 From these decrypted documents, we can get the answer for tasks 2 and 3 (the answers being `Australian Market` and `Notionwide` respectively).
 
-For the final remaining flasg (the BTC wallet and ransom amount), we can just pull this directly from the ransom note; `1BvBMSEYstWetqTFn5Au4m4GFg7xJaNVN2` for the wallet address, and `£1000000` (a million pounds) for the amount.
+For the final remaining flags (the BTC wallet and ransom amount), we can just pull this directly from the ransom note; `1BvBMSEYstWetqTFn5Au4m4GFg7xJaNVN2` for the wallet address,
+and `£1000000` (a million pounds) for the amount.
