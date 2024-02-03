@@ -53,7 +53,7 @@
 {#if sidebarOpen}
     <div class="w-screen">
         <div
-            class="fixed min-h-screen max-h-screen bg-black/25 shadow-xl sidebar"
+            class="fixed min-h-screen max-h-screen bg-white/75 shadow-xl sidebar"
             in:slide={{ delay: 0, duration: 350, easing: sineInOut, axis: "x" }}
             out:slide={{
                 delay: 0,
@@ -93,7 +93,7 @@
                                     </button>
                                     {#if openDropdown === page.name}
                                         <div
-                                            class={`my-4 -ml-8 absolute  min-w-[14rem] shadow-xl px-2 z-10 rounded-xl border
+                                            class={`my-4 -ml-8 absolute bg-white/90 min-w-[14rem] shadow-xl px-2 z-10 rounded-xl border
                                 ${
                                     openDropdown === page.name
                                         ? "block"
