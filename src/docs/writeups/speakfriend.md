@@ -4,13 +4,13 @@ description: "It seems like this website was compromised. We found this file tha
 author: "huntress"
 date: "2023-10-21"
 published: true
-tags: ["capture the flag", "forensics", "huntress", "reversing", "web", "networks"]
+tags: ["capture the flag", "huntress", "forensics", "reversing", "web", "networks"]
 ---
 
 # Speakfriend
 
 <aside>
-    <strong>Description</strong>: It seems like this website was compromised. We found this file that seems to be related... can you make any sense of these and uncover a flag?
+It seems like this website was compromised. We found this file that seems to be related... can you make any sense of these and uncover a flag?
 </aside>
 
 We are given a `main.7z` archive alongside a containerized webserver instance, though I suspect there is nothing surface-level to see here - a cursory glance through the source and various pages indicates that this assumption is *probably* correct.

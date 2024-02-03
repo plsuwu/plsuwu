@@ -10,7 +10,7 @@ tags: ["capture the flag", "tryhackme", "web", "networks"]
 # Mr. Robot
 
 <aside>
-<strong>Description</strong>: Based on the Mr. Robot show, can you root this box?
+Based on the Mr. Robot show, can you root this box?
 </aside>
 
 ## Recon

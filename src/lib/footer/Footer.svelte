@@ -10,14 +10,15 @@
 	}
 </script>
 
-<footer class="mt-6 w-full bottom-0 bg-cat-mantle/50 text-base">
+<footer class="mt-6 w-full bottom-0  text-base">
 	<div class="flex flex-row items-center justify-between">
 		<div class="mx-12 p-2 text-xs">uwu</div>
-		<div class="inline-flex space-x-4 text-cat-subtext0 italic justify-end mx-12 p-2">
+		<div class="inline-flex space-x-4  italic justify-end mx-12 p-2">
 			{#each footer as link}
 				<ul>
-					<li class="hover:text-cat-peach transition-all duration-300 ease-in-out">
+					<li class=" transition-all duration-300 ease-in-out">
 						<a href={link.href} target="_blank">
+                            <!-- unsure how to type this.  -->
 							{#await loadIcon(link.getIcon)}
 								<p>{link.placeholder}</p>
 							{:then IconComponent}

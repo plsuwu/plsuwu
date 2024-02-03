@@ -10,7 +10,7 @@ tags: ["capture the flag", "hackthebox", "web", "networks"]
 # Cozyhosting
 
 <aside>
-A very simple HTB seasonal.
+Writeup for this very simple boot-to-root HTB seasonal.
 </aside>
 
 ## Recon
