@@ -56,12 +56,9 @@ export default {
                         "padding": "2px 4px",
                         'font-style': 'italic',
                         "border-radius": "10px",
-                        "font-size": "0.5rem",
-                        "line-height": "1rem",
-                        '@media (min-width: 1024px)': {
-                            "font-size": "0.875rem",
-                            "line-height": "1.25rem",
-                        },
+                        "font-size": "0.875rem",
+                        "line-height": "1.25rem",
+
                     },
                     ul: {
                         "list-style": "disc inside",

@@ -29,9 +29,9 @@
                     <div class="">
                         <a
                             href="/writeups"
-                            class="text-xl text-lightpink hover:brightness-75 transition-all italic duration-300 ease-in-out space-x-4"
+                            class="text-sm sm:text-base text-lightpink hover:brightness-75 transition-all italic duration-300 ease-in-out space-x-4"
                             ><PhArrowLeft class="inline" /><span
-                                class="font-normal underline text-base"
+                                class="font-normal underline"
                                 >back to writeups</span
                             ></a
                         >

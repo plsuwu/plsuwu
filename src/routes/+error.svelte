@@ -12,4 +12,8 @@
         </div>
     </div>
 </div>
-<div class="w-full flex flex-col text-center mx-auto my-20">[FOOTER STUFF IDFKDDK]</div>
+<div class="w-full flex flex-col text-center mx-auto my-20">
+
+{"<"}- back to home --
+
+</div>
