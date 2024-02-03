@@ -13,7 +13,10 @@
     </div>
 </div>
 <div class="w-full flex flex-col text-center mx-auto my-20">
-
-{"<"}- back to home --
-
+    <a
+        class="group hover:text-lightpink transition-colors duration-300 ease-out"
+        href="/"
+    >
+        {"<"}- return to homepage --
+    </a>
 </div>
