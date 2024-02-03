@@ -21,9 +21,9 @@ export default {
                         "line-height": "1rem",
                     },
                     aside: {
-                        color: "#cdb2d5",
+                        color: "#451f7c",
                         "text-align": "left",
-                        // "background-color": "gray",
+                        "background-color": "#f6d1e7",
                         "border-left": "4px solid #c872e8",
                         "padding": "1.5rem",
                         "padding-left": "2rem",
@@ -33,28 +33,67 @@ export default {
                         'margin': '2rem 0'
                     },
                     "blockquote p:last-child": {
-                        "text-align": "left",
-                        "padding": "4px",
+                        "margin-left": "1.25em",
+                        "max-width": "fit-content",
+                        "padding": "0.5em",
+                        "padding-right": "1.7rem",
                         "padding-left": "1.5rem",
                         "margin-bottom": "2rem",
-                        color: "#9399b2",
-                        "background-color": "#1e1e2e",
-                        "border-left": "4px solid #9399b2",
+                        color: "#cc9da5",
+                        "background-color": "#eef3fa",
+                        "border-left": "4px solid #d99cc1",
                         'font-style': 'italic',
                     },
-                    h1: {
-                        "margin": "1rem auto",
+                    img: {
+                        "padding": "1px",
+                        "margin-bottom": "0",
+                        "border": "3px solid #d99cc1",
+                        "border-radius": "10px"
+                    },
+                    "code": {
+                        "background-color": "",
+                        color: "#884461",
+                        "padding": "2px 4px",
+                        'font-style': 'italic',
+                        "border-radius": "10px",
+                        "font-size": "0.5rem",
+                        "line-height": "1rem",
+                        '@media (min-width: 1024px)': {
+                            "font-size": "0.875rem",
+                            "line-height": "1.25rem",
+                        },
+                    },
+                    ul: {
+                        "list-style": "disc inside",
+                        "padding-left": "2rem",
                         "text-align": "left",
-                        "font-size": "3rem",
+                        "line-height": "1.75rem"
+                    },
+                    ol: {
+                        "list-style": "numbers inside",
+                        "padding-left": "2rem",
+                        "text-align": "left",
+                        "line-height": "1.75rem"
+
+                    },
+                    a: {
+                        "text-decoration": "underline",
+                        "font-style": "italic",
+                        "color": "#f0bbda"
+                    },
+                    h1: {
+                        "margin-top": "2rem",
+                        "text-align": "left",
+                        "font-size": "2.5rem",
                         "font-weight": "900",
                         "padding": "6px",
                         "padding-bottom": "0px",
                         "border-bottom": "4px solid #6c7086",
                         "margin-bottom": "3rem",
-                        //"max-width": "fit-content",
-                        "line-height": "3rem",
+                        "max-width": "fit-content",
+                        "line-height": "2rem",
                         '@media (min-width: 1024px)': {
-                            "margin-bottom": "5rem"
+                            "margin-bottom": "2rem"
                         },
                     },
                     h2: {

@@ -4,7 +4,7 @@ import type { BlogPost } from '$lib/types';
 let cache: (BlogPost[] | null);
 
 export function setCache(data: BlogPost[]) {
-    console.log(data);
+    //console.log(data);
     cache = data;
 }
 export function getCache() {

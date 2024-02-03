@@ -2,7 +2,7 @@
 title: "Lockpick 2"
 description: "We've been hit by Ransomware again, but this time the threat actor seems to have upped their skillset."
 author: "hackthebox"
-date: "2024-01-31"
+date: "2024-02-03"
 published: true
 tags: ["capture the flag", "hackthebox", "reversing", "malware", "forensics"]
 ---
@@ -15,14 +15,29 @@ Once again a they've managed to encrypt a large set of our files. It is our poli
 Please recover the files they have encrypted - we have no other option! Unfortunately our CEO is on a no-tech retreat so can't be reached.
 </aside>
 
-Similar to Lockpick 1, this challenge hands us an ELF binary with the same general pretext of decrypting files locked away by ransomware.
+Similar to [the first Lockpick challenge](/writeups/lockpick), this challenge hands us an ELF binary with the same general context of "decrypt these files using a ransomware binary".
 
-(there's also some other fingerprinting stuff I but thats like the big ticket challenge).
+## Tasks
+
+Our tasks for this challenge are as follows:
+
+1. What type of encryption has been utilised to encrypt the files provided?
+2. Which market is our CEO planning on expanding into? (Please answer with the wording utilised in the PDF)
+3. Please confirm the name of the bank our CEO would like to takeover?
+4. What is the file name of the key utlised by the attacker?
+5. What is the file hash of the key utilised by the attacker?
+6. What is the BTC wallet address the TA is asking for payment to?
+7. How much is the TA asking for?
+8. What was used to pack the malware?
+
+As this challenge's binary is a little more complex and the questions are a little more disordered, I'll go through the steps for analysis rather than per task as in the first Lockpick.
 
 ## Basic analysis
 
-I want to start by just running it to see what happens, so I will copy it onto a Kali box which *should* have a few pre-installed tools to do some network/system analysis when we detonate. When I downloaded the `.zip` archive,
-I noticed the tiny tiny filesize, and going through the `strings` output was indicated a UPX-packed binary. I’m going to detonate it with `Wireshark` monitoring the traffic (over an internal VM network with `inetsim`), and then I want to try unpacking.
+I want to start by just running it to see what happens, so I will copy it onto a Kali box which *should* have a few pre-installed tools to do some network/system analysis when we detonate. While we are told that the
+binary is packed, the very small size of `.zip` archive itself, the content of the IDA disassembly, and even some basic output from `strings` or `objdump` would be giveaways.
+Here, the output from `strings` indicates that the binary is packed with UPX (which is the answer for task 8). I’m going to detonate it with `Wireshark` monitoring the traffic (over an internal VM network with `inetsim`),
+and then I want to unpack it and load into IDA.
 
 ![Untitled](/img/lockpick_2_img/Untitled.png)
 
@@ -36,12 +51,12 @@ Wireshark indicates the binary reaches out to an endpoint, seemingly via `curl` 
 
 This binary is starting to seem a bit suspicious...
 
-It’s not exactly obvious what is going on. I will come back to those URLs if necessary - the binary isn’t actually receiving any usable data on account of  `inetsim`,
-so I feel like this is just printing some random URLs and telling us that it’s successfully updated or something, while doing its funny business in the background.
+To me, it’s not exactly obvious what is going on from this or the Wireshark output alone. I will come back to those URLs if necessary - the binary isn’t actually receiving any usable data on account of  `inetsim`,
+so I feel like this is just printing some junk URLs and doing funny malware stuff in the background.
 
 ## Digging a little deeper
 
-Let’s unpack it and run it through IDA.
+Unpacking it and running it through IDA now...
 
 ![Untitled](/img/lockpick_2_img/Untitled%203.png)
 
@@ -49,7 +64,7 @@ Let’s unpack it and run it through IDA.
 
 > *from ~10K to ~24K*
 
-With the binary now inflated, we get a much better look at it’s internals. In the symbol table here, we can note that the binary is (likely) using AES to encrypt the files:
+With the program decompressed, we can take a much better look at it’s internals. In the symbol table, we can note that the binary is most likely using AES to encrypt the files (with AES being the answer for Task 1):
 
 ![Untitled](/img/lockpick_2_img/Untitled%205.png)
 
@@ -65,7 +80,7 @@ In the read-only data section, there are a few interesting constants (given the 
 
 > *`xyzf3jv6x13d7w5e.onion` looks too short to be a valid onion URL so I’m ignoring it.*
 
-## get_key_from_url / xor_cipher functions
+## get_key_from_url & xor_cipher functions
 
 After a bit of digging to try to find out how the binary is encrypting files, my general interpretation of the relevant program flow is as follows:
 
@@ -87,7 +102,7 @@ As the function name indicates an XOR cipher, we can perform some manual decrypt
 
 > *`https://rb.gy/ehec6` is similar enough to the `Https://rb.gy/ehec` in the manual decryption.*
 
-Trying to navigate to this URL gives a `301` status response, and redirects to Google:
+Noting that it may be best to do some general opsec before blindly opening sites referenced in malware IRL, the service returns a `301` status, redirecting us to Google
 
 ![Untitled](/img/lockpick_2_img/Untitled%2011.png)
 
@@ -95,7 +110,9 @@ However, the domain seems to belong to a URL shortening service, so maybe the ot
 
 ![Untitled](/img/lockpick_2_img/Untitled%2012.png)
 
-No, they don’t.
+Unfortunately, they don’t.
+
+## Finding the decryption key
 
 None of the URLs directly printed to `stdout` lead to anything interesting - just pointless redirections to Google/Yahoo/similar websites.
 
@@ -114,7 +131,7 @@ Taking another step, we can see the following (previously unseen) URL as the res
 
 ![Untitled](/img/lockpick_2_img/Untitled%2014.png)
 
-Navigating to that URL, a tiny 48-byte payload is dropped:
+Navigating to that URL, a tiny 48-byte payload is dropped (Task 4 is this file's name, and Task 5 requires us to run `md5sum` on it):
 
 ![Untitled](/img/lockpick_2_img/Untitled%2015.png)
 
@@ -148,11 +165,13 @@ I try this again against the `takeover.docx` file, where Word automatically perf
 
 ![Untitled](/img/lockpick_2_img/Untitled%2021.png)
 
-Not exactly sure what is wrong here - my guess is that there is possibly something off with the `CR`/`LF` encoding given how close I was; my VM host here is running on a Windows machine whereas the victim runs Linux, which both use different line separator encodings.
-Ultimately, following Word’s example, we can get a perfectly functional PDF document after running it through an online PDF repair service:
+Not exactly sure what is wrong here - my guess is that there is possibly something off with the `CR`/`LF` encoding given how close I was; my VM host here is running on a Windows machine whereas the victim runs Linux,
+which both use different line separator encodings. Ultimately, following Word’s example, we can get a perfectly functional PDF document after running it through an online PDF repair service:
 
 ![Untitled](/img/lockpick_2_img/Untitled%2022.png)
 
 ![Untitled](/img/lockpick_2_img/Untitled%2023.png)
 
-For the final flags, we need the `MD5` hash of the `updater` payload/the key, and then also some garbage that we can copy/paste from the ransom note.
+From these decrypted documents, we can get the answer for tasks 2 and 3 (the answers being `Australian Market` and `Notionwide` respectively).
+
+For the final remaining flasg (the BTC wallet and ransom amount), we can just pull this directly from the ransom note; `1BvBMSEYstWetqTFn5Au4m4GFg7xJaNVN2` for the wallet address, and `£1000000` (a million pounds) for the amount.

@@ -13,7 +13,6 @@
         <Article {slug}>
             <ArticleTitle {slug} {title} />
             <ArticleMeta {date} {author} {tags} />
-
             <ArticleDescription {description} />
         </Article>
     </div>

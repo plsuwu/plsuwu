@@ -5,7 +5,8 @@ import type { MdsvexFile, BlogPost } from '$lib/types';
 import { setCache, getCache } from '$lib/cache';
 
 /*
-* stores posts in a serverside cache instead of globbing for posts on each page load
+* stores posts in a serverside cache instead of globbing directory for posts on each page load
+*
 *  --> i dont actually think this is more efficient and at this point it feels like its
 *       better to just do SQL queries.
 */
@@ -14,7 +15,7 @@ export const load: PageServerLoad = async () => {  // {url}
     let postArray = getCache();
 
     if (!postArray) {
-        const modules = import.meta.glob(`/src/docs/*/**/*.{md,svx,svelte.md}`);
+        const modules = import.meta.glob(`/src/docs/writeups/**/*.{md,svx,svelte.md}`);
         const postPromises = Object.entries(modules).map(([path, resolver]) =>
             resolver().then(
                 (post) =>

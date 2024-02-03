@@ -1,5 +1,5 @@
 <div
-    class="flex flex-col whitespace-nowrap items-center self-center -z-50 font-mono text-[10px] text-center leading-[9px] tracking-tighter"
+    class="flex flex-col whitespace-nowrap items-center self-center -z-50 font-mono text-[8px] text-center leading-[7px] tracking-tighter"
 >
     <div class="lg:block font-mono text-left">
         <pre>

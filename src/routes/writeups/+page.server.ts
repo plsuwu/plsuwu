@@ -9,7 +9,7 @@ export const load: PageServerLoad = async () => {  // {url}
     let postArray = getCache();
 
     if (!postArray) {
-        const modules = import.meta.glob(`/src/docs/*/**/*.{md,svx,svelte.md}`);
+        const modules = import.meta.glob(`/src/docs/writeups/**/*.{md,svx,svelte.md}`);
         const postPromises = Object.entries(modules).map(([path, resolver]) =>
             resolver().then(
                 (post) =>

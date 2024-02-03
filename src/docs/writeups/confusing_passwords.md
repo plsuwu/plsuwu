@@ -9,10 +9,8 @@ tags: ["capture the flag", "0x0539", "web"]
 
 # Confusing Passwords
 
-> [challenge page available @ 0x539.net](https://0x0539.net/play/minas_tirith/confusing_passwords)
-
 <aside>
-<strong>Description</strong>: This login system will give you the flag... as long as you can prove you're an admin!
+This login system will give you the flag... as long as you can prove you're an admin!
 </aside>
 
 ## overview
