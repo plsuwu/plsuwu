@@ -6,20 +6,32 @@
     import Footer from "$lib/footer/Footer.svelte";
     import { page } from "$app/stores";
     import PageHead from "$lib/components/PageHead.svelte";
-    import BanOne from "$lib/banner/BanOne.svelte";
+
+    import Yae from "$lib/banner/Yae.svelte";
+    import Camila from "$lib/banner/Camila.svelte";
+    import Makoto from "$lib/banner/Makoto.svelte";
+
+    const bannerList = [Yae, Camila, Makoto]
+
+    const rng: number = Math.floor(Math.random() * bannerList.length);
+    let randComponent = bannerList[rng]
+
+
+
+
 </script>
 
 <PageHead />
 
 <div class="m-0 flex min-h-screen flex-col">
-    <div class="mt-3 text-center font-bold lg:mt-5">
-        <BanOne />
+    <div class="hidden sm:block mt-3 text-center font-bold lg:mt-5">
+        <svelte:component this={randComponent} />
     </div>
-    <div class="lg:block">
+    <div class="hidden sm:block">
         <Nav />
     </div>
 
-    <div class="fixed lg:hidden">
+    <div class="fixed sm:hidden">
         <SmNav />
     </div>
 
