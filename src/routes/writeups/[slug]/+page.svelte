@@ -14,7 +14,7 @@
     $: component = data.component as unknown as C;
 
     let imgs: NodeListOf<HTMLImageElement>;
-    export let imageSrc = "/testImage.jpg";
+    export let imageSrc = "#";
 
     export function toggleModal(e: Event, src: string) {
         e.stopPropagation();
