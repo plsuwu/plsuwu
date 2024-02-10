@@ -4,26 +4,36 @@
     import PostsFromArray from "$lib/components/PostsFromArray.svelte";
     import { postTags } from "$lib/cache";
 
-    const sortOptions = ["newest first", "oldest first"];
+    const sortOptions = ["new -> old", "old -> new", "a-z"];
 
     export let data: PageData;
     let filterParams = "all";
-    let sortBy = "newest first";
-
+    let sortBy = sortOptions[0];
     $: sortedPosts = sortPosts(sortBy);
 
     function sortPosts(sort: string) {
         let sorted: BlogPost[];
 
+        // new to old
         if (sort === sortOptions[0]) {
             sorted = data.posts.sort((a, b) =>
                 new Date(a.date) > new Date(b.date) ? -1 : 1,
             );
             return filterPosts(sorted, filterParams);
-        } else {
+        }
+
+        // old to new
+        if (sort === sortOptions[1]) {
             sorted = data.posts.sort((a, b) =>
                 new Date(a.date) < new Date(b.date) ? -1 : 1,
             );
+            return filterPosts(sorted, filterParams);
+        }
+
+        // a-z
+        if (sort === sortOptions[2]) {
+            sorted = data.posts.sort((a, b) => (a.title < b.title ? -1 : 1));
+
             return filterPosts(sorted, filterParams);
         }
     }
@@ -71,12 +81,12 @@
             <div
                 class="flex flex-col px-4 text-sm sm:text-lg lg:space-y-0 lg:p-8 pt-2 pb-6 xl:min-w-[1300px] xl:max-w-[1300px]"
             >
-                <div class="grid grid-cols-3 text-center mb-4">
+                <div class="grid grid-rows-3 text-left text-xs mb-2">
                     <div>
                         <label for="sortSelect">sorting: </label>
                         <select
                             id="sortSelect"
-                            class="p-2 rounded-xl"
+                            class="p-1 rounded-xl"
                             bind:value={sortBy}
                             on:load={() => sortPosts(sortBy)}
                             on:change={() => sortPosts(sortBy)}
@@ -93,15 +103,18 @@
                         <label for="filterSelect">tag: </label>
                         <select
                             id="filterSelect"
-                            class="p-2 rounded-xl"
+                            class="p-1 rounded-xl"
                             bind:value={filterParams}
                             on:load={() => setFilter(filterParams)}
                             on:change={() => setFilter(filterParams)}
                         >
                             <option value={"all"}> all posts </option>
                             {#each postTags as option}
-                                <option value={option}>
-                                    {option}
+                                <option
+                                    value={option.name}
+                                    class={`${option.color}`}
+                                >
+                                    {option.name}
                                 </option>
                             {/each}
                         </select>

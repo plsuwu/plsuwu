@@ -2,8 +2,9 @@
 title: 'test'
 description: 'this is literally a TEST POST PLEASE im begging do not look'
 author: 'pls'
-date: '2023-12-14'
-published: false
+date: '2000-12-14'
+published: true
+tags: []
 ---
 
 [a link to somewhere](https://www.google.com.au)

@@ -16,7 +16,7 @@ We are refusing to pay the attackers and need you to find a way to recover the f
 
 > Worked through this on a virtual machine that was set up very quickly, so excuse any VS C*de.
 
-# Tasks
+## Tasks
 
 The challenge indicates the following tasks (which are essentially our flags) to complete:
 
@@ -34,7 +34,7 @@ colleague. Please confirm the IP address for Karylin O'Hederscoll.
 9. We need to confirm the integrity of the files once decrypted. Please confirm the MD5 hash of the trading backup.
 10. We need to confirm the integrity of the files once decrypted. Please confirm the MD5 hash of the complaints file.
 
-## Task 1
+### Task 1
 
 This task requires the encryption key - loading this up in IDA, the `.text`  section contains the following strings:
 
@@ -59,7 +59,7 @@ sub     rsp, 10h
 2. The `process_directory` function is then called, presumably using the directory indicated by the `/forela-criticaldata/` string to walk the directory,
 using the string to encrypt any matching files.
 
-### Decryption
+#### Decryption
 
 With the Task 1 content (likely) in hand, it’s apparent that most of the other tasks are going to require decrypted files. I couldn’t find a direct symbolic
 reference to the encryption *method*, we can start with trying XOR, as it is pretty easy method to implement and can be difficult to brute force the key.
@@ -83,7 +83,7 @@ DIR = "./forela-criticaldata/"
 text = b"test_str"
 
 def xor(data: bytes, key: str) -> bytes:
-    # xor `data` with `key`, returning resulting bytes
+    ## xor `data` with `key`, returning resulting bytes
     return bytes(a ^ b for a, b in zip(data, cycle(key)))
 
 def main():
@@ -93,7 +93,7 @@ def main():
 
         if not file.endswith(".txt"):
             with open(file, "rb") as en, open(f"{file}.dec", "wb") as de:
-                # for each encrypted file, write XOR'd content to new file
+                ## for each encrypted file, write XOR'd content to new file
                 encr = en.read()
                 decr = xor(encr, KEY)
 
@@ -131,7 +131,7 @@ trading-firebase_bkup.json.24bes_note.txt
 
 ![Untitled](/img/lockpick_img/Untitled%201.png)
 
-## Task 2
+### Task 2
 
 Task 2-4 are kind of just `ctrl+f` jobs, so nothing particularly interesting to see here, but I’ll go through each anyway for the sake of completionism.
 
@@ -139,19 +139,19 @@ For Task 2, we can run a pretty simple search to find  **`wbevansn1@cocolog-nift
 
 ![Untitled](/img/lockpick_img/Untitled%202.png)
 
-## Task 3
+### Task 3
 
 Again, we can do a quick search to find `Hart Manifould` in the `it_assets.xml` spreadsheet:
 
 ![Untitled](/img/lockpick_img/Untitled%203.png)
 
-## Task 4
+### Task 4
 
 The attacker’s email is in the ransom note:
 
 ![Untitled](/img/lockpick_img/Untitled%204.png)
 
-## Task 5
+### Task 5
 
 Task 5 requires us to confirm the email address and profit percentage of the person with the highest profit margin in a single trade. The trading database is
 backed up to JSON, so we can pretty easily use Python dictionary references to find the inside trader:
@@ -161,7 +161,7 @@ import json
 
 FILENAME = "trading-firebase_bkup.json.24bes.dec"
 
-# dict to hold the highest trader's email and profit percent
+## dict to hold the highest trader's email and profit percent
 highest_profit = {"email": "N", "trade_profit": 0}
 
 def check_high(trade_profit: str) -> bool | None:
@@ -175,7 +175,7 @@ def main(file: str) -> None:
     global highest_profit
 
     with open(file, "r") as f:
-        # we essentially perform a bubble sort to get the highest-profit trade
+        ## we essentially perform a bubble sort to get the highest-profit trade
 
         json_content = json.loads(f.read())
 
@@ -200,7 +200,7 @@ Rather than continue to press this one relatively small issue, I took the email 
 
 ![Untitled](/img/lockpick_img/Untitled%206.png)
 
-## Task 6
+### Task 6
 
 We find the IP address for Karylin O'Hederscoll in `sales_forecast.xlsx` - This is unfortunately *not* a quick `ctrl+f` as Office files store their
 content as binary data
@@ -213,14 +213,14 @@ It’s always hand to have Office around for malware stuff, so I download & inst
 
 ![Untitled](/img/lockpick_img/Untitled%208.png)
 
-## Task 7
+### Task 7
 
 To find the extensions targeted by the binary, we can jump back to IDA where there is a list of target file formats in the `process_directory` function - we
 can see that 24bes isn’t looking to target `.ppt` files:
 
 ![Untitled](/img/lockpick_img/Untitled%209.png)
 
-## Task 8, 9, and 10
+### Task 8, 9, and 10
 
 And finally, we `md5sum` the requested decrypted files (task 8 is `applications.sql`, 9 is `firebase_bkup.json`, and 10 is `complaints.csv`) to get the hashes:
 

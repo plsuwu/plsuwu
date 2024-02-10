@@ -51,7 +51,7 @@
 </script>
 
 {#if sidebarOpen}
-    <div class="w-screen">
+    <div class="w-screen z-50">
         <div
             class="fixed min-h-screen max-h-screen bg-white/75 shadow-xl sidebar"
             in:slide={{ delay: 0, duration: 350, easing: sineInOut, axis: "x" }}
@@ -141,14 +141,14 @@
     </div>
 {/if}
 
-<div class="fixed p-8 pl-4 text-xl z-10">
+<div class="fixed p-8 pl-4 text-xl z-50">
     {#if !sidebarOpen}
         <button
             on:click={openSidebar}
-            class="sidebar p-1 rounded-lg"
+            class="sidebar p-1 rounded-lg z-50"
             in:fade={{ delay: 350, duration: 250 }}
         >
-            <PhTextIndentBold />
+            <PhTextIndentBold class="z-20" />
         </button>
     {/if}
 </div>

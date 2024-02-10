@@ -3,10 +3,6 @@ export interface MdsvexFile {
     metadata: Record<string, string|string[]>;
 }
 
-export interface MkBanner {
-    default: import('svelte').SvelteComponent;
-}
-
 export type MdsvexResolver = () => Promise<MdsvexFile>;
 
 export interface BlogPost {

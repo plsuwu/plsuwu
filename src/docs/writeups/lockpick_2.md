@@ -84,7 +84,7 @@ In the read-only data section, there are a few interesting constants (given the 
 
 ![Untitled](/img/lockpick_2_img/Untitled%207.png)
 
-> *`xyzf3jv6x13d7w5e.onion` looks too short to be a valid onion URL so I’m ignoring it.*
+> *`xyzf3jv6xq3d7w5e.onion` looks too short to be a valid onion URL so I’m ignoring it.*
 
 ## get_key_from_url & xor_cipher functions
 

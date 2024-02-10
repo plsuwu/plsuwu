@@ -10,21 +10,16 @@
     import Yae from "$lib/banner/Yae.svelte";
     import Camila from "$lib/banner/Camila.svelte";
     import Makoto from "$lib/banner/Makoto.svelte";
+    const bannerList = [Yae, Camila, Makoto];
 
-    const bannerList = [Yae, Camila, Makoto]
-
-    const rng: number = Math.floor(Math.random() * bannerList.length);
-    let randComponent = bannerList[rng]
-
-
-
+    let randComponent = bannerList[Math.floor(Math.random() * bannerList.length)];
 
 </script>
 
 <PageHead />
 
 <div class="m-0 flex min-h-screen flex-col">
-    <div class="hidden sm:block mt-3 text-center font-bold lg:mt-5">
+    <div class="hidden sm:block w-full self-center mt-3 text-center font-bold lg:mt-5">
         <svelte:component this={randComponent} />
     </div>
     <div class="hidden sm:block">
@@ -38,7 +33,7 @@
     {#key $page.url}
         <div
             in:fade={{ delay: 0, duration: 350 }}
-            class="my-8 w-full min-w-full flex-1 lg:my-12"
+            class="my-8 w-full flex-1 lg:my-12"
         >
             <slot />
         </div>

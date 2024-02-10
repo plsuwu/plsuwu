@@ -2,7 +2,7 @@
     class="flex flex-col whitespace-nowrap overflow-hidden items-center self-center -z-50 font-mono text-[8px] text-center leading-[7px] tracking-tighter"
 >
     <div class="lg:block font-mono text-left">
-        <pre>
+<pre>
 ;+;:.                        .;:   ..     .$:..        .x;;X$:;xXXXx::::::;XxxXXX$$$&$$&$:   .+xx;.       .;.:::::::::::;xx+::::::x++++++;+Xx::::+X;::;;;++++xXXX$$$$Xx+;::x+;;+X$x;;;;;;;::;;;;;;;;;;;;;Xxxxxxxxx;;;;;;;;;;;;;;;;+xx+xxxxxX+++++xxxxxxxxxxxXXx++
                             .;+: ...      .$x::    .    x+;X$::+x$$X:::::.:++xxXXXxX$&&$&;    :+;;;:       ..:::::::::::;;;;:::::;xx+++;xX;:::::X+:::::;x+::::::::;+xX$$$$$$x;;xX$X;;;;;;;;:;;;;;;;;;;;;;Xxxxxxxxxx+;;;;;;;;;;;;;;;;xxxxxxXxx+++++++++xx+xxx$$$Xx
                            .;++:  ...     .$X;;         :x+X$:.;+$$X;::..    ;+xxxXXX;&&&&:  ..;::::;:       ::::::::::;;;;;;::::;X+;+Xx::::::;x::::;;x+:::::.::.::::::::;xXX;;xXX$;;;;;;;;:;;;;;;;;;;;;;Xxxxxxxxxxx+;;;;;;;;;;;:;;;;xxXXXxXx+++++;+++++++++XX$XX
@@ -46,4 +46,3 @@
 </pre>
     </div>
 </div>
-

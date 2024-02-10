@@ -16,7 +16,7 @@
 
 <div class="mx-auto w-full rounded-xl xl:min-w-[1300px] xl:max-w-[1300px]">
     <div
-        class="mt-14 text-center border-b p-2 italic font-bold text-2xl rounded-lg"
+        class="mt-14 mb-6 text-center underline tracking-[-3px] p-2 italic font-bold text-4xl rounded-lg"
     >
         - pls's blog -
     </div>
