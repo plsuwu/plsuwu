@@ -51,11 +51,11 @@
         <div class="font-bold">
             <div class="text-3xl font-bold"></div>
             <div class="flex flex-col w-full">
-                <div class="text-end mx-24 space-x-5">
+                <div class="text-center mx-auto space-x-5">
                     <div class="whitespace-nowrap">
                         <a
                             href="/writeups"
-                            class="text-start text-sm text-lightpink hover:brightness-75 transition-all italic duration-300 ease-in-out space-x-4"
+                            class="text-base text-lightpink hover:brightness-75 transition-all italic duration-300 ease-in-out space-x-4"
                             ><PhArrowLeft class="inline" /><span
                                 class="font-normal underline"
                                 >back to writeups</span
