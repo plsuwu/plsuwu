@@ -25,7 +25,7 @@
     <div
         role={"close modal"}
         on:click|stopPropagation={(e) => handleClickOff(e)}
-        class="w-[200%] fixed h-[200%] bg-[#e3eaf2] opacity-70"
+        class="w-[200%] fixed h-[200%] bg-[#e3eaf2] opacity-80"
     />
 <div class="absolute top-0 w-full z-50 ">
         <button
@@ -41,7 +41,7 @@
         <img
             {src}
             alt={`modal image for ${src}`}
-            class="touch-auto modalImage relative origin-left top-5 z-30 scale-[200%] overflow-x-scroll overflow-y-scroll m-4 rounded-lg"
+            class="touch-auto modalImage relative origin-left md:origin-center top-5 z-30 scale-[220%] md:mx-auto md:scale-[95%] overflow-x-scroll overflow-y-scroll m-4 rounded-lg"
         />
     </div>
 </div>
