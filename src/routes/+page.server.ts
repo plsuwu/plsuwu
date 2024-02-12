@@ -4,14 +4,14 @@ import type { MdsvexFile, BlogPost } from "$lib/types";
 
 import { setCache, getCache } from "$lib/cache";
 
-/*
- * stores posts in a serverside cache instead of globbing directory for posts on each page load
- *  --> i dont actually think this is more efficient given the 2GBs of memory on the VM.
- */
-
+// storing writeup data in a cache like this fixes the constant 404s
+// we should only 404 now if a writeup is accessed directly via its URL immediately after
+// a server startup.
 export const load: PageServerLoad = async () => {
     let postArray = getCache();
 
+    // if posts cannot be loaded from in-memory cache, fetch them from the
+    // filesystem and push them to the cache.
     if (!postArray) {
         const modules = import.meta.glob(
             `/src/docs/writeups/**/*.{md,svx,svelte.md}`,
@@ -30,8 +30,9 @@ export const load: PageServerLoad = async () => {
         const publishedPost = post.filter((post) => post.published);
         setCache(publishedPost);
 
-        // if postArray is empty, make sure to give it the array of posts,
-        // else the page must be reloaded again before we return a truthy postArray.
+        // after fetching & caching posts, make sure to actually assign the posts to return
+        // variable before returning, else the page returns a 404 and must be reloaded again before
+        // we return a truthy result for this function's check.
         postArray = publishedPost;
     }
 

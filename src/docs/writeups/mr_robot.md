@@ -1,23 +1,23 @@
 ---
 title: "Mr. Robot"
+link: "https://tryhackme.com/room/mrrobot"
 description: "Based on the Mr. Robot show, can you root this box?"
 author: "tryhackme"
 date: "2023-04-09"
-published: true
+published: false
 tags: ["capture the flag", "tryhackme", "web", "networks"]
 ---
 
 # Mr. Robot
 
 <aside>
+<a href={link}>{title} @ {author}</a>
 Based on the Mr. Robot show, can you root this box?
 </aside>
 
 ## Recon
 
-I start by using `nmap` to enumerate open ports with `nmap`:
-
-`nmap -sC -sV nmap-init 10.10.190.225 -vv`:
+I start by using `nmap` to enumerate for open ports and services:
 
 ```bash
 PORT    STATE  SERVICE  REASON         VERSION
@@ -56,8 +56,6 @@ PORT    STATE  SERVICE  REASON         VERSION
 ```
 
 We can also enumerate directories with a wordlist while investigating the HTTP service in a browser.
-
-`gobuster dir -u http://10.10.190.225/ -w ../../../tools/dirlists/directory-list-2.3-medium.txt -x html,js,css,txt,php -t 20 --retry`
 
 ```bash
     /#....
@@ -121,7 +119,8 @@ This shrunk it considerably - from 858,160 lines to just 11,451. We can see that
 
 ## Foothold
 
-Using this information as well as the headers from this request, I wrote a (kind of janky) python script using pwntools that will query the login page, using the filtered `fsociety.dic` as a wordlist:
+Using this information as well as the headers from this request, I wrote a (kind of janky) multithreaded python script using `pwntools` that will query the login page,
+using the filtered `fsociety.dic` as a wordlist:
 
 ```python
 from concurrent.futures import ThreadPoolExecutor

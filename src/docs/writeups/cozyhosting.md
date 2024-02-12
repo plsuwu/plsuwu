@@ -1,5 +1,6 @@
 ---
 title: "Cozyhosting"
+link: "https://www.hackthebox.com/machines/cozyhosting"
 description: "A very simple HTB seasonal."
 author: "hackthebox"
 date: "2023-09-04"
@@ -10,6 +11,7 @@ tags: ["capture the flag", "hackthebox", "web", "networks"]
 # Cozyhosting
 
 <aside>
+<a href={link}>{title} @ {author}</a><br/>
 Writeup for this very simple boot-to-root HTB seasonal.
 </aside>
 

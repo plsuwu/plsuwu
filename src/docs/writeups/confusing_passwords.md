@@ -1,5 +1,6 @@
 ---
 title: "Confusing Passwords"
+link: "https://0x0539.net/play/minas_tirith/confusing_passwords"
 description: "This login system will give you the flag... as long as you can prove you're an admin!"
 author: "0x0539"
 date: "2023-06-16"
@@ -9,11 +10,13 @@ tags: ["capture the flag", "0x0539", "web"]
 
 # Confusing Passwords
 
+
 <aside>
-This login system will give you the flag... as long as you can prove you're an admin!
+<a href={link}>{title} @ {author}</a><br/>
+"This login system will give you the flag... as long as you can prove you're an admin!"
 </aside>
 
-## overview
+## Overview
 
 The challenge landing page presents us with the login form and the page's source code. It's PHP-based, and the source code here contains hardcoded credentials (in the form of our target username, `admin`):
 

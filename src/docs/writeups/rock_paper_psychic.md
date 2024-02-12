@@ -10,7 +10,7 @@ tags: ["capture the flag", "huntress", "reversing"]
 # Rock, Paper, Psychic
 
 <aside>
-<strong>Description</strong>: Wanna play a game of rock, paper, scissors against a computer that can read your mind? Sounds fun, right?
+Wanna play a game of rock, paper, scissors against a computer that can read your mind? Sounds fun, right?
 </aside>
 
 The challenge presents us with a 7z archive, which extracts to an `.exe` binary. I executed the binary and tried a few easy classics (buffer overflow/format string stuff) and some pretty

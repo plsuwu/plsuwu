@@ -1,8 +1,22 @@
 import type { BlogPost } from '$lib/types';
 import { writable, type Writable } from "svelte/store";
 
-export let show: Writable<boolean> = writable(false);
+/*
+* this file is functionally equivalent to a store.ts
+* */
 
+let cache: (BlogPost[] | null);
+export function setCache(data: BlogPost[]) {
+    cache = data;
+}
+export function getCache() {
+    return cache;
+}
+
+export const show: Writable<boolean> = writable(false);
+export const sortComplete: Writable<boolean> = writable(true);
+
+// should probably be moved to types.ts, if bothered.
 type PostTag = {
     name: String,
     color: String
@@ -24,16 +38,3 @@ export const postTags: PostTag[] = [
     { name: "web", color: "text-cat-pink" },
     { name: "networks", color: "text-cat-pink" },
 ];
-
-let cache: (BlogPost[] | null);
-
-export function setCache(data: BlogPost[]) {
-    cache = data;
-}
-export function getCache() {
-    return cache;
-}
-
-export const sortComplete = writable<boolean>(true);
-
-

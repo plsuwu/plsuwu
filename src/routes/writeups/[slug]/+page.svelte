@@ -1,7 +1,7 @@
 <script lang="ts">
     import { onMount, onDestroy } from "svelte";
     import { show } from '$lib/cache';
-
+    import { fade } from 'svelte/transition';
 
     import type { PageData } from "./$types";
     import type { SvelteComponent } from "svelte";
@@ -17,12 +17,17 @@
     export let imageSrc = "#";
 
     export function toggleModal(e: Event, src: string) {
+        // stopPropagation handlers to stop scrollthrough when modal is visible
+        // (this doesnt work)
         e.stopPropagation();
         imageSrc = src;
         show.set(true);
     }
 
+    // dynamically adds an onclick listener to each image with the image's source href
+    // to launch a zoomed image modal view for phone users.
 	onMount(() => {
+        // should we be checking for `window` here? seems to work to avoid returning 500 but idk.
 		if (typeof window !== 'undefined') {
             imgs = document.querySelectorAll('img');
 
@@ -44,7 +49,7 @@
     };
 </script>
 
-<ImgModal src={imageSrc} />
+    <ImgModal src={imageSrc}/>
 
 <div class="mt-14 lg:mt-0 w-full flex flex-col">
     <div class=" w-full py-4">
@@ -67,8 +72,7 @@
         </div>
 
         <div class="mt-4 w-full rounded-xl">
-            <!-- todo: need to triple check custom prose style -->
-            <div class="text-sm p-4 lg:mx-8 2xl:mx-64 lg:p-12 prose">
+            <div class="text-sm p-4 lg:mx-20 2xl:mx-[18%] lg:p-12 prose">
                 <svelte:component this={component} />
                 <slot />
             </div>

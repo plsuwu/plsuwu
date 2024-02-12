@@ -57,7 +57,7 @@
 						</button>
 						{#if openDropdown === page.name}
 							<div
-								class={`absolute min-w-[16rem] bg-white/90 shadow-xl -ml-[4.5rem] my-3 px-6 py-4 z-10 rounded-xl border
+								class={`absolute min-w-[16rem] bg-[#e3eaf2]/90 shadow-xl -ml-[4.5rem] my-3 px-6 py-4 z-10 rounded-xl border
                                 ${openDropdown === page.name ? 'block' : 'hidden'}`}
 								in:fade={{ duration: 200 }}
 								out:fade={{ duration: 200 }}

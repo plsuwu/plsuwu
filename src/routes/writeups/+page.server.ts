@@ -8,6 +8,8 @@ import { setCache, getCache } from '$lib/cache';
 export const load: PageServerLoad = async () => {  // {url}
     let postArray = getCache();
 
+    // same deal as with the main page - this could be refactored out into a module and called from
+    // the pageserverload if bothered.
     if (!postArray) {
         const modules = import.meta.glob(`/src/docs/writeups/**/*.{md,svx,svelte.md}`);
         const postPromises = Object.entries(modules).map(([path, resolver]) =>
@@ -27,7 +29,6 @@ export const load: PageServerLoad = async () => {  // {url}
         postArray = publishedPost;
     }
 
-    // publishedPost.sort((a, b) => (new Date(a.date) > new Date(b.date) ? -1 : 1));
     return { posts: postArray };
 };
 

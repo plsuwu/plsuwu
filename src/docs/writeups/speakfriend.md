@@ -13,11 +13,12 @@ tags: ["capture the flag", "huntress", "forensics", "reversing", "web", "network
 It seems like this website was compromised. We found this file that seems to be related... can you make any sense of these and uncover a flag?
 </aside>
 
-We are given a `main.7z` archive alongside a containerized webserver instance, though I suspect there is nothing surface-level to see here - a cursory glance through the source and various pages indicates that this assumption is *probably* correct.
+We are handed a containerized webserver instance, and some required files in a zipped archive, `main.7z`. I suspect there is nothing surface-level to see on this website's frontend - a
+cursory glance through the source and various pages indicates that this assumption is *probably* correct.
 
 ![Standard Bootstrap template stuff](/img/speakfriend_img/Untitled.png)
 
->Standard Bootstrap template stuff
+> Gunicorn aside (before you ask - yes!! it runs horrendously!!), this is pretty standard Bootstrap+jQuery template stuff
 
 ```html
 $ curl --insecure 'https://chal.ctf.games:32032'
@@ -49,10 +50,11 @@ $ curl --insecure 'https://chal.ctf.games:32032'
   <!-- responsive style -->
   <link href="/static/css/responsive.css" rel="stylesheet" />
 
- <!-- ...etc .... -->
+ <!-- ... truncated (you get the idea I think) ... -->
 ```
+> `curl` request output
 
-Extracting the archive, we can run some basic filetype identification commands - `file` / `strings` / `objdump`:
+Extracting the archive (via a quick `7z x main.7z` command), we can run some basic filetype identification commands - `file` / `strings` / `objdump`:
 
 ```bash
 $ file main
@@ -113,7 +115,7 @@ Contents of section .dynstr:
  05a0 5f49544d 5f726567 69737465 72544d43  _ITM_registerTMC
  05b0 6c6f6e65 5461626c 65006375 726c5f65  loneTable.curl_e
 # ...
- 0680 322e322e 35004355 524c5f47 4e55544c  2.2.5.CURL_GNUTL             # -- interesting!
+ 0680 322e322e 35004355 524c5f47 4e55544c  2.2.5.CURL_GNUTL
  0690 535f3300                             S_3.
 # ...
 1480 48898530 feffff48 b84d6f7a 696c6c61  H..0...H.Mozilla
@@ -127,7 +129,7 @@ Contents of section .dynstr:
 
 Notable are the `curl` and `Mozilla` strings - the `H` strings might also refer to `curl`’s `-H` header argument - so it could be making some kind of request with `curl`, and pretending to be a Firefox client or something?
 
-Lets just run the binary:
+Lets just see what happens when we run the binary:
 
 ```bash
 pls@RUBY~$ ./main
@@ -135,23 +137,23 @@ pls@RUBY~$ ./main
 pls@RUBY~$
 ```
 
-Anti-climactic - nothing happened at all.
+Nothing happened at all!!
 
-We could try passing some arguments to it - I go with `-h`, to see if it has a `help` command/usage info. This seems to make the program to hang; I end up aborting with `C-c`.
+We could try passing some arguments to it - I go with `-h`, to see if it has a `help` command/usage info. Something is happening in the background as `stdin` gets
+hijacked, but ultimately I wound up aborting here with `<C-c>`.
 
 ![Untitled](/img/speakfriend_img/Untitled%201.png)
 
-This is pretty interesting - this is a little hard to visualize, but the binary stays running, so it seems to be doing _something_, even if it's silentl. Suspecting it harbours `curl` and therefore probably
-wants to connect to a server, lets see whether we can intercept anything with `Wireshark`:
+Suspecting an internal call for some `curl` functionality - and therefore probably reaching out to the internet - we might get something on `Wireshark`:
 
 ![Untitled](/img/speakfriend_img/Untitled%202.png)
 
 It’s a little tough to say exactly what is what traffic is outbound from what application as nothing is immediately obvious here. Also, the challenge uses TLS, so it’s possible for basically any of
-these to be relevant, as opposed to the bright green packets of unencrypted HTTP. Turning on hostnames was also pretty unhelpful - I really should set up a proper lab with REMnux - fakenet would be
-really beneficial right now.
+these to be relevant, as opposed to the bright green packets of unencrypted HTTP. Turning on hostnames was also pretty unhelpful - I really should set up a proper internalised lab with REMnux
+to limit network traffic when I get the chance.
 
-So, instead, why don’t we try running a specific IP through it and see if it kind of just functions like `curl`? We can grab the IP of the remote machine with the Network tab of Chrome’s Dev Tools, and
-throw it in as an argument to see if the binary produces any network activity when we filter Wireshark results to contain only the target machine's IP:
+So instead, maybe we can give it a specific point to reach out to - why don’t we try running a specific IP through it? In fact, we can grab the IP of the remote machine with the Network tab
+of Chrome’s Dev Tools and throw it in as an argument to see if the binary produces any network activity when we filter Wireshark results to contain only the target machine's IP:
 
 ![Untitled](/img/speakfriend_img/Untitled%203.png)
 
@@ -160,7 +162,9 @@ pls@RUBY~$ ./main 34.123.197.237:32032
 # ...
 ```
 
-Great - it seems like we make an unencrypted request to the server, which, upon further inspection, proves my initial suspicions correct:
+We can filter the Wireshark output for requests/responses containing that IP, and we see _exactly_ what we wanted to see.
+
+It seems like the binary makes an unencrypted request to the server, meaning we can _also_ see the data attached to the request:
 
 ![Untitled](/img/speakfriend_img/Untitled%204.png)
 
@@ -176,7 +180,8 @@ pls@RUBY~$ curl 34.123.197.237:32032 -H 'GET / HTTP/1.1' \\
 curl: (56) Recv failure: Connection reset by peer
 ```
 
-Unlucky, maybe instead of an IP, we need to make a request to the URL (the server's SSL cert isn't valid, so we need to tell `curl` that it should disregard certificate validity using the `--insecure` arg):
+Unlucky, maybe instead of an IP, we need to make a request to the URL itself (the server's SSL cert isn't valid, so we need to tell `curl` that it should disregard certificate
+validity using the `--insecure` arg):
 
 ```bash
 curl https://chal.ctf.games:32032 --insecure -H 'GET / HTTP/1.1' \\
@@ -197,5 +202,5 @@ curl  https://chal.ctf.games:32032 --insecure -H 'GET / HTTP/1.1' \\
 -H 'Host: 34.123.197.237:32032' \\
 -H 'User-Agent: Mozilla/5.0 93bed45b-7b70-4097-9279-98a4aef0353e' \\
 -H 'Accept: */*' -L
-flag{3******************************0}
+flag{redacted}
 ```

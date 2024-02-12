@@ -1,5 +1,6 @@
 ---
 title: "Lockpick"
+link: "https://app.hackthebox.com/sherlocks/Lockpick"
 description: "Forela needs your help! A whole portion of our UNIX servers have been hit with what we think is ransomware."
 author: "hackthebox"
 date: "2024-02-02"
@@ -10,15 +11,16 @@ tags: ["capture the flag", "hackthebox", "reversing", "malware", "forensics"]
 # Lockpick
 
 <aside>
+<a href={link}>{title} @ {author}</a><br/>
 Forela needs your help! A whole portion of our UNIX servers have been hit with what we think is ransomware.
 We are refusing to pay the attackers and need you to find a way to recover the files provided.
 </aside>
 
-> Worked through this on a virtual machine that was set up very quickly, so excuse any VS C*de.
+> Worked through this on a virtual machine that was set up very quickly - excuse any VSC*de.
 
 ## Tasks
 
-The challenge indicates the following tasks (which are essentially our flags) to complete:
+The challenge indicates the following tasks (which are essentially the challenge's flags) to complete:
 
 1. Please confirm the encryption key string utilised for the encryption of the files provided
 2. We have recently received an email from `wbevansn1@cocolog-nifty.com`  demanding to know the first and last name we have him registered as. They believe they
@@ -106,7 +108,7 @@ main()
 The result is the following output
 
 ```python
-PS C:\Users\please\Desktop\lockpick1> python cycle.py
+PS C:\\Users\\please\\Desktop\\lockpick1> python cycle.py
 co2_London
 [DECRYPTED FILE ./forela-criticaldata/co2_London]
 complaints.csv.24bes

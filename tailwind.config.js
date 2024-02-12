@@ -76,7 +76,11 @@ export default {
                     a: {
                         "text-decoration": "underline",
                         "font-style": "italic",
-                        color: "#f0bbda",
+                        color: "#81b6da",
+                        transition: "color 300ms ease-out"
+                    },
+                    "a:hover": {
+                        "color": "#242c50",
                     },
                     h1: {
                         "font-family": "inter",

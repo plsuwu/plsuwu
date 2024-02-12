@@ -51,9 +51,9 @@
 </script>
 
 {#if sidebarOpen}
-    <div class="w-screen z-50">
+    <div class="w-screen">
         <div
-            class="fixed min-h-screen max-h-screen bg-white/75 shadow-xl sidebar"
+            class="z-50 fixed min-h-screen max-h-screen bg-[#e3eaf2]/75 shadow-xl sidebar"
             in:slide={{ delay: 0, duration: 350, easing: sineInOut, axis: "x" }}
             out:slide={{
                 delay: 0,
@@ -65,11 +65,11 @@
             <button
                 in:fade={{ delay: 50, duration: 100 }}
                 on:click={openSidebar}
-                class="right-0 absolute p-4 text-xl my-4 z-10 sidebar"
+                class="right-0 absolute p-4 text-xl my-4 z-50 sidebar"
             >
                 <PhTextOutdentBold />
             </button>
-            <div class=" max-h-full rounded-xl flex-row my-20 mx-4 p-6">
+            <div class="max-h-full rounded-xl flex-row my-20 mx-4 p-6">
                 <div class="font-bold">
                     <ul class="text-xl space-y-6">
                         {#each pages as page (page.name)}
@@ -93,7 +93,7 @@
                                     </button>
                                     {#if openDropdown === page.name}
                                         <div
-                                            class={`my-4 -ml-8 absolute bg-white/90 min-w-[14rem] shadow-xl px-2 z-10 rounded-xl border
+                                            class={`my-4 -ml-8 absolute bg-[#e3eaf2]/90 min-w-[14rem] shadow-xl px-2 z-10 rounded-xl border
                                 ${
                                     openDropdown === page.name
                                         ? "block"
@@ -148,7 +148,7 @@
             class="sidebar p-1 rounded-lg z-50"
             in:fade={{ delay: 350, duration: 250 }}
         >
-            <PhTextIndentBold class="z-20" />
+            <PhTextIndentBold class="z-50" />
         </button>
     {/if}
 </div>

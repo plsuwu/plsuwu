@@ -1,5 +1,6 @@
 ---
 title: "Lockpick 2"
+link: "https://app.hackthebox.com/sherlocks/Lockpick2.0"
 description: "We've been hit by Ransomware again, but this time the threat actor seems to have upped their skillset."
 author: "hackthebox"
 date: "2024-02-03"
@@ -10,6 +11,7 @@ tags: ["capture the flag", "hackthebox", "reversing", "malware", "forensics"]
 # Lockpick 2
 
 <aside>
+<a href={link}>{title} @ {author}</a><br/>
 We've been hit by Ransomware again, but this time the threat actor seems to have upped their skillset.
 Once again a they've managed to encrypt a large set of our files. It is our policy NOT to negotiate with criminals.
 Please recover the files they have encrypted - we have no other option! Unfortunately our CEO is on a no-tech retreat so can't be reached.

@@ -1,6 +1,7 @@
 <script lang="ts">
     import PhXCircleFill from "virtual:icons/ph/x-circle-fill";
     import { show } from "$lib/cache";
+    import { fade } from "svelte/transition";
 
     export let src: string;
 
@@ -20,8 +21,11 @@
 <!--     on:click|stopPropagation={(e) => handleClickOff(e)}>TEST</button -->
 <!-- > -->
 
-
-<div class={`${$show ? "fixed" : "hidden"} top-0 h-full w-screen z-10 `}>
+{#key $show}
+<div
+in:fade={{ delay: 0, duration: 200 }}
+out:fade={{ delay:0, duration:200 }}
+class={`${$show ? "fixed" : "hidden"} top-0 h-full w-screen z-10 w-full flex `}>
     <div
         role={"close modal"}
         on:click|stopPropagation={(e) => handleClickOff(e)}
@@ -29,10 +33,10 @@
     />
 <div class="absolute top-0 w-full z-50 ">
         <button
-            class="w-full flex p-4"
+            class="p-4"
             on:click|stopPropagation={(e) => handleClickOff(e)}
         >
-            <PhXCircleFill class="text-lg text-black/50 w-full content-end" />
+            <PhXCircleFill class="hover:text-lightpink transition duration-300 text-lg text-black/50 w-full content-end" />
         </button>
     </div>
         <div
@@ -45,3 +49,4 @@
         />
     </div>
 </div>
+{/key}

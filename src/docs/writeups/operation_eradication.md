@@ -12,11 +12,12 @@ tags: ["capture the flag", "huntress", "malware", "web", "networks"]
 <aside>
 Oh no! A ransomware operator encrypted an environment, and exfiltrated data that they will soon use for blackmail and extortion if they don't receive payment!
 <strong>They stole our data!</strong>
-Luckily, we found what looks like a configuration file, that seems to have credentials to the actor's storage server... but it doesn't seem to work. Can you get onto their server and delete all the data they stole!?
+Luckily, we found what looks like a configuration file, that seems to have credentials to the actor's storage server... but it doesn't seem to work. Can you get onto their server and
+delete all the data they stole!?
 </aside>
 
 
-The challenge gives us a containerized HTTP server instance - `http://chal.ctf.games:30236/` - alongside a file with no extension, named simply `operation_eradication`.
+The challenge gives us a containerized HTTP server instance, alongside a file with no extension named simply `operation_eradication`.
 Passing it as an arg for the `file` command, we're told it's just plaintext ASCII. Viewing it's contents, we are shown the following:
 
 ```toml
@@ -27,9 +28,10 @@ user = VAHycYhK2aw9TNFGSpMf1b_2ZNnZuANcI8-26awGLYkwRzJwP_buNsZ1eQwRkmjQmVzxMe5r
 pass = HOUg3Z2KV2xlQpUfj6CYLLqCspvexpRXU9v8EGBFHq543ySEoZE9YSdH7t8je5rWfBIIMS-5
 ```
 
-Doing a little bit of googling, we can ascertain the remote server is likely running a `WebDAV` ("Web-Distributed Authoring and Versioning") protocol service, which is effectively a (now-obselete) type of file storage service.
-As indicated by the config's `url` param, we are able to access the service's front-end by adjusting the `localhost` address to our assigned wide-area address, `http://chal.ctf.games:30236/webdav`.
-The page is simply a blank white screen, so I assume we need to authenticate before we are able to see the _actual_ content.
+Doing a little bit of googling, we can ascertain the remote server is likely running a `WebDAV` ("Web-Distributed Authoring and Versioning") protocol service, which is effectively a
+(apparently now-obselete) type of network-accessible file storage service. As indicated by the config's `url` param, we are able to access the service's front-end by adjusting the `localhost`
+SLD to our assigned instance: `http://chal.ctf.games:30236/webdav`. The page is simply a blank white screen, so I assume we need to authenticate before we are able to see
+the _actual_ content (though nothing indicates this explicitly).
 
 After briefly reviewing WebDAV documentation alongside the tech stack used on the WebDAV endpoint, we can see the server accepts authentication via a `Basic` Authorization header, which we can craft by running
 `echo -n <username>:<password> | base64 --wrap=0` in a bash terminal, replacing the `<username>` and `<password>` strings with the user's authentication info.
