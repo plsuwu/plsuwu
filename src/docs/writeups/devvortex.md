@@ -29,15 +29,18 @@ Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
 
 ```
 
-We aren't allowed to access `ssh` without credentials (Anon login disallowed), and there is nothing to find of particular interest on the webpage itself; I did some directory enumeration with
-`feroxbuster` and re-ran port scans with various options, but none of the pages have any hidden functionality or exploitable holes, including the handful of `nginx v1.18.0`
-vulnerabilities with public proof-of-concept exploits.
+We aren't allowed to access `ssh` without credentials (Anon login disallowed, as is generally the case), and there is nothing to find of particular interest on the webpage itself;
+I did some directory enumeration with `feroxbuster` and re-ran port scans with various options, but none of the pages have any hidden functionality or exploitable holes, including
+the handful of `nginx v1.18.0` vulnerabilities with public proof-of-concept exploits.
 
-Ultimately, I wasn’t *particularly* keen on having to enumerate for domain stuff (as I will have to do more work in order to learn a tool/write code - which I wind up doing anyway).
-HTB often makes use of virtual hosts/subdomains, which we can enumerate for via the `Host` header of a HTTP GET request, so I wrote the following Python script to pull common subdomain names from a
-wordlist.
+HTB often makes use of virtual hosts/subdomains, though ultimately I wasn’t *particularly* keen on having to enumerate subdomain stuff as I will have to do more work in order to learn a
+tool or write and debug a script.
+Having now exhausted most other options, though, I might as well bite the bullet; I wrote the following Python script to pull common subdomain names from a SecLists subdomain wordlist and
+insert it into the `Host` header of a HTTP GET request. This is essentially like adding the subdomain URL and IP into our `/etc/hosts` for each subdomain - we are directing our DNS to resolve
+the domain specified in the `Host` header to the IP specified in the URL.
 
-> It would be handy to have a simple single-purpose tool for this, so I ~~want to rewrite this in Rust at some point~~ [rewrote it in Rust](https://github.com/plsuwu/vhost-enum).
+It might also be handy to have a simple single-purpose CLI tool for this, so I ~~want to rewrite this in Rust at some point~~ [rewrote it in Rust](https://github.com/plsuwu/vhost-enum)
+(it still needs some work).
 
 ```python
 #!/usr/bin/env python
@@ -73,7 +76,7 @@ for host in host_list:
 
 ```
 
-The script only makes it like 10 requests in as it very quickly returns a response for a subdomain with a 200 status - `dev.devvortex.htb`.
+The script only makes it like 10 requests in before we get a valid response for a subdomain with a 200 status - `dev.devvortex.htb`.
 
 ```
 [...]
@@ -412,7 +415,8 @@ subprocess.Popen(payload_cmd, shell=True)
 """, {}) }
 !bash
 ```
-> This is a little tricky to show without a moving image; if this doesn't really make sense, check out [this article](https://donncha.is/2016/12/compromising-ubuntu-desktop/).
+> This is a little tricky to show without a moving image; if this doesn't really make much sense *visually*, check out [this article](https://donncha.is/2016/12/compromising-ubuntu-desktop/) for
+a more in-depth explanation.
 
 ```bash
 *** Collecting problem information

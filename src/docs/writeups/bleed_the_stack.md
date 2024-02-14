@@ -192,13 +192,14 @@ To demonstrate this, the following explicitly passes both
 // ...
 ```
 
-### Modern compilers *generally* ship with built-in binary security
+### Modern computers and binary security
 
-As far as I am aware, most modern compilers and CPUs will bundle security settings (`RELRO`, `NX` bits, Stack canaries, `PIE`) into ELF binaries as a way to 'harden', or make common vulnerabilities
-harder to exploit. This would likely have been **specifically** disabled on 0x0539's end, given the purposes of the challenge.
+Most modern compilers and CPUs will compile security settings into a binary - e.g, relocation read-only (`RELRO`), never-execute (`NX`) bits, address space layout randomization (`ASLR`), stack canaries, position-independent executable (`PIE`) - into ELF binaries as a way to 'harden' them, with the general goal
+of making common/simple vulnerabilities harder to exploit. This would likely have been **specifically** disabled by this challenge's creator given its goal.
 
-For example, here we compile and run the above `C` program with default `gcc` settings, and we are not only notified of the potential security issues around `gets()`, but various protections
-are compiled into our binary by default; for example, note that we trigger a `SIGIOT` when we try to exploit this program using format specifiers in the same way:
+For example, here we compile and run the example `C` program with a basic `gcc` command. This means it compiles with default settings, and not only are we notified of the potential danger around the `gets()` function, but a range of protections
+are compiled into our binary by default (see the `pwn checksec` output). As an example, note that we trigger the compiler's stack canary when we try to exploit this program using format specifiers in a similar way, causing it to send a `SIGIOT` signal to the process,
+killing execution:
 
 ```bash
 $ gcc fstring_bug.c
@@ -225,4 +226,4 @@ input something to be repeated:
 [1]    141503 IOT instruction (core dumped)  ./a.out
 ```
 
-Note that there are ways around this, but the simple approach of `%x` spam is no longer possible.
+Note that there are ways around these protections, but the methodology becomes more complex than sending a long string of format specifiers.

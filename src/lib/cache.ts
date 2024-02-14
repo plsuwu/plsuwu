@@ -3,7 +3,7 @@ import { writable, type Writable } from "svelte/store";
 
 /*
 * this file is functionally equivalent to a store.ts
-* */
+*/
 
 let cache: (BlogPost[] | null);
 export function setCache(data: BlogPost[]) {
@@ -17,7 +17,7 @@ export const show: Writable<boolean> = writable(false);
 export const sortComplete: Writable<boolean> = writable(true);
 
 // should probably be moved to types.ts, if bothered.
-type PostTag = {
+interface PostTag {
     name: String,
     color: String
 }

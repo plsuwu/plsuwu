@@ -3,6 +3,11 @@ export interface MdsvexFile {
     metadata: Record<string, string|string[]>;
 }
 
+export interface PostTag {
+    name: String,
+    color: String
+}
+
 export type MdsvexResolver = () => Promise<MdsvexFile>;
 
 export interface BlogPost {
