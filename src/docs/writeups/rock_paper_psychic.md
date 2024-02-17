@@ -19,7 +19,7 @@ cheesy exploits from similarly-named CTF challenges - unfortunately it's not goi
 Loading the binary into IDA, we are able to perform a quick search for the term `flag` and make a quick note of relevant functions or symbols:
 
 ![Interesting functions](/img/rock_paper_psychic_img/Untitled.png)
-> IDAs' function search results
+> IDA's function search results
 
 Checking out our `printFlag` function, I have a pretty solid interpretation of what I'm looking at, but the mangled Nim disasm took me a bit off-guard:
 
@@ -27,9 +27,8 @@ Checking out our `printFlag` function, I have a pretty solid interpretation of w
 - The binary itself calls the `printFlag` function when a player wins.
 - This function seems to be a loop, which performs two _general_ actions:
     1. `lea` computes the address of a memory operand, storing the resulting location in the `rcx` register
-    2. a function, `copyString`, is called - I didn't really go into this function, but ultimately it's pretty inconsequential to the function's outcome; I assume this is maybe, like, a
-    memory-safe way to deference pointers or something.
-- The loop runs twice on two strings - `TM__V45tF8B8NBcxFcjfe7lhBw_38` on the first iteration, and `TM__V45tF8B8NBcxFcjfe7lhBw_39` second.
+    2. a function, `copyString`, is called - I didn't really go into this function, but ultimately it's pretty inconsequential to the function's outcome; I'm assuming this is a memory-safe way to dereference pointers or something.
+- The loop runs twice on two strings - `TM__V45tF8B8NBcxFcjfe7lhBw_38` in the first iteration, and `TM__V45tF8B8NBcxFcjfe7lhBw_39` in the second.
 - Finally, the program calls the function `fromRC4`, which appears to be the recipient of both strings.
 
 To summarize, it seems like the flag is RC4-encrypted, and is stored in the read-only `.rdata` section. Once a player wins, and the program will decrypt the flag and then print it to STDOUT.
@@ -96,7 +95,7 @@ We see they hold the following values respectively:
 ```
 > NOTE: Each byte of these variables were stored in a unique address and so the visual representation we got in IDA was a little different, but the end result is ultimately the same.
 
-Our values used in the decryption process use the strings `P P @gnnhexnyjkwpaghynzfthadollhtrhballsdmhhnbjppewgjkhnlhspwjswqoxtgdykxrhwlabblekxj` and `L L @D1E2A0D9FA89CABED207EDF4F55C688E04EBE20F077351BDAA1E110D5A74805C916AF12F054C` to decipher and print a flag.
+The decryption process uses the strings `P P @gnnhexnyjkwpaghynzfthadollhtrhballsdmhhnbjppewgjkhnlhspwjswqoxtgdykxrhwlabblekxj` and `L L @D1E2A0D9FA89CABED207EDF4F55C688E04EBE20F077351BDAA1E110D5A74805C916AF12F054C` to decipher and print a flag.
 
 Digging a little into the RC4 decryption function, we will find some child functions necessary to understand how we should ultimately be performing a decryption:
 
@@ -114,9 +113,9 @@ With two strings in hand, we _could_ force it and mash them together until somet
 returned [this Nim RC4 library on GitHub](https://github.com/OHermesJunior/nimRC4).
 
 The function from this library expects
-- argument one -`TM_..._38` - to be a key,
-- argument two - `TM_...39` to be a hexadecimal string containing the ciphertext.
+- argument one - possibly `TM_..._38` - to be a key,
+- argument two - possibly `TM_...39` to be a hexadecimal string containing the ciphertext.
 
-The example here seems to align pretty well with the function calls and values in this program, so lets try this out and run it through cyberchef:
+The example closely aligns with the function calls and values in this program, so let's test this theory and run it through cyberchef:
 
 ![Untitled](/img/rock_paper_psychic_img/Untitled%205.png)

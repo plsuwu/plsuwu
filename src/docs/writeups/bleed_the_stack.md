@@ -30,7 +30,7 @@ Test me! Enter your name and I'll print it back to you!
 
 We can enter a string value, and the program will respond to our input with our exact input.
 
-Given the challenge's name, our flag is probably hidden in this program's call stack - we can test this by sending a hexdecimal format string parameter, `%x`:
+Given the challenge's name, it seems likely that this challenge's flag is hidden in the program's call stack - we can test this by sending a hexadecimal format string parameter, `%x`:
 
 ```bash
 # ...
@@ -55,7 +55,7 @@ We can automate an exploit with the `pwntools` python module:
 - send loads of '%x' format specifiers when prompted for input,
 - and finally parse and decode the response.
 
-Noting that some bytearrays dont appear to have a valid ascii representation (such as the aformentioned `f7f77620`), we can handle any errors by just ignoring these as unnecessary.
+Considering that some byte arrays may not translate to valid ASCII representations (such as the aforementioned `f7f77620`), we can handle any errors by simply ignoring these as unnecessary.
 
 ```python
 from pwn import *
@@ -67,13 +67,14 @@ format_str = "%x " * 299
 
 def decode_bytes(dword: bytes) -> str:
     try:
-        # change endianness to BE & decode
+        # reverse byte order after hex conversion to
+        # account for little-endian encoding
         decoded = bytes.fromhex(dword).decode("ascii")[::-1]
         return "".join([ch for ch in decoded if 32 <= ord(ch) <= 126])
 
     except UnicodeDecodeError:
         # return unchanged array if it can't be decoded
-        print(f"UnicodeDecodeError on bytearray '{dword}'.\n")
+        print(f"UnicodeDecodeError on byte array '{dword}'.\n")
         return f" {dword} "
 
 
@@ -84,7 +85,7 @@ def main():
     raw_bytes = s.recvall().decode().strip()
 
     # print raw bytes from stack to stdout
-    print(f"\nbytearray:\n{raw_bytes}\n")
+    print(f"\nbyte array:\n{raw_bytes}\n")
     dwords = raw_bytes.split(" ")
 
     # pad incorrect array lengths
@@ -119,7 +120,7 @@ To investigate this bug a little further, we can use the following example `C` s
 int main(void) {
 
     char secret[7] = "secret";
-    char input[32]; // buffer for input
+    char input[32]; // buffer to store user input
 
     printf("input something to be repeated:\n");
 
@@ -194,8 +195,8 @@ To demonstrate this, the following explicitly passes both
 
 ### Modern computers and binary security
 
-Most modern compilers and CPUs will compile security settings into a binary - e.g, relocation read-only (`RELRO`), never-execute (`NX`) bits, address space layout randomization (`ASLR`), stack canaries, position-independent executable (`PIE`) - into ELF binaries as a way to 'harden' them, with the general goal
-of making common/simple vulnerabilities harder to exploit. This would likely have been **specifically** disabled by this challenge's creator given its goal.
+Most modern compilers and CPUs will compile security settings into a binary - e.g, Relocation Read-Only (`RELRO`), No-Execute (`NX`) bits, Address Space Layout Randomization (`ASLR`), stack canaries, Position-Independent Executable (`PIE`) - into ELF binaries as a way to 'harden' them, with the general goal
+of making common/simple vulnerabilities harder to exploit. Automatic protections like these were likely **specifically** disabled by this challenge's creator given its goal.
 
 For example, here we compile and run the example `C` program with a basic `gcc` command. This means it compiles with default settings, and not only are we notified of the potential danger around the `gets()` function, but a range of protections
 are compiled into our binary by default (see the `pwn checksec` output). As an example, note that we trigger the compiler's stack canary when we try to exploit this program using format specifiers in a similar way, causing it to send a `SIGIOT` signal to the process,

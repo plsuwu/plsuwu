@@ -13,7 +13,7 @@ tags: ["capture the flag", "hackthebox", "reversing", "malware", "forensics"]
 <aside>
 <a href={link}>{title} @ {author}</a><br/>
 We've been hit by Ransomware again, but this time the threat actor seems to have upped their skillset.
-Once again a they've managed to encrypt a large set of our files. It is our policy NOT to negotiate with criminals.
+Once again they've managed to encrypt a large set of our files. It is our policy NOT to negotiate with criminals.
 Please recover the files they have encrypted - we have no other option! Unfortunately our CEO is on a no-tech retreat so can't be reached.
 </aside>
 
@@ -62,7 +62,7 @@ This binary is starting to seem a bit suspicious...
 To me, it’s not exactly obvious what is going on from this or the Wireshark output alone. I will come back to those URLs if necessary - the binary isn’t actually receiving any usable data on account of  `inetsim`,
 so I feel like this is just printing some junk URLs and doing funny malware stuff in the background.
 
-## Digging a little deeper
+## Unpacking and investigating
 
 Unpacking it and running it through IDA now...
 
@@ -72,11 +72,11 @@ Unpacking it and running it through IDA now...
 
 > *from ~10K to ~24K*
 
-With the program decompressed, we can take a much better look at it’s internals. In the symbol table, we can note that the binary is most likely using AES to encrypt the files (with AES being the answer for Task 1):
+With the program decompressed, we can take a much better look at its internals. In the symbol table, we can note that the binary is most likely using AES to encrypt the files (with AES being the answer for Task 1):
 
 ![Untitled](/img/lockpick_2_img/Untitled%205.png)
 
-In the read-only data section, there are a few interesting constants (given the context of ransomware). Of particular interest:
+In the read-only data section, there are several interesting constants pertinent given the context of ransomware:
 
 - A reference to a string, `b7894532snsmajuys6`, which seems like it a candidate for use in crypto-related functions,
 - The target directory (`/share/`), and a list of file extensions,
@@ -110,7 +110,8 @@ As the function name indicates an XOR cipher, we can perform some manual decrypt
 
 > *`https://rb.gy/ehec6` is similar enough to the `Https://rb.gy/ehec` in the manual decryption.*
 
-Noting that it may be best to do some general opsec before blindly opening sites referenced in malware IRL, the service returns a `301` status, redirecting us to Google
+It's worth noting that it might be worth exercizing even a small amount of caution before opening sites referenced in *real* malware. In this instance, its kind of unlikely that HTB will do
+anything insane and malicious to my network or VM, and having mentally assessed the risks, I'm happy to go ahead and open the URL. We find out that the service returns a 301 status and redirects to Google.
 
 ![Untitled](/img/lockpick_2_img/Untitled%2011.png)
 
@@ -118,9 +119,9 @@ However, the domain seems to belong to a URL shortening service, so maybe the ot
 
 ![Untitled](/img/lockpick_2_img/Untitled%2012.png)
 
-Unfortunately, they don’t.
+They don’t!
 
-## Finding the decryption key
+## Decryption
 
 None of the URLs directly printed to `stdout` lead to anything interesting - just pointless redirections to Google/Yahoo/similar websites.
 
@@ -179,6 +180,8 @@ which both use different line separator encodings. Ultimately, following Word’
 ![Untitled](/img/lockpick_2_img/Untitled%2022.png)
 
 ![Untitled](/img/lockpick_2_img/Untitled%2023.png)
+
+## Finally,
 
 From these decrypted documents, we can get the answer for tasks 2 and 3 (the answers being `Australian Market` and `Notionwide` respectively).
 

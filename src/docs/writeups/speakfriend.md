@@ -13,12 +13,12 @@ tags: ["capture the flag", "huntress", "forensics", "reversing", "web", "network
 It seems like this website was compromised. We found this file that seems to be related... can you make any sense of these and uncover a flag?
 </aside>
 
-We are handed a containerized webserver instance, and some required files in a zipped archive, `main.7z`. I suspect there is nothing surface-level to see on this website's frontend - a
+We are handed a containerized webserver instance, and some required files in a zipped archive, `main.7z`. I suspect there is nothing surface-level to see on this web application's frontend - a
 cursory glance through the source and various pages indicates that this assumption is *probably* correct.
 
 ![Standard Bootstrap template stuff](/img/speakfriend_img/Untitled.png)
 
-> Gunicorn aside (before you ask - yes!! it runs horrendously!!), this is pretty standard Bootstrap+jQuery template stuff
+> Gunicorn aside (before you ask - yes! it runs atrociously!!), this is pretty standard Bootstrap+jQuery template stuff
 
 ```html
 $ curl --insecure 'https://chal.ctf.games:32032'
@@ -180,8 +180,7 @@ pls@RUBY~$ curl 34.123.197.237:32032 -H 'GET / HTTP/1.1' \\
 curl: (56) Recv failure: Connection reset by peer
 ```
 
-Unlucky, maybe instead of an IP, we need to make a request to the URL itself (the server's SSL cert isn't valid, so we need to tell `curl` that it should disregard certificate
-validity using the `--insecure` arg):
+Unlucky, maybe instead of an IP, we need to make a request to the URL itself (the server's SSL certificate is self-signed rather than CA-signed, so we need to tell `curl` that it should skip the certificate validity check using the `--insecure` arg):
 
 ```bash
 curl https://chal.ctf.games:32032 --insecure -H 'GET / HTTP/1.1' \\

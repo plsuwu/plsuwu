@@ -29,14 +29,14 @@ Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
 
 ```
 
-We aren't allowed to access `ssh` without credentials (Anon login disallowed, as is generally the case), and there is nothing to find of particular interest on the webpage itself;
-I did some directory enumeration with `feroxbuster` and re-ran port scans with various options, but none of the pages have any hidden functionality or exploitable holes, including
-the handful of `nginx v1.18.0` vulnerabilities with public proof-of-concept exploits.
+SSH access is denied without proper credentials (Anonymous login is disallowed, as is the default for SSH), and there is nothing to find of particular interest on the webpage itself;
+I used `feroxbuster` (a CLI tool for brute-forcing directories and file locations) to perform directory enumeration, though this turned up nothing of interest.
+I also re-ran port scans as sometimes `rustscan` can return false negatives on account of its speed, but there was really nothing to further.
+Finally, I checked out the handfull of `nginx v1.18.0` vulnerabilities with public proof-of-concept exploits, though nothing proved useful.
 
-HTB often makes use of virtual hosts/subdomains, though ultimately I wasn’t *particularly* keen on having to enumerate subdomain stuff as I will have to do more work in order to learn a
-tool or write and debug a script.
-Having now exhausted most other options, though, I might as well bite the bullet; I wrote the following Python script to pull common subdomain names from a SecLists subdomain wordlist and
-insert it into the `Host` header of a HTTP GET request. This is essentially like adding the subdomain URL and IP into our `/etc/hosts` for each subdomain - we are directing our DNS to resolve
+HTB often makes use of virtual hosts/subdomains to hide away CMS admin dashboards. We can call it "being thorough" in retrospect, though truthfully I just wasn't overly keen on having to enumerate for subdomains (mostly just because I will
+have to do even more work in order to learn a tool or write and debug a script - sunk-cost fallacy or whatever). Having now exhausted most other options, though, I might as well bite the bullet; I wrote the following Python script to pull common
+subdomain names from a SecLists subdomain wordlist and insert it into the `Host` header of a HTTP GET request. This is essentially like adding the subdomain URL and IP into our `/etc/hosts` for each subdomain - we are directing our DNS to resolve
 the domain specified in the `Host` header to the IP specified in the URL.
 
 It might also be handy to have a simple single-purpose CLI tool for this, so I ~~want to rewrite this in Rust at some point~~ [rewrote it in Rust](https://github.com/plsuwu/vhost-enum)
@@ -129,7 +129,8 @@ $ ./droopescan scan joomla --url <http://dev.devvortex.htb>                     
 
 ## Initial SSH access
 
-This version of Joomla is vulnerable to `CVE-2023-23752`, which is an unauthenticated information disclosure vulnerability. We can exploit this to gain access to the CMS as a superuser with `lewis@devvortex.htb`'s credentials:
+This Joomla! version is susceptible to CVE-2023-23752, an unauthenticated information disclosure vulnerability, allowing unauthorized access to sensitive information. We can exploit this to gain
+access to the CMS as a superuser with `lewis@devvortex.htb`'s credentials:
 
 ```bash
 $ ruby exploit.rb <http://dev.devvortex.htb>
@@ -170,10 +171,13 @@ to our local `netcat` listener.
 
 ![Untitled](/img/devvortex_img/Untitled%202.png)
 
-We can also run through some commands to upgrade the dumb shell session to a `tty` - this is more convenience than anything, but will allow us to (amongst other things) hit `<C-c`
-to send a `SIGINT` to the remote shell, as opposed to just accidentally interrupting our local `netcat` session.
-- There is an available `python3` binary, so we can spawn a `pty` (pseudo-teletype) with python's built-in `pty` module (`python3 -c 'import pty; pty.spawn("/bin/bash")`)
-- We can then upgrade the python-invoked `pty` to a fully interactive `tty` by copying over some of our terminal environment.
+To improve our shell interaction, we can execute a series of commands to upgrade from a basic shell session to a fully interactive tty terminal - this is more convenience than anything, but it allows
+us to, for example, hit `<C-c>` to send `SIGINT` to a process on the remote machine (rather than `SIGINT`ing our local netcat process).
+
+In this instance, we can use a few tricks to achieve this:
+
+- as there is an available `python3` binary, so we can spawn a `pty` (pseudo-teletype) with python's built-in `pty` module (the `python3 -c 'import pty; pty.spawn("/bin/bash")` command),
+- we can then upgrade the python-invoked `pty` to a fully interactive `tty` by copying over some of our terminal environment.
 
 The following output is a little bit messy, but we essentially send the raw stdin data directly to the remote session:
 
@@ -290,12 +294,12 @@ mysql> show tables;
 # ...
 
 mysql> select * from sd4fg_users;
-+-----+------------+----------+---------------------+--------------------------------------------------------------+-------+-----------+---------------------+---------------------+------------+---------------------------------------------------------------------------------------------------------------------------------------------------------+---------------+------------+--------+------+--------------+--------------+
-| id  | name       | username | email               | password                                                     | block | sendEmail | registerDate        | lastvisitDate       | activation | params                                                                                                                                                  | lastResetTime | resetCount | otpKey | otep | requireReset | authProvider |
-+-----+------------+----------+---------------------+--------------------------------------------------------------+-------+-----------+---------------------+---------------------+------------+---------------------------------------------------------------------------------------------------------------------------------------------------------+---------------+------------+--------+------+--------------+--------------+
-| 649 | lewis      | lewis    | lewis@devvortex.htb | $2y$10$6V52x.SD8Xc7hNlVwUTrI.ax4BIAYuhVBMVvnYWRceBmy8XdEzm1u |     0 |         1 | 2023-09-25 16:44:24 | 2024-02-05 12:54:58 | 0          |                                                                                                                                                         | NULL          |          0 |        |      |            0 |              |
-| 650 | logan paul | logan    | logan@devvortex.htb | $2y$10$IT4k5kmSGvHSO9d6M/1w0eYiB5Ne9XzArQRFJTGThNiy/yBtkIj12 |     0 |         0 | 2023-09-26 19:15:42 | NULL                |            | {"admin_style":"","admin_language":"","language":"","editor":"","timezone":"","a11y_mono":"0","a11y_contrast":"0","a11y_highlight":"0","a11y_font":"0"} | NULL          |          0 |        |      |            0 |              |
-+-----+------------+----------+---------------------+--------------------------------------------------------------+-------+-----------+---------------------+---------------------+------------+---------------------------------------------------------------------------------------------------------------------------------------------------------+---------------+------------+--------+------+--------------+--------------+
++-----+------------+----------+---------------------+--------------------------------------------------------------+--- ...]
+| id  | name       | username | email               | password                                                     | bl ...]
++-----+------------+----------+---------------------+--------------------------------------------------------------+--- ...]
+| 649 | lewis      | lewis    | lewis@devvortex.htb | $2y$10$6V52x.SD8Xc7hNlVwUTrI.ax4BIAYuhVBMVvnYWRceBmy8XdEzm1u |    ...]
+| 650 | logan paul | logan    | logan@devvortex.htb | $2y$10$IT4k5kmSGvHSO9d6M/1w0eYiB5Ne9XzArQRFJTGThNiy/yBtkIj12 |    ...]
++-----+------------+----------+---------------------+--------------------------------------------------------------+--- ...]
 2 rows in set (0.00 sec)
 
 mysql>
@@ -364,8 +368,10 @@ User logan may run the following commands on devvortex:
 
 ## Privilege escalation | System root
 
-[This POC](https://github.com/DonnchaC/ubuntu-apport-exploitation) explains that viewing a crafted crash log can allow for code execution. We can’t just use any random file as this must be a *crafted* log, but the POC *does* include a `minimal-rce.crash` file that does the heavy lifting for us.
-We can copy/paste its contents into a file on the box and pass it to `apport-cli` that we invoke as `root` with `sudo apport-cli -c ./test.crash`:
+According to this [proof of concept exploit](https://github.com/DonnchaC/ubuntu-apport-exploitation), viewing a crafted crash log through this version of `apport-cli` can lead to arbitrary code execution.
+We can’t just use a random crash log as this must be *crafted* to contain malicious code, but the POC *does* include a `minimal-rce.crash` file that will do the heavy lifting for us.
+
+We can copy/paste its contents into a file on the box and pass it to `apport-cli`, and then execute the binary as `root` using `sudo apport-cli -c ./test.crash`:
 
 ```bash
 logan@devvortex:~$ vim ./test.crash

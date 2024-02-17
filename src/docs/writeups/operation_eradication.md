@@ -18,7 +18,7 @@ delete all the data they stole!?
 
 
 The challenge gives us a containerized HTTP server instance, alongside a file with no extension named simply `operation_eradication`.
-Passing it as an arg for the `file` command, we're told it's just plaintext ASCII. Viewing it's contents, we are shown the following:
+Passing it as an argument to the file command reveals it's just plain ASCII text. Viewing its contents, we are presented with the following:
 
 ```toml
 type = webdav
@@ -28,7 +28,7 @@ user = VAHycYhK2aw9TNFGSpMf1b_2ZNnZuANcI8-26awGLYkwRzJwP_buNsZ1eQwRkmjQmVzxMe5r
 pass = HOUg3Z2KV2xlQpUfj6CYLLqCspvexpRXU9v8EGBFHq543ySEoZE9YSdH7t8je5rWfBIIMS-5
 ```
 
-Doing a little bit of googling, we can ascertain the remote server is likely running a `WebDAV` ("Web-Distributed Authoring and Versioning") protocol service, which is effectively a
+After a bit of Googling, we can ascertain that the remote server is likely running a WebDAV ("Web-Distributed Authoring and Versioning") protocol service, which is effectively a
 (apparently now-obselete) type of network-accessible file storage service. As indicated by the config's `url` param, we are able to access the service's front-end by adjusting the `localhost`
 SLD to our assigned instance: `http://chal.ctf.games:30236/webdav`. The page is simply a blank white screen, so I assume we need to authenticate before we are able to see
 the _actual_ content (though nothing indicates this explicitly).
@@ -56,9 +56,7 @@ As expected, this isn't correct.
 
 ![Untitled](/img/operation_eradication_img/Untitled%202.png)
 
-We can try to do a bit of hashcracking & decryption, but we have no idea how these strings have been hashed - the `user` and `pass` strings are 72 characters long (i.e they don't look like a common hash type),
-and preliminary hash analysis tools, google, and ChatGPT similarly have no idea.
-
+We can try to do a bit of hashcracking & decryption, but we have no idea how these strings have been hashed - the `user` and `pass` strings are 72 characters long (i.e they don't look like a common hash type), and online hash analysis tools, Google, and ChatGPT similarly have no clue.
 We can instead Google the config file's layout, and find that it (probably) belongs to a WebDAV client CLI tool named `Rclone`.
 
 Downloading Rclone, I was unable to simply dump the provided configuration file into the corresponding Rclone folder, but we can instead run through the setup to create our own (empty) config file,
@@ -138,7 +136,7 @@ machine, and we would need to run a tunnel via `ngrok` or something, and I hones
 ```
 > A simple PHP script that will run commands on the remote machine via the `system($cmd)` builtin, where `$cmd` is defined through a URL GET request parameter.
 
-Copying the `cmd` script over, we are able to see that this is successfully written in the root directory of the WebDAV endpoint:
+After copying the cmd script over, we can see that it has been successfully written to the root directory of the WebDAV endpoint:
 
 ```powershell
 .\\rclone copy C:\\...\\exec.php huntress:/
@@ -154,7 +152,7 @@ Copying the `cmd` script over, we are able to see that this is successfully writ
 
 We are now missing one final piece before we can wipe the endpoint - we still don’t have the authentication info, and the approach I am taking requires that we make a request _without_ Rclone.
 
-Because the service uses unencrypted HTTP, we can intercept traffic routed between Rclone and WebDAV using `Wireshark`; the result of which is the following:
+Because the service uses unencrypted HTTP, we can intercept traffic routed between Rclone and WebDAV using Wireshark, resulting in the following:
 
 ```powershell
 PROPFIND /webdav/ HTTP/1.1

@@ -73,13 +73,13 @@ The challenge landing page presents us with the login form and the page's source
 <!-- [ and then the page's html & css. ] -->
 ```
 
-## initial enumeration
+## Initial Enumeration
 
 Upon initial inspection, it seems the `checkCredentials` function ensures the following:
 - all necessary parameters must be included in a POST request,
 - the `username` and `compareLength` parameters must contain a value.
 
-We can run some requests through burpsuite to make some modifications to the request's POST data - we see that the default value for `compareLength` is `32`.
+We can run some requests through Burp Suite to make some modifications to the request's POST data - we see that the default value for `compareLength` is `32`.
 
 ![burp_post_test](/img/confusing_passwords_img/burp_post_test.png)
 
@@ -153,18 +153,18 @@ passes all 'pre-strncmp()' statements, and also results in a low number when the
 
 ### exploit
 
-The login function uses `intval()` to convert the data in `compareLength` to an integer; a practice that the [PHP documentaion **strongly** advises against when dealing with objects](https://www.php.net/manual/en/function.intval.php):
+The login function uses `intval()` to convert the data in `compareLength` to an integer, a practice that [the PHP documentation **strongly** advises against when dealing with objects](https://www.php.net/manual/en/function.intval.php):
 
 >Returns the int value of value, using the specified base for the conversion (the default is base 10). **intval() should not be used on objects, as doing so will emit an E_WARNING level error and return 1.**
 
 Another notable quirk about PHP & arrays (as it related to the page's functionality): Array objects are always considered greater than any non-array object (regardless of their actual values) - so a request with an empty array will pass both the tests we require.
 
-So, by assigning an Array to the `compareLength` parameter:
+So, by assigning an array to the `compareLength` parameter:
 
 - it will be a larger number than the length of `correctPassword` via type conversion principles,
 - `intval()` will still evaluate it as `1`.
 
-This ultimately means `strncmp()` will only be asked to compare the first character in `$correctPassword` and our `password` parameter; meaning we only need to enumerate through one set of valid characters - likely in the realm of a *maximum* of ~52 requests (the first character is likely [`a-Z`]).
+This ultimately means `strncmp()` will only be called to compare the first character in `$correctPassword` and our `password` parameter, meaning we only need to enumerate through one set of valid characters - likely in the realm of a *maximum* of ~52 requests (the first character is likely [`a-Z`]).
 
 We can check that our interpretation of the request is correct by submitting a post request with the `password` and `compareLength` params as arrays:
 

@@ -134,17 +134,17 @@ Sub AutoOpen()
 End Sub
 ```
 
-Visual Basic is insane, but we can simplify things by doing a little breakdown of each function:
+Visual Basic looks cursed (because it is) - but we can walk through the script and describe the purpose of each function:
 
-- `Pears(Beets)` -> Subbtracts 17 from a number and returns its corresponding ASCII character,
+- `Pears(Beets)` -> Subtracts 17 from a number and returns its corresponding ASCII character,
 - `Strawberries(Grapes)` -> Returns the first 3 characters in a string,
 - `Almonds(Jelly)` -> Removes the first 3 characters in a string,
 - `Nuts(Milk)` -> Like the script's `main` function - loops through a string which it passes to other functions, concatenating the returned values into a final payload,
 - `Bears(Cows)` -> Returns a reversed string (this function isn't used).
 
 Essentially, the program here is building out a payload by looping over a number in 3-character sections, subtracting 17 from the section, and then converting the result to ASCII.
-I really wanted to just run this and have it print the payload to stdout, but I couldn't get it to run for whatever reason - I _think_ I discarded all the garbage variables and functions,
-like `Tea`, `Coffee`, `Napkin`, and `Bears()`, but the script adamantly refusing to execute. Maybe it was silently doing the deobfuscation in the background, who knows.
+I really wanted to simply run this and have it print a payload to my terminal, but I couldn't get it to run at all - I _think_ I discarded all the garbage variables and functions,
+like `Tea`, `Coffee`, `Napkin`, and `Bears()`, but the script adamantly refusing to execute. Maybe it was silently doing deobfuscation and similar malware things in the background? Who knows.
 
 In any case, I gave up and converted the script to python:
 
@@ -187,9 +187,10 @@ def main(s: str) -> str:
 payload = "129128136118131132121118125125049062118127116049091088107132106104116074090126" # ... truncated
 print(main(payload))
 ```
-> NOTE: This script still functional, regardless of any truncation! It just doesn't output the entire string like below.
+> This script still runs, regardless of the truncation - though it will only output **part** of the final Powershell command below.
 
-The script here converts the `apples` string into a powershell command:
+The script here converts the `Apples` string into a PowerShell command:
+
 ```powershell
 powershell -enc JGZsYWc9ImZsYWd7NjNkY2M4MmMzMDE5Nzc2OGY0ZDQ1OGRhMTJmNjE4YmN9Ig==
 ```
