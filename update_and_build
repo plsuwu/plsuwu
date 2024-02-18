@@ -1,16 +1,24 @@
-printf "\nrunning apt update...\n"
+#!/usr/bin/env bash
+
+if [ "$(id -u)" -ne 0 ]
+  then echo "Run me again as root."
+  exit
+fi
+
+printf "\nUpdating apt repositories... \n"
 apt-get update && apt-get upgrade
 
-printf "\npulling new image..."
+printf "\nPulling new image: \n"
 git pull
 
-printf "\nstopping running ctr: '$(docker ps --format {{.Names}})'...\n"
-docker stop $(docker ps -q)
+printf "\nStopping running ctr ('$(docker ps --format {{.Names}})')\n"
+docker stop $(docker ps -q) 1>/dev/null && printf "Done."
 
-printf "\nbuilding image:"
+printf "\nbuilding image\n:"
 docker build -t plsuwu .
 
-printf "\nstarting updated service..."
+printf "\nStarting service: "
 docker run --rm -dp 80:3000 plsuwu
 
-printf "\nupdated."
+
+printf "\nUpdated finished.\n"
