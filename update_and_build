@@ -1,0 +1,16 @@
+printf "\nrunning apt update...\n"
+apt-get update && apt-get upgrade
+
+printf "\npulling new image..."
+git pull
+
+printf "\nstopping running ctr: '$(docker ps --format {{.Names}})'...\n"
+docker stop $(docker ps -q)
+
+printf "\nbuilding image:"
+docker build -t plsuwu .
+
+printf "\nstarting updated service..."
+docker run --rm -dp 80:3000 plsuwu
+
+printf "\nupdated."
