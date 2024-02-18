@@ -5,7 +5,7 @@ description: "We've been hit by Ransomware again, but this time the threat actor
 author: "hackthebox"
 date: "2024-02-03"
 published: true
-tags: ["capture the flag", "hackthebox", "reversing", "malware", "forensics"]
+tags: ["capture the flag", "hackthebox", "reversing", "malware"]
 ---
 
 # Lockpick 2

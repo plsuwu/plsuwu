@@ -10,8 +10,8 @@
     import Yae from "$lib/banner/Yae.svelte";
     import Camila from "$lib/banner/Camila.svelte";
     import Makoto from "$lib/banner/Makoto.svelte";
-    const bannerList = [Yae, Camila, Makoto];
 
+    const bannerList = [Yae, Camila, Makoto];
     let randComponent = bannerList[Math.floor(Math.random() * bannerList.length)];
 
 </script>

@@ -2,7 +2,6 @@
     import type { PageData } from "./$types";
     import type { BlogPost } from "$lib/types";
     import PostsFromArray from "$lib/components/PostsFromArray.svelte";
-    import { onMount } from "svelte";
     export let data: PageData;
 
     let recentPosts: BlogPost[] = data.posts;
@@ -28,7 +27,7 @@
             <div></div>
             <div>
                 <a
-                    href="/writeups"
+                    href="/posts"
                     class="whitespace-nowrap hover:brightness-75 text-lightpink transition-all duration-300 italic"
                 >
                     view all posts {"-->"}</a
@@ -38,7 +37,7 @@
         <PostsFromArray sortedPosts={recentPosts} />
         <div class="text-center pt-8">
             <a
-                href="/writeups"
+                href="/posts"
                 class="whitespace-nowrap hover:brightness-75 text-lightpink transition-all duration-300 italic"
             >
                 view all posts {"-->"}</a

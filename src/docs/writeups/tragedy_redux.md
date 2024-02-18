@@ -4,7 +4,7 @@ description: "We found this file as part of an attack chain that seemed to manip
 author: "huntress"
 date: "2023-10-16"
 published: true
-tags: ["capture the flag", "huntress", "malware", "reversing", "obfuscation"]
+tags: ["capture the flag", "huntress", "malware", "reversing"]
 ---
 
 # Tragedy Redux

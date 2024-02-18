@@ -11,7 +11,7 @@ export const load: PageServerLoad = async () => {  // {url}
     // same deal as with the main page - this could be refactored out into a module and called from
     // the pageserverload if bothered.
     if (!postArray) {
-        const modules = import.meta.glob(`/src/docs/writeups/**/*.{md,svx,svelte.md}`);
+        const modules = import.meta.glob(`/src/docs/*/**/*.{md,svx,svelte.md}`);
         const postPromises = Object.entries(modules).map(([path, resolver]) =>
             resolver().then(
                 (post) =>

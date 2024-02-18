@@ -5,7 +5,7 @@ description: "Forela needs your help! A whole portion of our UNIX servers have b
 author: "hackthebox"
 date: "2024-02-02"
 published: true
-tags: ["capture the flag", "hackthebox", "reversing", "malware", "forensics"]
+tags: ["capture the flag", "hackthebox", "reversing", "malware"]
 ---
 
 # Lockpick

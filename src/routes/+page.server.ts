@@ -4,9 +4,7 @@ import type { MdsvexFile, BlogPost } from "$lib/types";
 
 import { setCache, getCache } from "$lib/cache";
 
-// storing writeup data in a cache like this fixes the constant 404s
-// we should only 404 now if a writeup is accessed directly via its URL immediately after
-// a server startup.
+// storing post data like this fixes the random and constant 404s
 export const load: PageServerLoad = async () => {
     let postArray = getCache();
 

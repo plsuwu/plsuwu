@@ -1,7 +1,6 @@
 <script lang="ts">
-    import { onMount, onDestroy } from "svelte";
+    import { onMount } from "svelte";
     import { show } from '$lib/cache';
-    import { fade } from 'svelte/transition';
 
     import type { PageData } from "./$types";
     import type { SvelteComponent } from "svelte";
@@ -17,9 +16,7 @@
     export let imageSrc = "#";
 
     export function toggleModal(e: Event, src: string) {
-        // stopPropagation handlers to stop scrollthrough when modal is visible
-        // (this doesnt work)
-        e.stopPropagation();
+        e.stopPropagation(); // i've tried to use `stopPropagation` to stop modal scollthrough, but it doesn't work.
         imageSrc = src;
         show.set(true);
     }
@@ -27,7 +24,6 @@
     // dynamically adds an onclick listener to each image with the image's source href
     // to launch a zoomed image modal view for phone users.
 	onMount(() => {
-        // should we be checking for `window` here? seems to work to avoid returning 500 but idk.
 		if (typeof window !== 'undefined') {
             imgs = document.querySelectorAll('img');
 
@@ -38,7 +34,7 @@
 	});
 
     // the builtin `scrollTo({top: 0, behavior: 'smooth'})` doesn't have the nice gradual slowdown
-    // when nearing top, so we call this function instead -> its not perfect but i think good enough.
+    // when nearing top, so we use this function to return smoothly.
     const backToTop = () => {
         const pos =
             document.documentElement.scrollTop || document.body.scrollTop;
@@ -59,11 +55,11 @@
                 <div class="text-center mx-auto space-x-5">
                     <div class="whitespace-nowrap">
                         <a
-                            href="/writeups"
+                            href="/posts"
                             class="text-base text-lightpink hover:brightness-75 transition-all italic duration-300 ease-in-out space-x-4"
                             ><PhArrowLeft class="inline" /><span
                                 class="font-normal underline"
-                                >back to writeups</span
+                                >back to all posts</span
                             ></a
                         >
                     </div>

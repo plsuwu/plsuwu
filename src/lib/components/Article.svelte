@@ -1,6 +1,6 @@
 <script lang="ts">
     export let slug = "";
-    const href = slug && `/writeups/${slug}`;
+    const href = slug && `/posts/${slug}`;
     import PhCaretDoubleRightBold from "virtual:icons/ph/caret-double-right-bold";
 </script>
 

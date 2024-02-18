@@ -4,7 +4,7 @@ description: "Oh no! A ransomware operator encrypted an environment, and exfiltr
 author: "huntress"
 date: "2023-10-14"
 published: true
-tags: ["capture the flag", "huntress", "malware", "web", "networks"]
+tags: ["capture the flag", "huntress", "malware", "web"]
 ---
 
 # Operation Eradication

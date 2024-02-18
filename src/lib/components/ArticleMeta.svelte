@@ -50,23 +50,14 @@
             case "binex":
                 color = "text-cat-flamingo/75";
                 return color;
-            case "forensics":
-                color = "text-cat-sky/75";
-                return color;
             case "malware":
                 color = "text-cat-red/75";
                 return color;
             case "reversing":
                 color = "text-cat-yellow/75";
                 return color;
-            case "obfuscation":
-                color = "text-cat-teal/75";
-                return color;
             case "web":
                 color = "text-cat-pink/75";
-                return color;
-            case "networks":
-                color = "text-cat-blue/75";
                 return color;
 
             default:

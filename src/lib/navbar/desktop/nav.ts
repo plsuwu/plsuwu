@@ -15,7 +15,7 @@ export const pages: PageLink[] = [
     {
         name: "posts",
         children: [
-            { name: "writeups", href: "/writeups" },
+            { name: "ctf_writeups", href: "/posts" },
             // { name: "notes", href: "/notes" }, // TODO: separate 'notes' page
         ],
     },
