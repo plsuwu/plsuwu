@@ -171,15 +171,16 @@ to our local `netcat` listener.
 
 ![Untitled](/img/devvortex_img/Untitled%202.png)
 
-To improve our shell interaction, we can execute a series of commands to upgrade from a basic shell session to a fully interactive tty terminal - this is more convenience than anything, but it allows
-us to, for example, hit `<C-c>` to send `SIGINT` to a process on the remote machine (rather than `SIGINT`ing our local netcat process).
+To improve our shell interaction, we can execute a series of commands to upgrade from a basic shell session to a fully interactive tty terminal - this is more a matter of convenience than necessity, but it allows
+us to, for example, hit `<C-c>` to send `SIGINT` to a process on the remote machine, rather than `SIGINT`ing our local netcat process. There's a handful of other benefits to this but signal hotkeys are the first thing
+I could think of and there's already enough grammar mistakes to fix so I'm picking my battles and moving on.
 
-In this instance, we can use a few tricks to achieve this:
+Regardless, in this instance, we can use a few easy terminal tricks to achieve our `tty`:
 
-- as there is an available `python3` binary, so we can spawn a `pty` (pseudo-teletype) with python's built-in `pty` module (the `python3 -c 'import pty; pty.spawn("/bin/bash")` command),
-- we can then upgrade the python-invoked `pty` to a fully interactive `tty` by copying over some of our terminal environment.
+- the machine has an available `python3` binary, allowing us to spawn a `pty` with python's built-in `pty` module (this is achieved via the command `python3 -c 'import pty; pty.spawn("/bin/bash")`),
+- we further upgrade the python-invoked `pty` to a fully interactive `tty` by copying over some of our terminal environment, essentially allowing us to send our raw, untransformed input directly to the remote session.
 
-The following output is a little bit messy, but we essentially send the raw stdin data directly to the remote session:
+The following output is a little bit messy, but the general idea outlined above is (hopefully) visible:
 
 ```bash
 \[pls@ruby\]:\[~\] \$ nc -lnvp 9999                                                                                                                             130 ↵
