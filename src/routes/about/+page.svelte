@@ -31,19 +31,11 @@
 </script>
 
 <div class="mt-14 w-full flex-col lg:mt-0">
-            <div
-            class="mx-auto w-full rounded-xl  lg:max-w-[66%] text-center py-24"
-        >
+    <div class="mx-auto w-full rounded-xl lg:max-w-[66%] text-center py-24">
+        <div class="mb-4">cybersecurity vagueposts.</div>
 
-        <div class="mb-4">
-            cybersecurity vagueposts.
-        </div>
-
-        <div class="mb-8 italic text-cat-overlay0">
-            (sorry about the ui)
-        </div>
-        <div>
-        <span>
+        <div class="mb-8 italic text-cat-overlay0">(sorry about the ui)</div>
+        <div class="my-12 space-y-5">
             <a
                 class="text-lightpink transition-all duration-200 ease-out hover:brightness-75"
                 href="https://github.com/plsuwu"
@@ -51,7 +43,14 @@
                 <PhGithubLogo class="inline-flex" />
                 <span class="inline-flex underline">github.com/plsuwu</span>
             </a>
-            </div>
+            <br />
+            <a
+                class="text-lightpink transition-all duration-200 ease-out hover:brightness-75"
+                href="https://soundcloud.com/notpls"
+            >
+                <PhSoundcloudLogo class="inline-flex" />
+                <span class="inline-flex underline">soundcloud.com/notpls</span>
+            </a>
         </div>
     </div>
-
+</div>

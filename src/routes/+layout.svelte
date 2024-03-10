@@ -7,19 +7,22 @@
     import { page } from "$app/stores";
     import PageHead from "$lib/components/PageHead.svelte";
 
+    // urgh............
     import Yae from "$lib/banner/Yae.svelte";
     import Camila from "$lib/banner/Camila.svelte";
     import Makoto from "$lib/banner/Makoto.svelte";
 
-    const bannerList = [Yae, Camila, Makoto];
-    let randComponent = bannerList[Math.floor(Math.random() * bannerList.length)];
-
+    const bannerList = [Camila, Makoto]; // Yae
+    let randComponent =
+        bannerList[Math.floor(Math.random() * bannerList.length)];
 </script>
 
 <PageHead />
 
 <div class="m-0 flex min-h-screen flex-col">
-    <div class="hidden sm:block w-full self-center mt-3 text-center font-bold lg:mt-5">
+    <div
+        class="hidden sm:block w-full self-center mt-3 text-center font-bold lg:mt-5"
+    >
         <svelte:component this={randComponent} />
     </div>
     <div class="hidden sm:block">

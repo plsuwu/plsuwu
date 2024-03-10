@@ -1,11 +1,11 @@
 <script lang="ts">
     import { onMount } from "svelte";
-    import { show } from '$lib/cache';
+    import { imgUrlStore, show } from "$lib/cache";
 
     import type { PageData } from "./$types";
     import type { SvelteComponent } from "svelte";
     import PhArrowLeft from "virtual:icons/ph/arrow-left";
-    import ImgModal from "$lib/components/ImgModal.svelte";
+    import ImgModal from "$lib/components/Post/ImgModal.svelte";
 
     export let data: PageData;
 
@@ -23,15 +23,17 @@
 
     // dynamically adds an onclick listener to each image with the image's source href
     // to launch a zoomed image modal view for phone users.
-	onMount(() => {
-		if (typeof window !== 'undefined') {
-            imgs = document.querySelectorAll('img');
+    onMount(() => {
+        if (typeof window !== "undefined") {
+            imgs = document.querySelectorAll("img");
 
             imgs.forEach((img) => {
-                img.addEventListener('click', (e) => toggleModal(e, img.currentSrc))
+                img.addEventListener("click", (e) =>
+                    toggleModal(e, img.currentSrc),
+                );
             });
         }
-	});
+    });
 
     // the builtin `scrollTo({top: 0, behavior: 'smooth'})` doesn't have the nice gradual slowdown
     // when nearing top, so we use this function to return smoothly.
@@ -40,12 +42,12 @@
             document.documentElement.scrollTop || document.body.scrollTop;
         if (pos > 0) {
             window.requestAnimationFrame(backToTop);
-            window.scrollTo(0, pos - (pos / 28));
+            window.scrollTo(0, pos - pos / 28);
         }
     };
 </script>
 
-    <ImgModal src={imageSrc}/>
+<ImgModal src={imageSrc} />
 
 <div class="mt-14 lg:mt-0 w-full flex flex-col">
     <div class=" w-full py-4">
@@ -68,7 +70,7 @@
         </div>
 
         <div class="mt-4 w-full rounded-xl">
-            <div class="text-sm p-4 lg:mx-20 2xl:mx-[18%] lg:p-12 prose">
+            <div class="text-sm p-4 lg:mx-20 2xl:mx-[18%] lg:p-12 prose -z-50">
                 <svelte:component this={component} />
                 <slot />
             </div>

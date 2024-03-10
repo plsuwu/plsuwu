@@ -1,11 +1,11 @@
 interface Page {
-  name: string;
-  href: string;
+    name: string;
+    href: string;
 }
 
 interface ParentPage {
-  name: string;
-  children: Page[];
+    name: string;
+    children: Page[];
 }
 
 type PageLink = Page | ParentPage;

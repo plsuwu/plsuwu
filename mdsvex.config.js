@@ -1,7 +1,7 @@
 import { defineMDSveXConfig as defineConfig } from 'mdsvex';
 import remarkGfm from 'remark-gfm';
 
-const config = defineConfig({
+const mdsvexConfig = defineConfig({
     extensions: ['.svelte.md', '.md', '.svx'],
 
     remarkPlugins: [remarkGfm],
@@ -9,4 +9,4 @@ const config = defineConfig({
 
 });
 
-export default config;
+export default mdsvexConfig;

@@ -1,7 +1,7 @@
 <script lang="ts">
-export let content;
-
+    export let content;
 </script>
+
 <div>
     {content}
 </div>

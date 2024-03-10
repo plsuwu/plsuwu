@@ -38,7 +38,7 @@
 
     // lifecycle hooks
     onMount(() => {
-        // document must be loaded before component can mount
+        // document must be loaded before component runs  this function
         if (typeof window !== "undefined") {
             document.addEventListener("click", handleClickOutside);
         }
@@ -53,8 +53,13 @@
 {#if sidebarOpen}
     <div class="w-screen">
         <div
-            class="z-50 fixed min-h-screen max-h-screen bg-[#e3eaf2]/75 shadow-xl sidebar"
-            in:slide={{ delay: 0, duration: 350, easing: sineInOut, axis: "x" }}
+            class="z-50 fixed min-h-screen max-h-screen bg-[#e3eaf2]/50 shadow-xl sidebar backdrop-blur-sm"
+            in:slide={{
+                delay: 0,
+                duration: 350,
+                easing: sineInOut,
+                axis: "x",
+            }}
             out:slide={{
                 delay: 0,
                 duration: 250,
@@ -86,14 +91,14 @@
                                                 openDropdown === page.name
                                                     ? "rotate-180"
                                                     : "rotate-0"
-                                            } mt-0.5 inline-flex   transition-transform duration-700 ease-out`}
+                                            } mt-0.5 inline-flex transition-transform duration-700 ease-out`}
                                         >
                                             <PhCaretUpBold />
                                         </div>
                                     </button>
                                     {#if openDropdown === page.name}
                                         <div
-                                            class={`my-4 -ml-8 absolute bg-[#e3eaf2]/90 min-w-[14rem] shadow-xl px-2 z-10 rounded-xl border
+                                            class={`my-4 -ml-8 absolute bg-[#e3eaf2]/75 min-w-[14rem] backdrop-blur-sm shadow-xl px-2 z-10 rounded-xl border
                                 ${
                                     openDropdown === page.name
                                         ? "block"
@@ -108,7 +113,7 @@
                                                         <a
                                                             on:click={() =>
                                                                 (sidebarOpen = false)}
-                                                            class=" transition-colors duration-300 ease-out text-base"
+                                                            class=" transition-colors duration-300 ease-out text-sm"
                                                             href={child.href}
                                                         >
                                                             <span class=""
@@ -138,6 +143,10 @@
                 </div>
             </div>
         </div>
+
+        <!-- div to stop clickthrough to posts - i still like the way we use composedPath to find the relevant sidebar elements
+        to toggle, so this can be in combination. -->
+        <div class="h-screen w-screen bg-white relative opacity-0"></div>
     </div>
 {/if}
 

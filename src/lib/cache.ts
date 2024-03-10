@@ -2,12 +2,15 @@ import type { PostTag, BlogPost } from '$lib/types';
 import { writable, type Writable } from "svelte/store";
 
 let cache: (BlogPost[] | null);
+
 export function setCache(data: BlogPost[]) {
     cache = data;
 }
 export function getCache() {
     return cache;
 }
+
+export let imgUrlStore: Writable<string> = writable("#");
 
 export const show: Writable<boolean> = writable(false);
 export const sortComplete: Writable<boolean> = writable(true);

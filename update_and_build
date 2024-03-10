@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
 if [ "$(id -u)" -ne 0 ]
-  then echo "Run me again as root."
-  exit
+then echo "Run me again as root."
+    exit
 fi
 
 printf "\nUpdating apt repositories... \n"
@@ -11,7 +11,7 @@ apt-get update && apt-get upgrade
 printf "\nPulling new image: \n"
 git pull
 
-printf "\nStopping running ctr ('$(docker ps --format {{.Names}})')\n"
+printf "\nStopping running ctr: '$(docker ps --format {{.Names}})'\n"
 docker stop $(docker ps -q) 1>/dev/null && printf "Done."
 
 printf "\nbuilding image\n:"
@@ -21,4 +21,4 @@ printf "\nStarting service: "
 docker run --rm -dp 80:3000 plsuwu
 
 
-printf "\nUpdated finished.\n"
+printf "\nUpdate finished.\n"

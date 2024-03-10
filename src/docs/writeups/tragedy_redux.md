@@ -10,7 +10,7 @@ tags: ["capture the flag", "huntress", "malware", "reversing"]
 # Tragedy Redux
 
 <aside>
-<strong>Description:</strong> "We found this file as part of an attack chain that seemed to manipulate file contents to stage a payload. Can you make any sense of it?"
+"We found this file as part of an attack chain that seemed to manipulate file contents to stage a payload. Can you make any sense of it?"
 </aside>
 
 Unzipping the challenge archive, we are given a single file to work with - running `file` on it tells us that it’s a Zip archive:

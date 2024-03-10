@@ -20,10 +20,10 @@
         - pls's blog -
     </div>
     <div
-        class="p-4 border rounded-lg  flex flex-col px-4 text-xs sm:text-lg lg:space-y-0 lg:p-8 pt-2 pb-6 xl:min-w-[1300px] xl:max-w-[1300px]"
+        class="p-4 border rounded-lg flex flex-col px-4 text-xs sm:text-lg lg:space-y-0 lg:p-8 pt-2 pb-6 xl:min-w-[1300px] xl:max-w-[1300px]"
     >
-        <div class="grid grid-cols-3 text-center mb-4 ">
-            <div>recent posts: </div>
+        <div class="grid grid-cols-3 text-center mb-4">
+            <div>recent posts:</div>
             <div></div>
             <div>
                 <a

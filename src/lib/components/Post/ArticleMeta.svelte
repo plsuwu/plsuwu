@@ -69,7 +69,7 @@
 <div class="space-x-2 mb-2 italic">
     <span class="ml-2">posted {daysAgo} ({formattedDate})  </span>
     <span class=" "> </span>
-    <div class="opacity-25">{author}</div>
+    <div class="opacity-25 relative -z-10">{author}</div>
     <div class="">{tags.length} tags:
     <span class="text-left">
         [ {#each tags as tag, i}

@@ -1,8 +1,8 @@
 <script lang="ts">
-    import Article from "$lib/components/Article.svelte";
-    import ArticleTitle from "$lib/components/ArticleTitle.svelte";
-    import ArticleMeta from "$lib/components/ArticleMeta.svelte";
-    import ArticleDescription from "$lib/components/ArticleDescription.svelte";
+    import Article from "$lib/components/Post/Article.svelte";
+    import ArticleTitle from "$lib/components/Post/ArticleTitle.svelte";
+    import ArticleMeta from "$lib/components/Post/ArticleMeta.svelte";
+    import ArticleDescription from "$lib/components/Post/ArticleDescription.svelte";
     import type { BlogPost } from "$lib/types";
 
     export let sortedPosts: BlogPost[];

@@ -1,6 +1,6 @@
 export interface MdsvexFile {
     default: import('svelte').SvelteComponent;
-    metadata: Record<string, string|string[]>;
+    metadata: Record<string, string | string[]>;
 }
 
 export interface PostTag {

@@ -51,5 +51,5 @@ test
 
 `inline` code / `/ ` \
 
- --> note that backslashes will probably need to be escaped else vite cant fucking compile.
+ --> note that backslashes might need to be escaped (it seems this is sometimes?? done automatically by notion) or else vite cant fucking compile.
 

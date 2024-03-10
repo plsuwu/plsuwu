@@ -114,9 +114,9 @@
                     </div>
                 </div>
                 <!--
-                if we return an `undefined` title here, it likely means a filter option yields an
-                empty `BlogPost` array, caused by a tag not having any associated posts. need a gentle
-                way to handle this case and return correctly (we just remove the unused tags for now).
+                if we return `undefined` for the title here, it likely means a filter option yields an
+                empty `BlogPost` array - usually caused by a tag not having any associated posts. need a gentle
+                way to handle this case and return correctly (however we just remove the unused tags for now).
                 -->
                 {#key sortedPosts[0].title}
                     <PostsFromArray {sortedPosts} />

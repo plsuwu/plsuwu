@@ -5,7 +5,9 @@
 <div class="w-full flex flex-col mx-auto my-20">
     <div class="text-center">
         {#if $page.status === 500}
-            <div class={`my-10 italic text-xl text-lightpink transition-all duration-1000`}>
+            <div
+                class={`my-10 italic text-xl text-lightpink transition-all duration-1000`}
+            >
                 server undergoing maintenance - please try again later.
             </div>
         {:else}

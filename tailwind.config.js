@@ -14,8 +14,12 @@ export default {
         typography: {
             DEFAULT: {
                 css: {
+                    "* ::before": {
+                        "z-index": "-1",
+                        "position": "relative"
+                    },
                     "p:not(:last-child)": {
-                        "text-align": "left",
+                        "text-align": "justify",
                         margin: "1rem",
                         "font-size": "1.1rem",
                         "line-height": "1.1rem",
@@ -157,7 +161,7 @@ export default {
                     "h1 ::before": {
                         "content": "'#'",
                         "padding-right": "7px",
-                        "opacity": "75%"
+                        "opacity": "75%",
                     },
                     "h2 ::before": {
                         "content": "'##'",
