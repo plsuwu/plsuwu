@@ -1,6 +1,6 @@
 {
 	"name": "plsuwu",
-	"version": "0.1.1",
+	"version": "0.2.1",
 	"private": true,
 	"scripts": {
 		"dev": "vite dev",
@@ -8,40 +8,31 @@
 		"preview": "vite preview",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
-		"lint": "prettier --check . && eslint .",
+		"lint": "prettier --check .",
 		"format": "prettier --write ."
 	},
 	"devDependencies": {
-		"@catppuccin/tailwindcss": "^0.1.6",
-		"@iconify/json": "^2.2.157",
+		"@iconify/json": "^2.2.199",
 		"@sveltejs/adapter-auto": "^3.0.0",
 		"@sveltejs/adapter-node": "^2.1.2",
-		"@sveltejs/kit": "^2.4.3",
+		"@sveltejs/kit": "^2.0.0",
 		"@sveltejs/vite-plugin-svelte": "^3.0.0",
-		"@tailwindcss/typography": "^0.5.10",
-		"@typescript-eslint/eslint-plugin": "^6.0.0",
-		"@typescript-eslint/parser": "^6.0.0",
-		"autoprefixer": "^10.4.16",
-		"eslint": "^8.28.0",
-		"eslint-config-prettier": "^9.0.0",
-		"eslint-plugin-svelte": "^2.30.0",
-		"mdsvex": "^0.11.0",
-		"node-html-parser": "^6.1.11",
-		"postcss": "^8.4.32",
-		"prettier": "^3.2.5",
-		"prettier-plugin-svelte": "^3.0.0",
+		"autoprefixer": "^10.4.19",
+		"postcss": "^8.4.38",
+		"prettier": "^3.1.1",
+		"prettier-plugin-svelte": "^3.2.2",
 		"prettier-plugin-tailwindcss": "^0.5.13",
 		"svelte": "^4.2.7",
 		"svelte-check": "^3.6.0",
-		"tailwindcss": "^3.3.6",
+		"tailwindcss": "^3.4.3",
 		"tslib": "^2.4.1",
 		"typescript": "^5.0.0",
-		"unplugin-icons": "^0.18.1",
-		"vite": "^5.0.12"
+		"unplugin-icons": "^0.18.5",
+		"vite": "^5.0.3"
 	},
 	"type": "module",
 	"dependencies": {
-		"remark-gfm": "^4.0.0",
-		"unist-util-visit": "^5.0.0"
+		"mdsvex": "^0.11.0",
+		"remark-gfm": "^4.0.0"
 	}
 }
