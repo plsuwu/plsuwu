@@ -1,6 +1,6 @@
 {
 	"name": "plsuwu",
-	"version": "0.0.1",
+	"version": "0.1.1",
 	"private": true,
 	"scripts": {
 		"dev": "vite dev",
@@ -28,8 +28,9 @@
 		"mdsvex": "^0.11.0",
 		"node-html-parser": "^6.1.11",
 		"postcss": "^8.4.32",
-		"prettier": "^3.0.0",
+		"prettier": "^3.2.5",
 		"prettier-plugin-svelte": "^3.0.0",
+		"prettier-plugin-tailwindcss": "^0.5.13",
 		"svelte": "^4.2.7",
 		"svelte-check": "^3.6.0",
 		"tailwindcss": "^3.3.6",
