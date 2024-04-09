@@ -2,8 +2,8 @@
 title: 'test'
 description: 'this is literally a TEST POST PLEASE im begging do not look'
 author: 'pls'
-date: '2000-12-14'
-published: false
+date: '2024-04-10'
+published: true
 tags: []
 ---
 

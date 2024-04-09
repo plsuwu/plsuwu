@@ -1,1 +1,9 @@
-<div class="flex flex-row items-center justify-center w-full">banner</div>
+<script lang="ts">
+    import Camila from "./chars/Camila.svelte";
+
+
+</script>
+
+<div class='p-3'>
+    <Camila />
+</div>

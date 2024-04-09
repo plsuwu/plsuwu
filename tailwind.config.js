@@ -5,7 +5,7 @@ export default {
 		extend: {
 			colors: {
 				l: {
-					darkpink: '#210811',
+					darkpink: '#21084a',
 					pink: '#ff99be',
 					lightpink: '#ffc8dd',
 					darkblue: '#001529',
@@ -15,10 +15,10 @@ export default {
 					whiteblue: '#f2f8ff',
 				},
 			},
-            fontFamily: {
-                sans: ['Noto Sans'],
-                mono: ['Noto Sans Mono'],
-            }
+			fontFamily: {
+				sans: ['Noto Sans'],
+				mono: ['Noto Sans Mono'],
+			},
 		},
 	},
 	plugins: [],

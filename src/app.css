@@ -3,5 +3,5 @@
 @tailwind utilities;
 
 body {
-	@apply bg-l-whitepink text-l-darkblue;
+	@apply text-l-darkpink;
 }

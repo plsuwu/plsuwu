@@ -1,13 +1,36 @@
-<script>
+<script lang="ts">
+	import { page, navigating } from '$app/stores';
+	import { fade } from 'svelte/transition';
+    import SvgSpinnersRingResize from '~icons/svg-spinners/ring-resize';
 	import Banner from '$lib/components/banner/Banner.svelte';
-import '../app.css';
+	import Nav from '$lib/components/nav/Nav.svelte';
+	import '../app.css';
 </script>
 
-<div class="mb-14 py-2">
-    <Banner />
-</div>
-<div>
-    <slot />
-</div>
+<div class="flex min-h-screen flex-col">
+	<div class="mb-8 flex flex-col shadow-md">
+		<Banner />
+		<Nav />
+	</div>
 
-<div></div>
+	{#key $page.url}
+		{#if $navigating}
+			<div
+				in:fade={{ delay: 0, duration: 350 }}
+				out:fade={{ delay: 0, duration: 100 }}
+				class="my-8 w-full flex flex-row flex-1 lg:my-12 justify-center"
+			>
+			    <SvgSpinnersRingResize class='text-6xl opacity-75' />
+
+			</div>
+		{:else}
+			<div
+				in:fade={{ delay: 100, duration: 350 }}
+				class="my-8 w-full flex-1 lg:my-12"
+			>
+				<slot />
+			</div>
+		{/if}
+	{/key}
+	<div>asdb</div>
+</div>
