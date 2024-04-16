@@ -5,7 +5,8 @@ description: "A very simple HTB seasonal."
 author: "hackthebox"
 date: "2023-09-04"
 published: true
-tags: ["capture the flag", "hackthebox", "web"]
+area: "ctf"
+tags: ["web"]
 ---
 
 # Cozyhosting

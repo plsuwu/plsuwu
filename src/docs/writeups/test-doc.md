@@ -3,8 +3,9 @@ title: 'test'
 description: 'this is literally a TEST POST PLEASE im begging do not look'
 author: 'pls'
 date: '2024-04-10'
-published: true
-tags: []
+published: false
+area: "none"
+tags: ["test", "test post"]
 ---
 
 [a link to somewhere](https://www.google.com.au)

@@ -4,7 +4,8 @@ description: "Wanna play a game of rock, paper, scissors against a computer that
 author: "huntress"
 date: "2023-10-16"
 published: true
-tags: ["capture the flag", "huntress", "reversing"]
+area: "ctf"
+tags: ["reversing"]
 ---
 
 # Rock, Paper, Psychic

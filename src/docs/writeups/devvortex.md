@@ -5,7 +5,8 @@ description: "Easy HackTheBox seasonal machine."
 author: "hackthebox"
 date: "2024-02-08"
 published: true
-tags: ["capture the flag", "hackthebox", "web"]
+area: "ctf"
+tags: ["web"]
 ---
 
 # DevVortex

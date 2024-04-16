@@ -8,7 +8,7 @@
 </script>
 
 <div class="flex min-h-screen flex-col">
-	<div class="mb-8 flex flex-col shadow-md">
+	<div class="mb-4 flex flex-col shadow-md">
 		<Banner />
 		<Nav />
 	</div>
@@ -18,7 +18,7 @@
 			<div
 				in:fade={{ delay: 0, duration: 350 }}
 				out:fade={{ delay: 0, duration: 100 }}
-				class="my-8 w-full flex flex-row flex-1 lg:my-12 justify-center"
+				class="mb-8 w-full flex flex-row flex-1 lg:my-12 justify-center"
 			>
 			    <SvgSpinnersRingResize class='text-6xl opacity-75' />
 
@@ -26,11 +26,11 @@
 		{:else}
 			<div
 				in:fade={{ delay: 100, duration: 350 }}
-				class="my-8 w-full flex-1 lg:my-12"
+				class="mb-8 w-full flex-1 lg:my-12"
 			>
 				<slot />
 			</div>
 		{/if}
 	{/key}
-	<div>asdb</div>
+	<div class='mt-12'>asdb</div>
 </div>

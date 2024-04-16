@@ -5,7 +5,8 @@ description: "An amateur programmer decides that for his hello world program, he
 author: "0x0539"
 date: "2023-05-16"
 published: true
-tags: ["capture the flag", "0x0539", "binex"]
+area: "ctf"
+tags: ["binex"]
 ---
 
 # Bleed the Stack

@@ -4,7 +4,11 @@ export const pages: NavButton[] = [
 	{ name: 'home', href: '/' },
 	{
 		name: 'posts',
-		children: [{ name: 'ctf stuff', href: '/posts/ctf' }],
+		children: [
+            { name: 'all posts', href: '/posts' },
+            // { name: 'ctf stuff', href: '/posts/ctf' },
+            // { name: 'notes', href: '/posts/notes' }
+        ],
 	},
     {
         name: 'about',

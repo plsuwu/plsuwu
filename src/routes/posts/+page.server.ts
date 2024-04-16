@@ -1,13 +1,12 @@
 import type { PageServerLoad } from "./$types";
 import type { MdsvexFile, BlogPost } from "$lib/utils/types";
-import { sleep, slugFromPath } from "$lib/utils/utils";
+import { slugFromPath } from "$lib/utils/utils";
 import { setCache, getCache } from "$lib/utils/store";
 
 export const load: PageServerLoad = async () => {
     let postArray = getCache();
 
-    // if posts cannot be loaded from in-memory cache, fetch them from the
-    // filesystem and push them to the cache.
+    // should be in memory by this point.
     if (!postArray) {
         // glob for filenames in `src/docs` & its subdirectories - this is just metadata, post content is
         // loaded when navigated to in `../[slug]/page.ts`.

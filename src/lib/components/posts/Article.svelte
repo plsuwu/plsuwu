@@ -1,9 +1,13 @@
 <script lang="ts">
+	import HeroiconsBarsArrowDown16Solid from '~icons/heroicons/bars-arrow-down-16-solid';
+	import HeroiconsArrowLongRightSolid from '~icons/heroicons/arrow-long-right-solid';
 	import { truncate, elapsedTime } from '$lib/utils/utils';
+
 	export let slug: string;
 	export let title: string;
 	export let author: string;
 	export let date: string;
+	export let area: string;
 	export let tags: string[];
 	export let description: string;
 
@@ -12,49 +16,67 @@
 		.replace(/[^a-zA-Z ]/g, '')
 		.replace(/\s/g, '-');
 
+	function colorTag(tag: string): string {
+		const colorMap: { [key: string]: string } = {
+			ctf: 'text-l-darkpink/75',
+		};
+
+		return colorMap[tag];
+	}
+
 	// should determine if ctf or other route
 	const href = slug && `/posts/ctf/${slug}`;
 	const daysAgo = elapsedTime(new Date(date).getTime());
-	const formattedDate = new Date(date).toDateString();
+	const formattedDate = new Date(date).toLocaleDateString('en-AU');
 </script>
 
-<div>
-	<article>
-		<div
-			class="m-3 mb-0 max-w-fit text-left text-xl font-bold italic transition-colors duration-300 ease-in-out lg:text-2xl"
-			{id}
-		>
-			<a {href}>
-				{title}
+<div class="w-full items-center p-4">
+	<div class="grid grid-cols-3 justify-between">
+		<div class="flex flex-col content-center self-center justify-self-start">
+			<a {href} class="text-sm font-bold lg:text-lg">
+				[ {title} ]
 			</a>
-		</div>
-		<div class="p-px">
-			<p class="p-2 pb-0 pl-1 sm:p-4">
-				<span class="my-1 text-start italic">
-					<div class="mb-1">description:</div>
-					<span class="text-lg">&ldquo;</span>{truncate(description, 64)}<span
-						class="text-lg">&rdquo;</span
-					></span
-				>
-			</p>
-		</div>
-		<div class="mb-2 space-x-2 italic">
-			<span class="ml-2">posted {daysAgo} ({formattedDate}) </span>
-			<span class=" "> </span>
-			<div class="relative -z-10 opacity-25">{author}</div>
-			<div class="">
-				{tags.length} tags:
-				<span class="text-left">
-					[ {#each tags as tag, i}
-						{#if i + 1 !== tags.length}
-							<span>{tag}</span>,
-						{:else}
-							<span>{tag}</span>
-						{/if}
-					{/each}]
-				</span>
+
+			<div class="italic opacity-55">
+				<div class="text-left text-sm">posted {daysAgo},</div>
+				<div class="text-left text-sm">on {formattedDate}</div>
 			</div>
 		</div>
-	</article>
+
+		<div class="col-span-1 content-center self-center justify-self-start">
+			<div class="flex flex-row items-center space-x-2">
+				<div class={`text-md font-bold italic ${colorTag(area)}`}>{area}</div>
+				<div class="mt-0.5 text-xs font-normal italic opacity-55">
+					({author})
+				</div>
+			</div>
+
+			<div class="text-xs italic opacity-55">
+				tagged:{' '}
+				[{' '}{#each tags as tag, i}
+					{#if i + 1 !== tags.length}
+						<span>{tag}</span>,
+					{:else}
+						<span>{tag}</span>
+					{/if}
+				{/each}{' '}]
+			</div>
+		</div>
+
+		<div class="col-span-1 self-center justify-self-end">
+			<a
+				href={`posts/${area}/${slug}`}
+				class="group flex flex-row items-center text-lg transition-all duration-200 group-hover:text-l-darkpink/55"
+			>
+				[
+				<div
+					class="group mt-1 flex flex-row space-x-2 text-xs transition-all duration-200 group-hover:text-l-darkpink/55"
+				>
+					<div>{' '}read{' '}</div>
+					<HeroiconsArrowLongRightSolid />
+				</div>
+				]
+			</a>
+		</div>
+	</div>
 </div>
-<!-- <div class="border border-b"></div> -->

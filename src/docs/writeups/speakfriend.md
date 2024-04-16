@@ -4,7 +4,8 @@ description: "It seems like this website was compromised. We found this file tha
 author: "huntress"
 date: "2023-10-21"
 published: true
-tags: ["capture the flag", "huntress", "reversing", "web"]
+area: "ctf"
+tags: ["reversing", "web"]
 ---
 
 # Speakfriend

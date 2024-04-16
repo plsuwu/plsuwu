@@ -5,7 +5,8 @@ description: "This login system will give you the flag... as long as you can pro
 author: "0x0539"
 date: "2023-06-16"
 published: true
-tags: ["capture the flag", "0x0539", "web"]
+area: "ctf"
+tags: ["web"]
 ---
 
 # Confusing Passwords

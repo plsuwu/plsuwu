@@ -1,7 +1,7 @@
-// simulates network delay
+// async network delay
 export const sleep = async (ms: number) => {
     return new Promise((r) => setTimeout(r, ms));
-}
+};
 
 export function truncate(str: string, n: number) {
     return str.length > n ? str.slice(0, n - 1).trimEnd() + '...' : str;

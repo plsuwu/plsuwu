@@ -2,7 +2,9 @@
 	import { onMount, onDestroy } from 'svelte';
 	import { fade } from 'svelte/transition';
 	import HeroiconsChevronUp20Solid from '~icons/heroicons/chevron-up-20-solid';
+    import HeroiconsArrowSmallRight20Solid from '~icons/heroicons/arrow-small-right-20-solid';
 	import { pages } from './nav';
+	import { expoIn, expoOut } from 'svelte/easing';
 
 	let dropdown = '';
 
@@ -34,14 +36,14 @@
 	});
 </script>
 
-<div class="flex w-full flex-col items-center justify-center p-6">
+<div class="flex w-full flex-col items-center justify-center p-5">
 	<ul class="flex flex-row space-x-8 font-bold">
 		{#each pages as page}
 			{#if 'children' in page}
 				<li>
 					<button
 						on:click={() => toggle(page.name)}
-						class="group flex flex-row items-center space-x-2 p-2 dropdown"
+						class="dropdown group flex flex-row items-center space-x-2 p-2"
 					>
 						<div class="transition-all duration-200 group-hover:text-l-pink">
 							{page.name}
@@ -54,19 +56,20 @@
 					</button>
 					{#if dropdown === page.name}
 						<div
-							class={`absolute rounded-md border backdrop-opacity-25 pr-2 pl-1 py-2 shadow-xl backdrop-blur-sm
+							class={`absolute rounded-md border bg-white/75 py-2 pl-1 pr-2 shadow-xl backdrop-blur-lg
                                 ${dropdown === page.name ? 'block' : 'hidden'}`}
-							in:fade={{ duration: 200 }}
-							out:fade={{ duration: 200 }}
+                            in:fade={{ duration: 200, easing: expoOut  }}
+							out:fade={{ duration: 200, easing: expoOut }}
 						>
-							<ul class="space-y-4 p-1 -pr-2">
+							<ul class="-pr-2 space-y-1 p-0.5">
 								{#each page.children as child}
-									<li class="mx-auto">
+									<li class="mx-auto min-w-48 border border-pink-200 rounded-md p-0.5">
 										<a
-											class="hover:bg-l-whitepink py-1 pl-2 pr-8 text-start rounded-lg transition-all duration-200 hover:text-l-pink"
+                                            class="rounded-md px-3 flex flex-row items-center justify-between py-1.5 transition-all duration-300 ease-out hover:bg-l-pink/35 hover:text-l-darkpink/55"
 											href={child.href}
 										>
 											{child.name}
+                                            <HeroiconsArrowSmallRight20Solid class='text-lg text-end'/>
 										</a>
 									</li>
 								{/each}
