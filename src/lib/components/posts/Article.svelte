@@ -2,6 +2,8 @@
 	// import HeroiconsBarsArrowDown16Solid from '~icons/heroicons/bars-arrow-down-16-solid';
 	import HeroiconsArrowLongRightSolid from '~icons/heroicons/arrow-long-right-solid';
 	import { elapsedTime } from '$lib/utils/utils';
+	import { blur } from 'svelte/transition';
+	import { expoIn } from 'svelte/easing';
 
 	export let slug: string;
 	export let title: string;
@@ -63,20 +65,28 @@
 			</div>
 		</div>
 
-		<div class="col-span-1 self-center justify-self-end">
-			<a
-				href={`posts/${area}/${slug}`}
-				class="group flex flex-row items-center text-lg transition-all duration-200 group-hover:text-l-darkpink/55"
-			>
-				[
-				<div
-					class="group mt-1 flex flex-row space-x-2 text-xs transition-all duration-200 group-hover:text-l-darkpink/55"
+		<div class="col-span-1 items-center self-center text-center justify-self-end">
+				<a
+					class="group flex space-x-1 flex-row items-center text-center rounded-md px-0.5 align-top transition-all duration-300 ease-out opacity-50 hover:opacity-100"
+					href={`posts/${area}/${slug}`}
 				>
-					<div>{' '}read{' '}</div>
-					<HeroiconsArrowLongRightSolid />
-				</div>
-				]
-			</a>
+					<div
+						class="transition-all duration-200 ease-out"
+					>
+						[
+					</div>
+					<div
+						class="mt-0.5 flex flex-row items-center rounded-md text-xs opacity-50 transition-colors duration-200 ease-out group-hover:opacity-100"
+					>
+						<div>{' '}read{' '}</div>
+						<HeroiconsArrowLongRightSolid class="inline-flex" />
+					</div>
+					<div
+						class="transition-all duration-200 ease-out"
+					>
+						]
+					</div>
+				</a>
 		</div>
 	</div>
 </div>

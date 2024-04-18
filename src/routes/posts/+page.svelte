@@ -1,8 +1,10 @@
 <script lang="ts">
 	import type { PageData } from './$types';
 	import type { BlogPost } from '$lib/utils/types';
+	import { blur } from 'svelte/transition';
 	import PostLayout from '$lib/components/posts/PostLayout.svelte';
 	import { fzf } from '$lib/utils/utils';
+	import { expoIn, expoOut } from 'svelte/easing';
 	export let data: PageData;
 
 	const noSearchResults: BlogPost = {
@@ -20,15 +22,15 @@
 	// const orderingKeys = ['asc', 'des'];
 
 	let sorting = 'date';
-	let ordering = 'des';
+	let ordering = 'descending';
 	let filtering = 'all';
 	let prValue = '';
 	let posts: BlogPost[];
 
 	$: posts = apply(data.posts, sorting, ordering, filtering);
 
-	 // pull out into two functions so we don't re-apply the filter each time
-     // -- for now tho this is so much better than the 27 if/elses i was using prior
+	// pull out into two functions so we don't re-apply the filter each time
+	// -- for now tho this is so much better than the 27 if/elses i was using prior
 	function apply(
 		posts: BlogPost[],
 		sortingKey: string,
@@ -43,7 +45,7 @@
 				comp = a.title.localeCompare(b.title);
 			}
 
-			return ordering === 'des' ? -comp : comp;
+			return ordering === 'descending' ? -comp : comp;
 		});
 
 		return filterer(sorted, filtering);
@@ -95,12 +97,10 @@
 						<div>sorting by the [</div>
 						<select
 							id="sortSelect"
-							class="rounded-md px-1 py-0 text-xs"
+							class="rounded-md px-1 py-0 text-xs bg-l-darkblue text-l-whitepink"
 							bind:value={sorting}
-							on:load={() =>
-								apply(posts, sorting, ordering, filtering)}
-							on:change={() =>
-								apply(posts, sorting, ordering, filtering)}
+							on:load={() => apply(posts, sorting, ordering, filtering)}
+							on:change={() => apply(posts, sorting, ordering, filtering)}
 						>
 							{#each sortingKeys as option}
 								<option value={option}>
@@ -109,14 +109,14 @@
 							{/each}
 						</select>
 
-						<div>] of each post,</div>
+						<div>] of each post</div>
 					</div>
 					<div class="inline-flex space-x-2 self-end text-start">
 						<div>in</div>
 						<button
 							class="group inline-flex rounded-md px-0.5 transition-colors duration-200 ease-out hover:bg-l-darkblue"
 							on:click={() =>
-								(ordering = ordering === 'des' ? 'asc' : 'des')}
+								(ordering = ordering === 'descending' ? 'ascending' : 'descending')}
 						>
 							<div
 								class="transition-colors duration-200 ease-out group-hover:text-l-whitepink"
@@ -141,7 +141,12 @@
 			</div>
 		</div>
 	</div>
-	{#key posts[0].title}
-		<PostLayout sortedPosts={posts} />
-	{/key}
+	<!-- {#key posts[0].title && posts[posts.length - 1].title} -->
+    <!-- in:blur={{ delay: 100, duration: 500, easing: expoOut }} -->
+		<ul
+			class="flex w-full flex-col space-y-4 self-center rounded-md sm:max-w-4xl xl:w-[65%]"
+		>
+			<PostLayout sortedPosts={posts} />
+		</ul>
+	<!-- {/key} -->
 </div>

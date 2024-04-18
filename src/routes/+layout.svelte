@@ -6,8 +6,9 @@
 	import Nav from '$lib/components/nav/Nav.svelte';
 	import '../app.css';
 	import Footer from '$lib/components/footer/Footer.svelte';
+	import PageHead from '$lib/components/PageHead.svelte';
 </script>
-
+<PageHead />
 <div class="flex min-h-screen flex-col">
 	<div class="mb-4 flex flex-col shadow-md">
 		<Banner />
@@ -19,7 +20,7 @@
 			<div
 				in:fade={{ delay: 0, duration: 350 }}
 				out:fade={{ delay: 0, duration: 100 }}
-				class="mb-8 w-full flex flex-row flex-1 lg:my-12 justify-center"
+				class="mb-8 w-full flex flex-row flex-1 lg:my-12 justify-center min-h-full"
 			>
 			    <SvgSpinnersRingResize class='text-6xl opacity-75' />
 

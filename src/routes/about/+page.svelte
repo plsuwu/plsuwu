@@ -18,10 +18,10 @@
 	];
 </script>
 
-<div class="mt-14 w-full flex-col lg:mt-0">
-	<div class="mx-auto w-full rounded-xl py-24 text-center lg:max-w-[66%]">
+<div class="mt-18 w-full flex-col lg:mt-0">
+	<div class="mx-auto w-full rounded-xl py-36 text-center lg:max-w-[66%]">
 		<div class="mb-2 text-lg font-semibold">cybersecurity vagueposts.</div>
-		<div class="mb-8 italic opacity-50">(sorry about the UI)</div>
+		<div class="mb-8 italic opacity-50"></div>
 		<div class="my-12 flex flex-col space-y-2">
 			{#each offsite as link}
 				<a class="group" href={link.href}>
