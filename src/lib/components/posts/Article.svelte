@@ -1,7 +1,7 @@
 <script lang="ts">
-	import HeroiconsBarsArrowDown16Solid from '~icons/heroicons/bars-arrow-down-16-solid';
+	// import HeroiconsBarsArrowDown16Solid from '~icons/heroicons/bars-arrow-down-16-solid';
 	import HeroiconsArrowLongRightSolid from '~icons/heroicons/arrow-long-right-solid';
-	import { truncate, elapsedTime } from '$lib/utils/utils';
+	import { elapsedTime } from '$lib/utils/utils';
 
 	export let slug: string;
 	export let title: string;

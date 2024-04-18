@@ -5,6 +5,7 @@
 	import Banner from '$lib/components/banner/Banner.svelte';
 	import Nav from '$lib/components/nav/Nav.svelte';
 	import '../app.css';
+	import Footer from '$lib/components/footer/Footer.svelte';
 </script>
 
 <div class="flex min-h-screen flex-col">
@@ -32,5 +33,7 @@
 			</div>
 		{/if}
 	{/key}
-	<div class='mt-12'>asdb</div>
+	<div class='mt-24'>
+        <Footer />
+    </div>
 </div>

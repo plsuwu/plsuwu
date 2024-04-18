@@ -1,3 +1,6 @@
+import type { SvelteComponent } from 'svelte';
+import type { BlogPost, IconPromise } from './types';
+
 // async network delay
 export const sleep = async (ms: number) => {
     return new Promise((r) => setTimeout(r, ms));
@@ -5,6 +8,39 @@ export const sleep = async (ms: number) => {
 
 export function truncate(str: string, n: number) {
     return str.length > n ? str.slice(0, n - 1).trimEnd() + '...' : str;
+}
+
+export async function iconLoader(getIcon: IconPromise): Promise<typeof SvelteComponent> {
+    const component = await getIcon();
+    return component.default;
+}
+
+export function fzf(query: string, data: BlogPost[]): BlogPost[] {
+    query = query.toLowerCase();
+
+    const scoreItem = (item: string): number => {
+        // console.log('spread search data =>', item);
+        let score = 0;
+        let queryIndex = 0;
+        const lowerItem = item.toLowerCase();
+        // console.log('lowered spread data =>', lowerItem);
+
+        for (let i = 0; i < lowerItem.length && queryIndex < query.length; i++) {
+            if (lowerItem[i] === query[queryIndex]) {
+                score++;
+                queryIndex++;
+            }
+        }
+
+        return score;
+    };
+
+    return data
+        .map((item) => ({ item, score: scoreItem([...item.tags, item.title, item.author, item.area].join(" ")) }))
+        .filter(({ score }) =>  score > query.length - 1)
+        .map((item) => item)
+        .sort((a, b) => b.score - a.score)
+        .map(({ item }) => item);
 }
 
 export const slugFromPath = (path: string) =>

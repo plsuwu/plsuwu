@@ -1,8 +1,8 @@
-import type { PostTag, BlogPost } from '$lib/utils/types';
+import type { BlogPost } from '$lib/utils/types';
 import { writable, type Writable } from 'svelte/store';
 
-const sortOptions = ['date', 'name'];
-const orderOptions = ['ascending', 'descending'];
+// const sortOptions = ['date', 'name'];
+// const orderOptions = ['ascending', 'descending'];
 
 let cache: BlogPost[] | null;
 

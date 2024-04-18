@@ -4,7 +4,7 @@
 	import HeroiconsChevronUp20Solid from '~icons/heroicons/chevron-up-20-solid';
     import HeroiconsArrowSmallRight20Solid from '~icons/heroicons/arrow-small-right-20-solid';
 	import { pages } from './nav';
-	import { expoIn, expoOut } from 'svelte/easing';
+	import { expoOut } from 'svelte/easing';
 
 	let dropdown = '';
 

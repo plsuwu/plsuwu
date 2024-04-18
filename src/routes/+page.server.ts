@@ -1,6 +1,6 @@
 import type { PageServerLoad } from "./$types";
 import type { MdsvexFile, BlogPost } from "$lib/utils/types";
-import { sleep, slugFromPath } from "$lib/utils/utils";
+import { slugFromPath } from "$lib/utils/utils";
 import { setCache, getCache } from "$lib/utils/store";
 
 export const load: PageServerLoad = async () => {

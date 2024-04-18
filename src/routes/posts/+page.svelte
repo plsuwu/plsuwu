@@ -2,118 +2,146 @@
 	import type { PageData } from './$types';
 	import type { BlogPost } from '$lib/utils/types';
 	import PostLayout from '$lib/components/posts/PostLayout.svelte';
-
-	const sortOptions = ['new -> old', 'old -> new', 'a-z', 'z-a'];
-
+	import { fzf } from '$lib/utils/utils';
 	export let data: PageData;
-	let filterParams = 'all';
-	$: sortBy = sortOptions[0];
-	let sortedPosts: BlogPost[];
-	$: sortedPosts = sortPosts(sortBy);
 
+	const noSearchResults: BlogPost = {
+		slug: '',
+		title: 'no results',
+		author: '',
+		area: '',
+		tags: [''],
+		description: '',
+		date: '',
+		published: true,
+	};
 
-    /**
-     * make this chunk of if/elses tidier (cant be bothered atm)
-    */
+	const sortingKeys = ['date', 'title'];
+	// const orderingKeys = ['asc', 'des'];
 
-	function sortPosts(sort: string): BlogPost[] {
-		let sorted: BlogPost[];
+	let sorting = 'date';
+	let ordering = 'des';
+	let filtering = 'all';
+	let prValue = '';
+	let posts: BlogPost[];
 
-		// new to old
-		if (sort === sortOptions[0]) {
-			sorted = data.posts.sort((a, b) =>
-				new Date(a.date) > new Date(b.date) ? -1 : 1
-			);
-			return filterPosts(sorted, filterParams);
-		}
-		// old to new
-		if (sort === sortOptions[1]) {
-			sorted = data.posts.sort((a, b) =>
-				new Date(a.date) < new Date(b.date) ? -1 : 1
-			);
-			return filterPosts(sorted, filterParams);
-		}
-		// a-z
-		if (sort === sortOptions[2]) {
-			sorted = data.posts.sort((a, b) => (a.title < b.title ? -1 : 1));
-			return filterPosts(sorted, filterParams);
-		}
-		// z-a
-		if (sort === sortOptions[3]) {
-			sorted = data.posts.sort((a, b) => (a.title > b.title ? -1 : 1));
-			return filterPosts(sorted, filterParams);
-		}
+	$: posts = apply(data.posts, sorting, ordering, filtering);
 
-		return data.posts;
+	 // pull out into two functions so we don't re-apply the filter each time
+     // -- for now tho this is so much better than the 27 if/elses i was using prior
+	function apply(
+		posts: BlogPost[],
+		sortingKey: string,
+		ordering: string,
+		filtering: string
+	): BlogPost[] {
+		const sorted = posts.sort((a, b) => {
+			let comp = 0;
+			if (sortingKey === 'date') {
+				comp = new Date(a.date).getTime() - new Date(b.date).getTime();
+			} else if (sortingKey === 'title') {
+				comp = a.title.localeCompare(b.title);
+			}
+
+			return ordering === 'des' ? -comp : comp;
+		});
+
+		return filterer(sorted, filtering);
 	}
 
-	function setFilter(filter: string) {
-		filterParams = filter;
-		sortedPosts = sortPosts(sortBy);
+	function filterer(posts: BlogPost[], tag: string): BlogPost[] {
+		return tag === 'all' ? posts : posts.filter((post) => post.tags.includes(tag));
 	}
 
-	function filterPosts(posts: BlogPost[], selectedTag: string): BlogPost[] {
-		if (selectedTag === 'all') {
-			return posts;
-		}
-
-		return posts.filter((post) => post.tags.includes(selectedTag));
+	let debounce: number | undefined;
+	async function search(
+		event: Event & { currentTarget: EventTarget & HTMLInputElement }
+	) {
+		const { value } = event.target as HTMLInputElement;
+		clearTimeout(debounce);
+		debounce = setTimeout(async () => {
+			if (!value || value === '') {
+				posts = apply(data.posts, sorting, ordering, filtering);
+			}
+			if (value === prValue) {
+				let result = fzf(value, posts);
+				if (result.some((post) => post.title)) {
+					posts = apply(result, sorting, ordering, filtering);
+				} else {
+					posts = Array(noSearchResults);
+				}
+			}
+		}, 250); // ms
 	}
 </script>
 
 <div class="flex w-full flex-col justify-center space-y-10 px-6">
 	<div class="self-center pb-4 text-5xl font-extrabold">all posts</div>
 	<div class="flex w-1/3 flex-row justify-between self-center">
-		<div class="flex">
+		<div class="flex flex-row space-x-2">
+			<input
+				type="text"
+				class="active:placeholder-shown:false h-8 self-center rounded-md bg-l-darkblue px-2 text-sm text-l-whitepink placeholder:italic"
+				placeholder="search for something..."
+				bind:value={prValue}
+				on:input={(event) => search(event)}
+			/>
 		</div>
-		<!-- <div class="flex-0 my-1 border-l border-l-darkpink/55"></div> -->
+		<div class="flex-0 my-1 border-l border-l-darkpink/55"></div>
 		<div>
 			<div class="inline-flex justify-end space-x-2 text-xs font-medium">
 				<div class="flex flex-col space-y-1">
-					<div class="flex flex-row items-center justify-end space-x-1">
-						<div>[</div>
-						<!-- <div> -->
-							<label for="sortSelect">sorting</label>
+					<div class="flex flex-row items-center justify-end space-x-2">
+						<div>sorting by the [</div>
+						<select
+							id="sortSelect"
+							class="rounded-md px-1 py-0 text-xs"
+							bind:value={sorting}
+							on:load={() =>
+								apply(posts, sorting, ordering, filtering)}
+							on:change={() =>
+								apply(posts, sorting, ordering, filtering)}
+						>
+							{#each sortingKeys as option}
+								<option value={option}>
+									{option}
+								</option>
+							{/each}
+						</select>
 
-                        <div>]:</div>
-							<select
-								id="sortSelect"
-								class="rounded-md p-px"
-								bind:value={sortBy}
-								on:load={() => sortPosts(sortBy)}
-								on:change={() => sortPosts(sortBy)}
+						<div>] of each post,</div>
+					</div>
+					<div class="inline-flex space-x-2 self-end text-start">
+						<div>in</div>
+						<button
+							class="group inline-flex rounded-md px-0.5 transition-colors duration-200 ease-out hover:bg-l-darkblue"
+							on:click={() =>
+								(ordering = ordering === 'des' ? 'asc' : 'des')}
+						>
+							<div
+								class="transition-colors duration-200 ease-out group-hover:text-l-whitepink"
 							>
-								{#each sortOptions as option}
-									<option value={option}>
-										{option}
-									</option>
-								{/each}
-							</select>
-						</div>
-					<!-- </div> -->
+								[
+							</div>
+							<div
+								class="rounded-md px-1 opacity-50 transition-colors duration-200 ease-out group-hover:text-l-whitepink group-hover:opacity-100"
+							>
+								{ordering}
+							</div>
+							<div
+								class="transition-colors duration-200 ease-out group-hover:text-l-whitepink"
+							>
+								]
+							</div>
+						</button>
 
-					<!-- <div class="flex flex-row items-center justify-end"> -->
-					<!-- 	<div>[</div> -->
-					<!-- 	<div></div> -->
-					<!-- 	<div> -->
-					<!-- 		<label for="filterSelect">tag: </label> -->
-					<!-- 		<select -->
-					<!-- 			id="filterSelect" -->
-					<!-- 			class="rounded-md p-px" -->
-					<!-- 			bind:value={filterParams} -->
-					<!-- 			on:load={() => setFilter(filterParams)} -->
-					<!-- 			on:change={() => setFilter(filterParams)} -->
-					<!-- 		> -->
-					<!-- 			<option value={'all'}> all posts </option> -->
-					<!-- 		</select> -->
-					<!-- 	</div> -->
-					<!-- 	<div>]</div> -->
-					<!-- </div> -->
+						<span>order</span>
+					</div>
 				</div>
 			</div>
 		</div>
 	</div>
-	{#key sortedPosts[0].title}
-		<PostLayout {sortedPosts} />
+	{#key posts[0].title}
+		<PostLayout sortedPosts={posts} />
 	{/key}
 </div>
