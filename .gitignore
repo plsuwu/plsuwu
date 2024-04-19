@@ -1,6 +1,7 @@
 build/
 node_modules/
 .svelte-kit/
+nginx.conf
 
 logs
 *.log
