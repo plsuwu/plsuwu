@@ -84,7 +84,7 @@ DIR = "./forela-criticaldata/"
 text = b"test_str"
 
 def xor(data: bytes, key: str) -> bytes:
-    ## xor `data` with `key`, returning resulting bytes
+    # xor `data` with `key`, returning resulting bytes
     return bytes(a ^ b for a, b in zip(data, cycle(key)))
 
 def main():
@@ -94,7 +94,7 @@ def main():
 
         if not file.endswith(".txt"):
             with open(file, "rb") as en, open(f"{file}.dec", "wb") as de:
-                ## for each encrypted file, write XOR'd content to new file
+                # for each encrypted file, write XOR'd content to new file
                 encr = en.read()
                 decr = xor(encr, KEY)
 
@@ -162,7 +162,7 @@ import json
 
 FILENAME = "trading-firebase_bkup.json.24bes.dec"
 
-## dict to hold the highest trader's email and profit percent
+# dict to hold the highest trader's email and profit percent
 highest_profit = {"email": "N", "trade_profit": 0}
 
 def check_high(trade_profit: str) -> bool | None:
@@ -176,7 +176,7 @@ def main(file: str) -> None:
     global highest_profit
 
     with open(file, "r") as f:
-        ## we essentially perform a bubble sort to get the highest-profit trade
+        # essentially performing a bubble sort to get the highest-profit trade
 
         json_content = json.loads(f.read())
 
@@ -191,11 +191,12 @@ def main(file: str) -> None:
 main(FILENAME)
 ```
 
-Frustratingly, Python's float precision isn't high enough to store the entire profit percentage needed to get the correct answer for this task. I tried to force this to stay put
-by converting the value to a string instead, but this obviously doesn’t work probably on account of the fact that the interpreter still has to load the value as a float into memory
-at some point, where it is probably truncated.
+Python's float resolution isn't high enough to store the entire percentage required to get the correct answer for this task. I tried to force this to stay put
+by converting the value to a string instead, but this doesn’t work probably on account of the fact that the interpreter still has to load the value as a float into memory
+at some point, and it will be truncated at this point anyway.
 
-Rather than continue to waste time on this one relatively small issue, I copied the email string used `ctrl+f` with VS C*de to find the correct profit percentage:
+Rather than continue to waste time on figuring out how to get my script to output the correct value, we can just copy the email string and `ctrl+f` for it with VS C*de to find
+the correct profit percentage:
 
 ![Untitled](/img/lockpick_img/Untitled%205.png)
 

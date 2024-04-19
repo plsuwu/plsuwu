@@ -32,29 +32,35 @@
 	const formattedDate = new Date(date).toLocaleDateString('en-AU');
 </script>
 
-<div class="w-full items-center p-4">
+<div class="w-full items-center p-2 sm:p-4">
 	<div class="grid grid-cols-3 justify-between">
 		<div class="flex flex-col content-center self-center justify-self-start">
-			<a {href} class="text-sm font-bold lg:text-lg">
+			<a {href} class="text-xs font-bold sm:text-sm lg:text-lg">
 				[ {title} ]
 			</a>
 
 			<div class="italic opacity-55">
-				<div class="text-left text-sm">posted {daysAgo},</div>
-				<div class="text-left text-sm">on {formattedDate}</div>
+				<div class="text-left text-xs sm:text-sm">
+					<span class="hidden sm:inline">posted{' '}</span>{daysAgo},
+				</div>
+				<div class="text-left text-xs sm:text-sm">on {formattedDate}</div>
 			</div>
 		</div>
 
-		<div class="col-span-1 content-center self-center justify-self-start">
+		<div
+			class="col-span-1 content-center self-center justify-self-center sm:ml-8 sm:justify-self-start"
+		>
 			<div class="flex flex-row items-center space-x-2">
-				<div class={`text-md font-bold italic ${colorTag(area)}`}>{area}</div>
+				<div class={`sm:text-md text-xs font-bold italic ${colorTag(area)}`}>
+					{area}
+				</div>
 				<div class="mt-0.5 text-xs font-normal italic opacity-55">
 					({author})
 				</div>
 			</div>
 
-			<div class="text-xs italic opacity-55">
-				tagged:{' '}
+			<div class="hidden text-center text-xs italic opacity-55 sm:inline">
+				tags:{' '}
 				[{' '}{#each tags as tag, i}
 					{#if i + 1 !== tags.length}
 						<span>{tag}</span>,
@@ -65,28 +71,20 @@
 			</div>
 		</div>
 
-		<div class="col-span-1 items-center self-center text-center justify-self-end">
-				<a
-					class="group flex space-x-1 flex-row items-center text-center rounded-md px-0.5 align-top transition-all duration-300 ease-out opacity-50 hover:opacity-100"
-					href={`posts/${area}/${slug}`}
+		<div class="col-span-1 items-center self-center justify-self-end text-center">
+			<a
+				class="group flex flex-row items-center space-x-1 rounded-md px-0.5 text-center align-top opacity-50 transition-all duration-300 ease-out hover:opacity-100"
+				href={`posts/${area}/${slug}`}
+			>
+				<div class="transition-all duration-200 ease-out">[</div>
+				<div
+					class="mt-0.5 flex flex-row items-center rounded-md text-xs opacity-50 transition-colors duration-200 ease-out group-hover:opacity-100"
 				>
-					<div
-						class="transition-all duration-200 ease-out"
-					>
-						[
-					</div>
-					<div
-						class="mt-0.5 flex flex-row items-center rounded-md text-xs opacity-50 transition-colors duration-200 ease-out group-hover:opacity-100"
-					>
-						<div>{' '}read{' '}</div>
-						<HeroiconsArrowLongRightSolid class="inline-flex" />
-					</div>
-					<div
-						class="transition-all duration-200 ease-out"
-					>
-						]
-					</div>
-				</a>
+					<div>{' '}read{' '}</div>
+					<HeroiconsArrowLongRightSolid class="inline-flex" />
+				</div>
+				<div class="transition-all duration-200 ease-out">]</div>
+			</a>
 		</div>
 	</div>
 </div>

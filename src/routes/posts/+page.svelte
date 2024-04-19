@@ -18,15 +18,28 @@
 		published: true,
 	};
 
+	export const emptyPost: BlogPost = {
+		slug: '#',
+		title: '',
+		author: '',
+		area: '',
+		tags: [''],
+		description: '',
+		date: '',
+		published: true,
+	};
+
 	const sortingKeys = ['date', 'title'];
 	// const orderingKeys = ['asc', 'des'];
 
+	const postCount = data.posts.length;
 	let sorting = 'date';
 	let ordering = 'descending';
 	let filtering = 'all';
-	let prValue = '';
+
 	let posts: BlogPost[];
 
+	$: prValue = '';
 	$: posts = apply(data.posts, sorting, ordering, filtering);
 
 	// pull out into two functions so we don't re-apply the filter each time
@@ -66,20 +79,31 @@
 				posts = apply(data.posts, sorting, ordering, filtering);
 			}
 			if (value === prValue) {
-				let result = fzf(value, posts);
+				let result = fzf(value, data.posts); // send the whole data.posts per query, NOT just posts!
+
 				if (result.some((post) => post.title)) {
+					if (result.length < postCount) {
+						for (let i = result.length; i < postCount; ++i) {
+							result.push(emptyPost);
+						}
+					}
 					posts = apply(result, sorting, ordering, filtering);
 				} else {
-					posts = Array(noSearchResults);
+                   posts = Array(noSearchResults);
+					for (let i = result.length; i < postCount - 1; ++i) {
+						posts.push(emptyPost);
+					}
 				}
 			}
-		}, 250); // ms
+		}, 350); // ms
 	}
 </script>
 
 <div class="flex w-full flex-col justify-center space-y-10 px-6">
 	<div class="self-center pb-4 text-5xl font-extrabold">all posts</div>
-	<div class="flex w-1/3 flex-row justify-between self-center">
+	<div
+		class="flex w-full max-w-[875px] flex-col items-center self-center sm:flex-row sm:justify-between lg:w-[75%] xl:w-1/2"
+	>
 		<div class="flex flex-row space-x-2">
 			<input
 				type="text"
@@ -89,15 +113,18 @@
 				on:input={(event) => search(event)}
 			/>
 		</div>
-		<div class="flex-0 my-1 border-l border-l-darkpink/55"></div>
 		<div>
-			<div class="inline-flex justify-end space-x-2 text-xs font-medium">
-				<div class="flex flex-col space-y-1">
-					<div class="flex flex-row items-center justify-end space-x-2">
+			<div
+				class="inline-flex justify-center space-x-2 text-xs font-medium sm:justify-end"
+			>
+				<div class="mt-8 sm:mt-0 flex flex-col space-y-5  sm:space-y-1">
+					<div
+						class="flex flex-row items-center justify-center space-x-2 sm:justify-end"
+					>
 						<div>sorting by the [</div>
 						<select
 							id="sortSelect"
-							class="rounded-md px-1 py-0 text-xs bg-l-darkblue text-l-whitepink"
+							class="rounded-md bg-l-darkblue px-1 py-0 text-xs text-l-whitepink"
 							bind:value={sorting}
 							on:load={() => apply(posts, sorting, ordering, filtering)}
 							on:change={() => apply(posts, sorting, ordering, filtering)}
@@ -111,12 +138,15 @@
 
 						<div>] of each post</div>
 					</div>
-					<div class="inline-flex space-x-2 self-end text-start">
+					<div class="inline-flex space-x-2 self-center sm:self-end">
 						<div>in</div>
 						<button
 							class="group inline-flex rounded-md px-0.5 transition-colors duration-200 ease-out hover:bg-l-darkblue"
 							on:click={() =>
-								(ordering = ordering === 'descending' ? 'ascending' : 'descending')}
+								(ordering =
+									ordering === 'descending' ? 'ascending' : (
+										'descending'
+									))}
 						>
 							<div
 								class="transition-colors duration-200 ease-out group-hover:text-l-whitepink"
@@ -142,11 +172,11 @@
 		</div>
 	</div>
 	<!-- {#key posts[0].title && posts[posts.length - 1].title} -->
-    <!-- in:blur={{ delay: 100, duration: 500, easing: expoOut }} -->
-		<ul
-			class="flex w-full flex-col space-y-4 self-center rounded-md sm:max-w-4xl xl:w-[65%]"
-		>
-			<PostLayout sortedPosts={posts} />
-		</ul>
+	<!-- in:blur={{ delay: 100, duration: 500, easing: expoOut }} -->
+	<ul
+		class="flex w-full flex-col space-y-2 self-center rounded-md sm:max-w-4xl xl:w-[65%]"
+	>
+		<PostLayout sortedPosts={posts} />
+	</ul>
 	<!-- {/key} -->
 </div>

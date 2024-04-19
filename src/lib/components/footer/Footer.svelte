@@ -18,7 +18,7 @@
 	];
 </script>
 
-<div class="flex w-full flex-row items-center justify-between px-2 py-2 shadow-inner">
+<div class="flex w-full flex-row items-center justify-between px-4 py-6 sm:px-2 sm:py-2 shadow-inner bg-l-whitepink/25">
 	<div class="font-mono text-sm italic opacity-50">uwu</div>
 	<div class="flex flex-row items-center justify-center space-x-2">
 		<div class="font-mono text-sm italic opacity-50">plsuwu @</div>

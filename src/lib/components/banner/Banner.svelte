@@ -2,6 +2,6 @@
 	import Camila from './chars/Camila.svelte';
 </script>
 
-<div class="pt-3 select-none">
+<div class="py-3 select-none">
 	<Camila />
 </div>
