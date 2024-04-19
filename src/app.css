@@ -1,9 +1,9 @@
-@import "/styles/prism-catppuccin.css";
+@import '/styles/prism-catppuccin.css';
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 body {
-	@apply text-l-darkpink overflow-y-scroll w-full;
+	@apply w-full overflow-y-scroll text-l-darkpink;
 }

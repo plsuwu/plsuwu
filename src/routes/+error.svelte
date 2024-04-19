@@ -2,7 +2,6 @@
 	import { page } from '$app/stores';
 	import { afterNavigate } from '$app/navigation';
 	import { base } from '$app/paths';
-	import HeroiconsArrowLongLeft from '~icons/heroicons/arrow-long-left';
 
 	let previousPage: string = base;
 	afterNavigate(({ from }) => {
@@ -21,7 +20,7 @@
 			server responded with the status code '
 			<div class="font-semibold text-red-600">{$page.status}</div>
 			' {#if $page.error?.message}
-				and  an error message '
+				and an error message '
 				<div class="text-red-700">{$page.error?.message.toLowerCase()}</div>
 				'
 			{/if}
@@ -37,9 +36,6 @@
 	>
 		[
 	</div>
-	<!-- <HeroiconsArrowLongLeft -->
-	<!-- 	class="inline-flex mt-0.5 text-3xl opacity-50 group-hover:opacity-100 transition-all duration-300 ease-out0" -->
-	<!-- /> -->
 	<div
 		class="font-semibold opacity-60 transition-all duration-300 ease-out group-hover:opacity-100"
 	>

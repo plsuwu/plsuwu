@@ -1,9 +1,8 @@
 <script lang="ts">
-	import HeroiconsArrowLongRightSolid from '~icons/heroicons/arrow-long-right-solid';
 	import HeroiconsSparkles from '~icons/heroicons/sparkles';
-    import HeroiconsBookOpen from '~icons/heroicons/book-open';
+	import HeroiconsBookOpen from '~icons/heroicons/book-open';
 	import { blur } from 'svelte/transition';
-	import { expoIn, expoOut, sineIn } from 'svelte/easing';
+	import { sineIn } from 'svelte/easing';
 	import type { PageData } from './$types';
 	import type { BlogPost } from '$lib/utils/types';
 	import PostLayout from '$lib/components/posts/PostLayout.svelte';
@@ -20,7 +19,7 @@
 
 <div class="flex w-full flex-col justify-center space-y-10 px-6">
 	<div class="self-center pb-4 text-5xl font-extrabold">plsuwu</div>
-	<div class="flex w-full md:w-1/2 lg:w-1/3 flex-row justify-between self-center">
+	<div class="flex w-full flex-row justify-between self-center md:w-1/2 lg:w-1/3">
 		<div class="group inline-flex items-center space-x-1 rounded-md px-0.5">
 			<div class="">[</div>
 			<div class="rounded-md px-1 text-lg font-semibold">
@@ -47,7 +46,7 @@
 					class="rounded-md px-1 font-semibold opacity-50 transition-all duration-200 ease-out group-hover:text-l-darkpink group-hover:opacity-100"
 				>
 					<div class="inline-flex">view all</div>
-					<HeroiconsBookOpen class="inline-flex -mt-0.5" />
+					<HeroiconsBookOpen class="-mt-0.5 inline-flex" />
 				</div>
 				<div
 					class="transition-colors duration-200 ease-out group-hover:text-l-darkpink"
