@@ -5,13 +5,13 @@ export const pages: NavButton[] = [
 	{
 		name: 'posts',
 		children: [
-            { name: 'all posts', href: '/posts' },
-            // { name: 'ctf stuff', href: '/posts/ctf' },
-            // { name: 'notes', href: '/posts/notes' }
-        ],
+			{ name: 'all posts', href: '/posts' },
+			// { name: 'ctf stuff', href: '/posts/ctf' }, // leaving these here for future ref
+			// { name: 'notes', href: '/posts/notes' }
+		],
 	},
-    {
-        name: 'about',
-        href: '/about',
-    },
+	{
+		name: 'about',
+		href: '/about',
+	},
 ];

@@ -1,12 +1,6 @@
 <script lang="ts">
-	import type { SvelteComponent } from 'svelte';
-    import type { IconLink, IconPromise } from '$lib/utils/types';
-    import { iconLoader } from '$lib/utils/utils';
-
-	// async function load(getIcon: IconPromise): Promise<typeof SvelteComponent> {
-	// 	const component = await getIcon();
-	// 	return component.default;
-	// }
+	import type { IconLink } from '$lib/utils/types';
+	import { iconLoader } from '$lib/utils/utils';
 
 	const links: IconLink[] = [
 		{
@@ -18,7 +12,9 @@
 	];
 </script>
 
-<div class="flex w-full flex-row items-center justify-between px-4 py-6 sm:px-2 sm:py-2 shadow-inner bg-l-whitepink/25">
+<div
+	class="flex w-full flex-row items-center justify-between bg-l-whitepink/25 px-4 py-6 shadow-inner sm:px-2 sm:py-2"
+>
 	<div class="font-mono text-sm italic opacity-50">uwu</div>
 	<div class="flex flex-row items-center justify-center space-x-2">
 		<div class="font-mono text-sm italic opacity-50">plsuwu @</div>

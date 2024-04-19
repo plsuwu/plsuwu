@@ -1,5 +1,4 @@
 <script lang="ts">
-	// import { onMount } from 'svelte';
 	import Article from './Article.svelte';
 	import type { BlogPost } from '$lib/utils/types';
 	import { blur } from 'svelte/transition';

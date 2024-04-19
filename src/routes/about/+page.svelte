@@ -7,7 +7,7 @@
 			name: 'github.com/plsuwu',
 			href: 'https://github.com/plsuwu',
 			getIcon: () => import('~icons/ri/github-fill'),
-            loading: 'gh',
+			loading: 'gh',
 		},
 		{
 			name: 'soundcloud.com/notpls',

@@ -1,9 +1,6 @@
 import type { BlogPost } from '$lib/utils/types';
 import { writable, type Writable } from 'svelte/store';
 
-// const sortOptions = ['date', 'name'];
-// const orderOptions = ['ascending', 'descending'];
-
 let cache: BlogPost[] | null;
 
 export function setCache(data: BlogPost[]) {

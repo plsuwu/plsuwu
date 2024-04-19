@@ -1,10 +1,8 @@
 <script lang="ts">
 	import type { PageData } from './$types';
 	import type { BlogPost } from '$lib/utils/types';
-	import { blur } from 'svelte/transition';
 	import PostLayout from '$lib/components/posts/PostLayout.svelte';
 	import { fzf } from '$lib/utils/utils';
-	import { expoIn, expoOut } from 'svelte/easing';
 	export let data: PageData;
 
 	const noSearchResults: BlogPost = {
@@ -30,7 +28,6 @@
 	};
 
 	const sortingKeys = ['date', 'title'];
-	// const orderingKeys = ['asc', 'des'];
 
 	const postCount = data.posts.length;
 	let sorting = 'date';
@@ -79,7 +76,7 @@
 				posts = apply(data.posts, sorting, ordering, filtering);
 			}
 			if (value === prValue) {
-				let result = fzf(value, data.posts); // send the whole data.posts per query, NOT just posts!
+				let result = fzf(value, data.posts); // send the whole data.posts per query, NOT just posts lol
 
 				if (result.some((post) => post.title)) {
 					if (result.length < postCount) {
@@ -89,7 +86,7 @@
 					}
 					posts = apply(result, sorting, ordering, filtering);
 				} else {
-                   posts = Array(noSearchResults);
+					posts = Array(noSearchResults);
 					for (let i = result.length; i < postCount - 1; ++i) {
 						posts.push(emptyPost);
 					}
@@ -117,7 +114,7 @@
 			<div
 				class="inline-flex justify-center space-x-2 text-xs font-medium sm:justify-end"
 			>
-				<div class="mt-8 sm:mt-0 flex flex-col space-y-5  sm:space-y-1">
+				<div class="mt-8 flex flex-col space-y-5 sm:mt-0 sm:space-y-1">
 					<div
 						class="flex flex-row items-center justify-center space-x-2 sm:justify-end"
 					>

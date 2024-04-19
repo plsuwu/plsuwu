@@ -3,10 +3,9 @@
 	import Phone from './Phone.svelte';
 </script>
 
-<div class='hidden sm:block'>
-<Desktop />
+<div class="hidden sm:block">
+	<Desktop />
 </div>
-<div class='block sm:hidden absolute'>
-<Phone />
+<div class="absolute block sm:hidden">
+	<Phone />
 </div>
-

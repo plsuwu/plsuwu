@@ -13,14 +13,9 @@
 	let sidebarOpen: boolean = false;
 	let dropdown = '';
 
-	const toggleDropdown = (name: string) => {
-		dropdown = dropdown === name ? '' : name;
-	};
-
 	const openSidebar = () => {
 		sidebarOpen = !sidebarOpen;
 	};
-
 	const toggle = (name: string) => {
 		dropdown = dropdown === name ? '' : name;
 	};
@@ -45,7 +40,6 @@
 			document.addEventListener('click', inDropdown);
 		}
 	});
-
 	onDestroy(() => {
 		if (typeof window !== 'undefined') {
 			document.removeEventListener('click', inDropdown);
@@ -111,7 +105,8 @@
 														class="mx-auto min-w-48 rounded-md border border-pink-200 p-0.5"
 													>
 														<a
-										                    on:click={() => (sidebarOpen = false)}
+															on:click={() =>
+																(sidebarOpen = false)}
 															class="flex flex-row items-center justify-between rounded-md px-3 py-1.5 transition-all duration-300 ease-out hover:bg-l-pink hover:text-l-darkpink/55"
 															href={child.href}
 														>
@@ -130,7 +125,7 @@
 								<li>
 									<a
 										on:click={() => (sidebarOpen = false)}
-						                class="flex flex-row items-center space-x-2 p-2 transition-all duration-200 hover:text-l-pink"
+										class="flex flex-row items-center space-x-2 p-2 transition-all duration-200 hover:text-l-pink"
 										href={page.href}
 									>
 										{page.name}
@@ -160,4 +155,3 @@
 		</button>
 	{/if}
 </div>
-

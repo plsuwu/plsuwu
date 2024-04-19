@@ -1,9 +1,6 @@
 <script lang="ts">
-	// import HeroiconsBarsArrowDown16Solid from '~icons/heroicons/bars-arrow-down-16-solid';
 	import HeroiconsArrowLongRightSolid from '~icons/heroicons/arrow-long-right-solid';
 	import { elapsedTime } from '$lib/utils/utils';
-	import { blur } from 'svelte/transition';
-	import { expoIn } from 'svelte/easing';
 
 	export let slug: string;
 	export let title: string;
