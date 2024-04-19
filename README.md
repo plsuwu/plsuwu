@@ -1,7 +1,5 @@
 # plsuwu
 
-> (new and improved under construction)
-
-please
+please uwu
 
 https://plsuwu.com
