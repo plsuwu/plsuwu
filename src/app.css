@@ -1,4 +1,5 @@
 @import '/styles/prism.css';
+/* @import '/scripts/tokyonight.js'; */
 
 @tailwind base;
 @tailwind components;

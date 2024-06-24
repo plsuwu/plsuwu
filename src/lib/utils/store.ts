@@ -12,6 +12,7 @@ export function getCache() {
 
 export const loading: Writable<boolean> = writable(false);
 export const sortComplete: Writable<boolean> = writable(true);
-
-export let imgUrlStore: Writable<string> = writable('#');
 export const show: Writable<boolean> = writable(false);
+
+// debug thing if i recall correctly
+export let imgUrlStore: Writable<string> = writable('#');

@@ -22,6 +22,7 @@
 	class="mt-4 flex w-full flex-col items-center justify-center rounded-xl px-4 lg:px-0"
 >
 	<div class="flex w-full flex-row transition-all duration-500 lg:w-[85%] xl:w-[60%]">
+    <!-- this is messy due to buttons which will be tidier as a component -->
 		<button
 			class="group inline-flex rounded-md px-0.5 transition-colors duration-200 ease-out hover:bg-l-darkblue"
 			on:click={() => history.go(-1)}

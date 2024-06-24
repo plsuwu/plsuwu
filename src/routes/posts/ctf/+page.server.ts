@@ -1,15 +1,16 @@
 import type { PageServerLoad } from './$types';
-import { setCache, getCache } from '$lib/utils/store';
+import { getCache, setCache } from '$lib/utils/store';
 import { getPostArray } from '$lib/utils/getPostArray';
 
 export const load: PageServerLoad = async () => {
+    // not used yet
 	let postArray = getCache();
-
-	// should be in memory by this point.
 	if (!postArray) {
-		postArray = await getPostArray();
+        postArray = await getPostArray();
         setCache(postArray);
 	}
 
-	return { posts: postArray };
+    const ctfPost = postArray.filter((post) => post.area === 'ctf');
+	return { posts: ctfPost };
 };
+

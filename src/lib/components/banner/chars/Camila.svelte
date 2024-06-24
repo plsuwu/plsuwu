@@ -1,8 +1,4 @@
-<div
-	class="-z-50 flex flex-col items-center self-center overflow-hidden whitespace-nowrap text-center font-mono text-[8px] leading-[7px] tracking-tighter"
->
-	<div class="text-left font-mono lg:block">
-		<pre>
+<pre>
                   .::::.            .:;;;:::::::::::::::;;;:    ;&&&&&&&&x:... ....
                      .;;+;;;..:;;;;;:::::::::::::::::::::::::;: :&&&&&&&&&$+:    ......
                            .;xxx+;::::::::::::;;::::::::::;;;;;:+&&&&&&x:             ...
@@ -44,5 +40,3 @@ xxxXxx+xxxxx+x;;..:;;.:::::;::....:.       ....  .;;;;;.  .;;;:+$$$$$$$;;;++++++
                    ;;;;;++xx++;;+;;;;;;;  .                      :xxx+xxXXXxxXXXXXxxXX;
                    .:;+;;;++;+;;;;.       .                       xXxxxxxXXXxXXXXXXXXXX;
 </pre>
-	</div>
-</div>
