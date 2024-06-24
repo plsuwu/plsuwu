@@ -33,8 +33,8 @@ but we are forbade from accessing the endpoint without authentication:
 
 ![admin-endpoint](/img/vlookup_hot_singles_img/admin_endpoint_init.png)
 
-A quick look at the source code not only tells us that proof of identity is supplied to the server via a JWT cookie, but also the secret to use alongside
-the credentials we will need to supply:
+A quick look at the source code not only tells us that proof of identity is supplied to the server via a JWT cookie, but also the secret used to sign
+the token alongside the credentials we will need to supply (`user: starknight` -> `user: jelly`):
 
 ![source-jwt-endpoint-function](/img/vlookup_hot_singles_img/source_code_token.png)
 
@@ -43,7 +43,7 @@ sign our modified token with the secret we saw in the server's source code (`sin
 
 ![jwt-debug](/img/vlookup_hot_singles_img/jwt_decode.png)
 
-We can then replace our issued token with the modified one and navigate to the `/admin` endpoint without issue to grasp the first part of the challenge's flag:
+We can then replace our issued token with the modified one and navigate to the `/admin` endpoint without issue, grasping the first `vlookup-hot-singles` challenge flag:
 
 ![authed-admin-endpoint](/img/vlookup_hot_singles_img/flag_one.png)
 
@@ -53,15 +53,14 @@ We can then replace our issued token with the modified one and navigate to the `
 oh. it's her. well, see if you can get the flag at /app/flag.txt and then get out of there
 </aside>
 
-The functionality of above endpoint made me quickly jump to the idea of a potential XXE injection vulnerability as we are prompted for a spreadsheet.
-We can quickly test out the response we should expect to see from the site if we provide a known-good `xlsx` sheet, which we can procure by downloading
-a blank spreadsheet from Google Docs. Gauging the server's response...:
+I instantly jumped to the idea of a potential XXE injection vulnerability in this function given the prompt to upload a spreadsheet.
+I think that it's best if we quickly test out the response we should expect given an unmodified/known-good `xlsx` file, which we can procure by downloading
+a blank spreadsheet from Google Docs. Gauging the server's response:
 
 ![openoffice-location-recorded-xlsx](/img/vlookup_hot_singles_img/test_upload_blank.png)
 > website output
 
-... And use this to cross-reference the `/spreadsheet` route's source code. The file we just downloaded is an edited spreadsheet with some additional columns
-appended to the end. There are also a few base cases that return us to `/admin` if we don't supply a file or the file's name is empty:
+... we can cross-reference this with the `/spreadsheet` route's source code:
 
 ```python
 # ...
@@ -96,15 +95,24 @@ def spreadsheet():
 ```
 > the `xlsx` handler code
 
+
+The file we just downloaded is an edited spreadsheet with some additional columns appended to the end. There are also a few base cases that return us to `/admin`
+if we don't supply a file or the file's name is empty.
+
 ![burp-output](/img/vlookup_hot_singles_img/burpsuite_post.png)
-> the request in burpsuite, with the headers and data that Chrome automatically populates.
+> + the request in burpsuite, with the headers and data that Chrome automatically populates when we submit the form.
 
-So it seems pretty straightfoward - make a POST request using a crafted `xlsx` sheet to include a file's content, and we might be able to exfiltrate the contents of that file in the field
-with our malicious entity.
+So the exploit I'm going for here seems reasonably straightfoward; given that Microsoft Office documents (like `docx`, `xlsx`, ...) are akin to an compression container like `.zip`:
+1. inflate the document,
+2. define a malcious entity and call it from an internal XML file that will be parsed by the server
+3. re-compress the spreadsheet,
+4. upload this crafted `xlsx` sheet, which should hopefully be parsed by the spreadsheet parser
+5. have the server parse the external entity and include the contents of the specified file into some part of the spreadsheet's internal XML,
+6. maybe exfiltrate the flag in the returned `your_location_has_been_recorded.xlsx` sheet??
 
-I initially went for [this exotic `PayloadsAllTheThings` XXE payload](https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/XXE%20Injection#xxe-inside-xlsx-file), modified slightly to
-avoid having to start `ngrok` + local fileservers and deal with the headache that comes with facilitating remote DTD callback garbage. We know the flag filepath is `/app/flag.txt` given the
-challenge's description (though this information is also in the `Dockerfile` in the situation that we weren't explicitly given this info).
+As it seemed to meet my requirements almost exactly, I initially opted for [this exotic `PayloadsAllTheThings` XXE payload](https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/XXE%20Injection#xxe-inside-xlsx-file),
+with a slight modification to avoid having to start `ngrok` + local fileservers and deal with the headache that comes with facilitating remote callback pains (we only want to exfil `flag.txt`, right?).
+We know the flag filepath is `/app/flag.txt` given the challenge's description (though this information is also in the `Dockerfile` in the situation that we weren't explicitly given this info).
 
 We can unzip a `spreadsheet.xlsx` into a new directory using `7zip`; I copy the blank Google Sheets document to a payload file and extract its contents to `./XXE/`, placing the
 payload below into `workbook.xml` (the `PayloadsAllTheThings` description indicates that `xml` parsers often touch either `workbook.xml` or `sharedStrings.xml`).
