@@ -1,4 +1,4 @@
-@import '/styles/prism-catppuccin.css';
+@import '/styles/prism.css';
 
 @tailwind base;
 @tailwind components;

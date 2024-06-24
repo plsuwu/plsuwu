@@ -57,6 +57,7 @@ export function elapsedTime(date: number) {
 		{ seconds: 2592000, unit: 'month' },
 		{ seconds: 86400, unit: 'day' },
 		{ seconds: 3600, unit: 'hour' },
+        { seconds: 0, unit: 'seconds' }
 	];
 
 	for (let i = 0; i < intervals.length; i++) {

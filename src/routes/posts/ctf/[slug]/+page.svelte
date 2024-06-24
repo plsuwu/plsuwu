@@ -46,7 +46,7 @@
 
 	<div class="mt-10 w-full border-b border-b-l-pink lg:w-[90%] xl:w-[65%]"></div>
 	<div
-		class="prose w-full text-sm transition-all duration-500 ease-out lg:w-[85%] xl:w-[60%]"
+		class="prose w-full flex flex-col text-sm transition-all duration-500 ease-out lg:w-[85%] xl:w-[60%]"
 	>
 		<svelte:component this={component} />
 		<slot />

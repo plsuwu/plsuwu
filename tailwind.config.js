@@ -30,6 +30,15 @@ export default {
 						'font-size': '1.1rem',
 						'line-height': '1.25rem',
 					},
+                    pre: {
+                        "display": "flex",
+                        "width": "95%",
+                        "align-self": "center",
+                        "justify-self": "center",
+                        "@media (width: 1024)": {
+                            "max-width": "100%"
+                        }
+                    },
 					aside: {
 						color: '#451f7c',
 						'text-align': 'left',
@@ -65,10 +74,12 @@ export default {
 						color: '#884461',
 						'background-color': '#f6d1e7',
 						'font-style': 'italic',
+                        'font-weight': '450',
 						'border-radius': '10px',
 						'font-size': '1rem',
 						'line-height': '1.25rem',
 						'word-break': 'break-word',
+                        'padding': '0.5px 7px 0.5px 4.5px',
 					},
 					ul: {
 						'list-style': 'disc inside',

@@ -9,14 +9,14 @@
 code[class*="language-"],
 pre[class*="language-"] {
 	color: #111b27;
-    font-size: 12px;
+    font-size: 14px;
 	background: none;
 	text-align: left;
 	white-space: pre;
 	word-spacing: normal;
 	word-break: normal;
 	word-wrap: normal;
-	line-height: 1.5;
+	line-height: 1.2;
 	-moz-tab-size: 4;
 	-o-tab-size: 4;
 	tab-size: 4;
