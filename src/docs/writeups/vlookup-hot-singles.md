@@ -103,15 +103,16 @@ if we don't supply a file or the file's name is empty.
 > + the request in burpsuite, with the headers and data that Chrome automatically populates when we submit the form.
 
 So the exploit I'm going for here seems reasonably straightfoward; given that Microsoft Office documents (like `docx`, `xlsx`, ...) are akin to an compression container like `.zip`:
-1. inflate the document,
+1. inflate the spreadsheet to extract its internal XML files,
 2. define a malcious entity and call it from an internal XML file that will be parsed by the server
 3. re-compress the spreadsheet,
-4. upload this crafted `xlsx` sheet, which should hopefully be parsed by the spreadsheet parser
-5. have the server parse the external entity and include the contents of the specified file into some part of the spreadsheet's internal XML,
+4. upload the spreadsheet, which will hopefully have the crafted content parsed by the `xlsx` parser
+5. by parsing our entity, the server will write the content of the specified file back into the spreadsheet's internal XML,
 6. maybe exfiltrate the flag in the returned `your_location_has_been_recorded.xlsx` sheet??
 
-As it seemed to meet my requirements almost exactly, I initially opted for [this exotic `PayloadsAllTheThings` XXE payload](https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/XXE%20Injection#xxe-inside-xlsx-file),
-with a slight modification to avoid having to start `ngrok` + local fileservers and deal with the headache that comes with facilitating remote callback pains (we only want to exfil `flag.txt`, right?).
+I initially opted for [this exotic `PayloadsAllTheThings` XXE payload](https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/XXE%20Injection#xxe-inside-xlsx-file),
+as it met my requirements almost exactly. With slight modifications to directly specify the file to include, we avoid having to deal
+with `ngrok` + local fileservers and the headache that comes with facilitating remote callback pains; we only want to exfil `flag.txt`, right?
 We know the flag filepath is `/app/flag.txt` given the challenge's description (though this information is also in the `Dockerfile` in the situation that we weren't explicitly given this info).
 
 We can unzip a `spreadsheet.xlsx` into a new directory using `7zip`; I copy the blank Google Sheets document to a payload file and extract its contents to `./XXE/`, placing the
@@ -185,5 +186,7 @@ opening `docProps/core.xml` again, we get our flag:
 
 ![oo-sheet-extracted](/img/vlookup_hot_singles_img/flag_two.png)
 
-Ultimately: thank you for reminding me that i hate microsoft and foster nothing but microsoft hate this is a microsoft hate writeup die die d
+### addendum
+
+thank you for reminding me that i hate microsoft and foster nothing but microsoft hate this is a microsoft hate writeup die die d
 
