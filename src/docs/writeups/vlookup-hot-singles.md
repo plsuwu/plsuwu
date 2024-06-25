@@ -100,10 +100,10 @@ The file we just downloaded is an edited spreadsheet with some additional column
 if we don't supply a file or the file's name is empty.
 
 ![burp-output](/img/vlookup_hot_singles_img/burpsuite_post.png)
-> + the request in burpsuite, with the headers and data that Chrome automatically populates when we submit the form.
+> the request in burpsuite, with the headers and data that Chrome automatically populates when we submit the form.
 
-So the exploit I'm going for here seems reasonably straightfoward; given that Microsoft Office documents (like `docx`, `xlsx`, ...) are akin to an compression container like `.zip`:
-1. inflate the spreadsheet to extract its internal XML files,
+So my initial plan here seems reasonably straightfoward:
+1. given that an `xlsx` is basically just a zip file, we inflate the spreadsheet to extract its internal XML files,
 2. define a malcious entity and call it from an internal XML file that will be parsed by the server
 3. re-compress the spreadsheet,
 4. upload the spreadsheet, which will hopefully have the crafted content parsed by the `xlsx` parser
@@ -112,7 +112,7 @@ So the exploit I'm going for here seems reasonably straightfoward; given that Mi
 
 I initially opted for [this exotic `PayloadsAllTheThings` XXE payload](https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/XXE%20Injection#xxe-inside-xlsx-file),
 as it met my requirements almost exactly. With slight modifications to directly specify the file to include, we avoid having to deal
-with `ngrok` + local fileservers and the headache that comes with facilitating remote callback pains; we only want to exfil `flag.txt`, right?
+with `ngrok` + local fileservers and the headache that comes with facilitating remote callbacks over the open internet (plus, we don't care to be reading multiple files, just `flag.txt`).
 We know the flag filepath is `/app/flag.txt` given the challenge's description (though this information is also in the `Dockerfile` in the situation that we weren't explicitly given this info).
 
 We can unzip a `spreadsheet.xlsx` into a new directory using `7zip`; I copy the blank Google Sheets document to a payload file and extract its contents to `./XXE/`, placing the
@@ -155,7 +155,7 @@ When this didn't work as expected, I reset `workbook.xml` to its original state 
 
 This gave us the same result - apparently our injected entity didn't exist >:((
 
-I'll spare exact descriptions of what I tried here, but over the course of a few days I
+I'll spare the details of what I tried here, but over the course of a few days I
 - tried changing where the entity was called from,
 - where the entity was defined,
 - the original remote DTD exfiltration method,
@@ -163,15 +163,15 @@ I'll spare exact descriptions of what I tried here, but over the course of a few
 - several other methods that have been wiped from my memory, possibly as a trauma response,
 
 ... But I was continually gated by `lxml`'s XML parser despite these changes. I had an _inkling_ that this could be due to where I acquired the initial `.xlsx`
-(i.e, Google Sheets vs. Microsoft Office) and the possible format differentials between the two, but I kind of decided on metagaming - "_surely_ this would be
-doable for those without access to Micros*ft Office", I thought to myself (I use Neovim AND Arch btw) - so I tried to see if I could find my way into the debug mode console.
+(i.e, Google Sheets vs. Microsoft Office) and the possible format differentials between the two, but I kind of decided that this _surely_ isn't the case, so
+I tried to see if I could find my way into the debug mode console.
 
 ![debugger](/img/vlookup_hot_singles_img/shit.png)
 
 This was a rabbit hole that didn't yield a single meaningful result, so after a number of excruciating days and some rest, I turned to Google. According to [this report @ bugs.debian.org](https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=854442),
 the version of `openpyxl` (2.4.1) the server runs is definitely vulnerable external entity inclusion via the exact `file:///path/to/file` method we were trying,
 but the MS Office `xlsx` format includes a `docProps` directory NOT present in the Google Sheets format.
-The report outlines that the `docProps/core.xml` file was pretty integral in getting `lxml` to actually parse our entity:
+The report seems to indicate that the `docProps/core.xml` file is pretty integral in getting `lxml` to actually parse our external entity:
 
 ![oh-mb](/img/vlookup_hot_singles_img/cve_payload.png)
 
@@ -189,4 +189,3 @@ opening `docProps/core.xml` again, we get our flag:
 ### addendum
 
 thank you for reminding me that i hate microsoft and foster nothing but microsoft hate this is a microsoft hate writeup die die d
-
