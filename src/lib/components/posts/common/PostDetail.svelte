@@ -16,12 +16,12 @@
 			{#if i + 1 === tags.length}
 				<a
 					class="opacity-50 transition-all duration-300 ease-in-out hover:opacity-100"
-					href={`&tag=${tag}`}>{tag}</a
+					href={`/posts?type=ctf&tag=${tag}`}>{tag}</a
 				><span>{']'}</span>
 			{:else}
 				<a
 					class="opacity-50 transition-all duration-300 ease-in-out hover:opacity-100"
-					href={`&tag=${tag}`}>{tag}</a
+					href={`/posts?type=ctf&tag=${tag}`}>{tag}</a
 				><span>,</span>
 			{/if}
 		{/each}

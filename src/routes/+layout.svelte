@@ -24,7 +24,9 @@
 				out:fade={{ delay: 0, duration: 100 }}
 				class="mb-8 flex min-h-full w-full flex-1 flex-row justify-center lg:my-12"
 			>
-				<!-- <SvgSpinnersRingResize class="text-6xl opacity-75" /> -->
+
+				<!-- some kind of pretty spinner here -->
+
 			</div>
 		{:else}
 			<div
