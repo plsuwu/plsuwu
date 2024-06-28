@@ -11,7 +11,7 @@ tags: ["rev", "crypto", "malware"]
 # Lockpick
 
 <aside>
-<a href={link}>{title} @ {author}</a><br/>
+<a href={link}>{title} @ {from}</a><br/>
 Forela needs your help! A whole portion of our UNIX servers have been hit with what we think is ransomware.
 We are refusing to pay the attackers and need you to find a way to recover the files provided.
 </aside>

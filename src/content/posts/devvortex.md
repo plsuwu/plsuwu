@@ -2,17 +2,16 @@
 title: "DevVortex"
 link: "https://www.hackthebox.com/machines/devvortex"
 description: "Easy HackTheBox seasonal machine."
-author: "hackthebox"
+from: "hackthebox"
 date: "2024-02-08"
-published: true
-area: "ctf"
+type: "ctf"
 tags: ["web"]
 ---
 
 # DevVortex
 
 <aside>
-<a href={link}>{title} @ {author}</a><br/>
+<a href={link}>{title} @ {from}</a><br/>
 Another easy HackTheBox machine demonstrating some vulnerabilities with readily-accessible proof-of-concept exploits.
 </aside>
 

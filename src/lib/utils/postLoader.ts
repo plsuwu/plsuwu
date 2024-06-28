@@ -6,16 +6,16 @@ export interface MdsvexFile {
 export type MdsvexResolver = () => Promise<MdsvexFile>;
 
 /** Below `Post` interface mirrors the frontmatter, eg:
-* ---
-* title: 'post title'
-* link: 'https://url.to/ctf/challenge.html'
-* description: 'an example of the expected frontmatter'
-* from: 'ctf site'
-* date: '1719488654'
-* type: 'ctf'
-* tags: ['web', 'tag 2', 'tag 4']
-* ---
-*/
+ * ---
+ * title: 'post title'
+ * link: 'https://url.to/ctf/challenge.html'
+ * description: 'an example of the expected frontmatter'
+ * from: 'ctf site'
+ * date: '1719488654'
+ * type: 'ctf'
+ * tags: ['web', 'tag 2', 'tag 4']
+ * ---
+ */
 export interface Post {
     slug: string;
     title: string;
@@ -27,14 +27,19 @@ export interface Post {
 }
 
 export const matchPostType = (query: string, posts: Post[]): Post[] => {
-    return posts.filter((post => post.type === query));
-}
+    return posts.filter((post) => post.type === query);
+};
 
 export const slugFromPath = (path: string) => {
     return path.match(/([\w-]+)\.(md)/i)?.[1] ?? null;
-}
+};
 
-export const loadPosts = async (): Promise<Post[]> => {
+/**
+ * Loads post metadata from the markdown YAML frontmatter
+ * @async
+ * @returns {Promise<Post[]>} Array of `Post` metadata as a promise, sorted by date (newest first)
+ */
+export const loadPosts = (async (): Promise<Post[]> => {
     const modules = import.meta.glob(`/src/content/posts/**/*.md`);
 
     const postsPromise = Object.entries(modules).map(async ([path, resolver]) =>
@@ -48,5 +53,8 @@ export const loadPosts = async (): Promise<Post[]> => {
     );
 
     const postResolved = await Promise.all(postsPromise);
-    return postResolved;
-};
+    const sorted = postResolved.sort((a, b) =>
+        new Date(a.date) > new Date(b.date) ? -1 : 1
+    );
+    return sorted;
+});

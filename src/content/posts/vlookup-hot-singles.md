@@ -18,7 +18,7 @@ I kind of want to go over it for the sake of being thorough and complete.
 ## vlookup-hot-singles_(1)
 
 <aside>
-<a href="https://jellyc.tf/challenges#vlookup_hot_singles-8">vlookup-hot-singles 1 @ {author}</a><br/>
+<a href="https://jellyc.tf/challenges#vlookup_hot_singles-8">vlookup-hot-singles 1 @ {from}</a><br/>
 looks like this is some kind of dating site for nerds? weird, figure out who the admin is and access their panel.
 </aside>
 
@@ -48,7 +48,7 @@ We can then replace our issued token with the modified one and navigate to the `
 
 ## vlookup-hot-singles_(2)
 <aside>
-<a href="https://jellyc.tf/challenges#vlookup_hot_singles-8">vlookup-hot-singles-2 @ {author}</a><br/>
+<a href="https://jellyc.tf/challenges#vlookup_hot_singles-8">vlookup-hot-singles-2 @ {from}</a><br/>
 oh. it's her. well, see if you can get the flag at /app/flag.txt and then get out of there
 </aside>
 
@@ -67,7 +67,7 @@ a blank spreadsheet from Google Docs. Gauging the server's response:
 @app.route("/spreadsheet", methods=["POST"])
 def spreadsheet():
     if not is_admin(request.cookies.get('token')):
-        return "Unauthorized"
+        return "Unfromized"
 
     if "file" not in request.files:
         return redirect(url_for("admin"))

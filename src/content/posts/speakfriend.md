@@ -34,7 +34,7 @@ $ curl --insecure 'https://chal.ctf.games:32032'
   <!-- Site Metas -->
   <meta name="keywords" content="" />
   <meta name="description" content="" />
-  <meta name="author" content="" />
+  <meta name="from" content="" />
   <link rel="shortcut icon" href="/static/images/favicon.png" type="image/x-icon">
 
   <title>Guarder</title>

@@ -11,7 +11,7 @@ tags: ["rev", "crypto", "malware"]
 # Lockpick 2
 
 <aside>
-<a href={link}>{title} @ {author}</a><br/>
+<a href={link}>{title} @ {from}</a><br/>
 We've been hit by Ransomware again, but this time the threat actor seems to have upped their skillset.
 Once again they've managed to encrypt a large set of our files. It is our policy NOT to negotiate with criminals.
 Please recover the files they have encrypted - we have no other option! Unfortunately our CEO is on a no-tech retreat so can't be reached.

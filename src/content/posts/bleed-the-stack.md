@@ -11,7 +11,7 @@ tags: ["binex"]
 # Bleed the Stack
 
 <aside>
-<a href={link}>{title} @ {author}</a><br/>
+<a href={link}>{title} @ {from}</a><br/>
 An amateur programmer decides that for his hello world program, he will echo whatever you say. Can you find his mistake?
 </aside>
 
