@@ -8,30 +8,29 @@
 	<div class="my-16 flex flex-col space-y-2">
 		{#each links as link}
 			<a
-				class="group flex flex-row w-1/5 self-center justify-between"
+				class="group flex w-1/5 flex-row justify-between self-center"
 				href={link.href}
 				target="_blank"
 			>
-            <div class="flex flex-row justify-start space-x-2">
-				{#await fetchIcon(link.fetchIcon)}
-					<div class="inline-flex">
-						{link.loading}
-					</div>
-				{:then Icon}
-					<svelte:component
-						this={Icon.default}
-						class="inline-flex transition-all duration-200 ease-out group-hover:text-l-pink mt-1.5"
-					/>
-				{/await}
+				<div class="flex flex-row justify-start space-x-2">
+					{#await fetchIcon(link.fetchIcon)}
+						<div class="inline-flex">
+							{link.loading}
+						</div>
+					{:then Icon}
+						<svelte:component
+							this={Icon.default}
+							class="mt-1.5 inline-flex transition-all duration-200 ease-out group-hover:text-l-pink"
+						/>
+					{/await}
 					<div
 						class="inline-flex underline transition-all duration-200 ease-out group-hover:text-l-pink group-hover:brightness-75"
 					>
 						{link.name}
 					</div>
 				</div>
-
 				<div
-					class="justify-end inline-flex transition-all duration-200 ease-out group-hover:text-l-pink opacity-50"
+					class="inline-flex justify-end opacity-50 transition-all duration-200 ease-out group-hover:text-l-pink group-hover:opacity-100"
 				>
 					/plsuwu
 				</div>

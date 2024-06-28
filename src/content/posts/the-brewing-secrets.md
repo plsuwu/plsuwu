@@ -11,7 +11,7 @@ tags: ["rev", "crypto"]
 # the-brewing-secrets
 
 <aside>
-<a href={link}>{title} @ {author}</a><br/>
+<a href={link}>{title} @ {from}</a><br/>
 Rumour has it Sakana stores the secret recipes for Phase Connect's coffee blends in his garage 'super secure laboratory'. Can you hack your way in?
 </aside>
 

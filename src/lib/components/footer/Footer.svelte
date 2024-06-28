@@ -10,9 +10,9 @@
 </script>
 
 <div
-	class="flex flex-row w-full justify-between py-2 px-4 space-x-4 bg-l-darkpink/20 shadow-inner"
+	class="flex w-full flex-row justify-between space-x-4 bg-l-darkpink/20 px-4 py-2 shadow-inner"
 >
-	<div class="inline-flex mt-2">
+	<div class="mt-2 inline-flex">
 		<button on:click={uwu}>
 			{text}
 		</button>
@@ -30,7 +30,7 @@
 						<SquareBraceButton handleParentEvent={undefined}>
 							<svelte:component
 								this={Icon.default}
-								class="text-xl inline"
+								class="inline text-xl"
 							/>
 						</SquareBraceButton>
 					</a>

@@ -1,4 +1,4 @@
-import { loadPosts, type Post } from "./postLoader";
+import { loadPosts, type Post } from './postLoader';
 
 export let cache: Post[] | null;
 export function setCache(data: Post[]) {

@@ -2,17 +2,16 @@
 title: "Cozyhosting"
 link: "https://www.hackthebox.com/machines/cozyhosting"
 description: "A very simple HTB seasonal."
-author: "hackthebox"
+from: "hackthebox"
 date: "2023-09-04"
-published: true
-area: "ctf"
+type: "ctf"
 tags: ["web"]
 ---
 
 # Cozyhosting
 
 <aside>
-<a href={link}>{title} @ {author}</a><br/>
+<a href={link}>{title} @ {from}</a><br/>
 A straightfoward boot-to-root HackTheBox seasonal machine.
 </aside>
 

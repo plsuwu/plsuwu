@@ -13,7 +13,7 @@ tags: ["web"]
 
 
 <aside>
-<a href={link}>{title} @ {author}</a><br/>
+<a href={link}>{title} @ {from}</a><br/>
 "This login system will give you the flag... as long as you can prove you're an admin!"
 </aside>
 
