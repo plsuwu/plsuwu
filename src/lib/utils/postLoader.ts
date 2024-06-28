@@ -1,6 +1,8 @@
+import type { Param } from './navigation';
+
 export interface MdsvexFile {
-    default: import('svelte').SvelteComponent;
-    metadata: Record<string, string | string[]>;
+	default: import('svelte').SvelteComponent;
+	metadata: Record<string, string | string[]>;
 }
 
 export type MdsvexResolver = () => Promise<MdsvexFile>;
@@ -17,45 +19,41 @@ export type MdsvexResolver = () => Promise<MdsvexFile>;
  * ---
  */
 export interface Post {
-    slug: string;
-    title: string;
-    description: string;
-    from: string;
-    date: string;
-    type: string;
-    tags: string[];
+	slug: string;
+	title: string;
+	description: string;
+	from: string;
+	date: string;
+	type: string;
+	tags: string[];
 }
 
 export const slugFromPath = (path: string) => {
-    return path.match(/([\w-]+)\.(md)/i)?.[1] ?? null;
+	return path.match(/([\w-]+)\.(md)/i)?.[1] ?? null;
 };
-
-export const matchPostType = (query: string, posts: Post[]): Post[] => {
-    return posts.filter((post) => post.type === query);
-};
-
 
 /**
  * Loads post metadata from the markdown YAML frontmatter
  * @async
  * @returns {Promise<Post[]>} Array of `Post` metadata as a promise, sorted by date (newest first)
  */
-export const loadPosts = (async (): Promise<Post[]> => {
-    const modules = import.meta.glob(`/src/content/posts/**/*.md`);
+export const loadPosts = async (): Promise<Post[]> => {
+	const modules = import.meta.glob(`/src/content/posts/**/*.md`);
 
-    const postsPromise = Object.entries(modules).map(async ([path, resolver]) =>
-        resolver().then(
-            (post) =>
-                ({
-                    slug: slugFromPath(path),
-                    ...(post as unknown as MdsvexFile).metadata,
-                }) as Post
-        )
-    );
+	const postsPromise = Object.entries(modules).map(async ([path, resolver]) =>
+		resolver().then(
+			(post) =>
+				({
+					slug: slugFromPath(path),
+					...(post as unknown as MdsvexFile).metadata,
+				}) as Post
+		)
+	);
 
-    const postResolved = await Promise.all(postsPromise);
-    const sorted = postResolved.sort((a, b) =>
-        new Date(a.date) > new Date(b.date) ? -1 : 1  // replace with a modular sorting func
-    );
-    return sorted;
-});
+	const postResolved = await Promise.all(postsPromise);
+	const sorted = postResolved.sort(
+		(a, b) => (new Date(a.date) > new Date(b.date) ? -1 : 1) // replace with a modular sorting func
+	);
+
+	return sorted;
+};
