@@ -8,20 +8,13 @@
 	import ButtonNavigation from './submodules/ButtonNavigation.svelte';
 
 	let active = '';
-	const toggle = (name: string, param?: Param) => {
-		// handle setting URL params if a link that sets a URL
-        // param was clicked
+	const setRoute = (name: string, param?: Param, path?: string) => {
 		if (param) {
-			updateParams({ type: param.type });
+			updateParams({ type: param.type }, path);
 		}
 
-		// toggle state of the specified dropdown
 		active = active === name ? '' : name;
 	};
-
-	// toggles an opened dropdown state to closed by emptying the
-	// state of `active` if the clicked element does not contain a
-    // dropdown node
 
 	const handleCheckClick = (node: HTMLElement) => {
 		const handleClick = (event: MouseEvent) => {
@@ -29,8 +22,8 @@
 				active = '';
 			}
 		};
-
 		document.addEventListener('click', handleClick);
+
 		return {
 			destroy() {
 				document.removeEventListener('click', handleClick);
@@ -43,11 +36,12 @@
 	<ul use:handleCheckClick class="flex flex-row space-x-8 font-bold">
 		{#each pages as page}
 			{#if 'children' in page}
-				<Dropdown name={page.name} {active} {toggle}>
+				<Dropdown name={page.name} {active} {setRoute}>
 					{#each page.children as child}
-						{#if child.href}
+						{#if !child.param && child.href}
 							<NavigationLink
-								handleParentEvent={() => toggle(page.name)}
+								handleParentEvent={() =>
+									setRoute(page.name, child.param, child.href)}
 								href={child.href}
 							>
 								<div
@@ -59,9 +53,10 @@
 									/>
 								</div>
 							</NavigationLink>
-						{:else}
+						{:else if child.param}
 							<ButtonNavigation
-								handleParentEvent={() => toggle(page.name, child.param)}
+								handleParentEvent={() =>
+									setRoute(page.name, child.param, child.href)}
 							>
 								<div
 									class="mx-2 my-1 inline-flex w-full justify-between rounded-md border border-l-lightpink p-1 px-4"
@@ -76,7 +71,10 @@
 					{/each}
 				</Dropdown>
 			{:else if page.href}
-				<NavigationLink handleParentEvent={() => toggle(active)} href={page.href}>
+				<NavigationLink
+					handleParentEvent={() => setRoute(active)}
+					href={page.href}
+				>
 					{page.name}
 				</NavigationLink>
 			{/if}

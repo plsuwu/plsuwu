@@ -1,4 +1,6 @@
 <script lang="ts">
+    import type { PageData } from './$types';
+
     import HeroiconsSparkles from '~icons/heroicons/sparkles';
     import HeroiconsBookOpen from '~icons/heroicons/book-open';
 
@@ -6,8 +8,11 @@
 	import SquareBraceAElement from '$uic/squarebrace/SquareBraceAElement.svelte';
 	import SquareBraceText from '$uic/squarebrace/SquareBraceText.svelte';
 
-	export let data;
+	export let data: PageData;
 	$: posts = data.posts;
+    let tags = data.tags;
+    let ctfs = data.ctfs;
+
 </script>
 
 <div class="flex w-full flex-col">
@@ -27,5 +32,5 @@
         </div>
 		</SquareBraceAElement>
 	</div>
-	<PostsMetaLayout {posts} />
+	<PostsMetaLayout {tags} {ctfs} {posts} />
 </div>

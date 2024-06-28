@@ -7,3 +7,17 @@ export function setCache(data: Post[]) {
 export function getCache() {
 	return cache;
 }
+
+export let ctfs = new Set<string>();
+export let tags = new Set<string>();
+
+export function getTocOptions() {
+	return { tags, ctfs };
+}
+
+export const pushTocOptions = (posts: Post[]) => {
+	for (const post of posts) {
+		ctfs.add(post.from);
+		post.tags.forEach((tag) => tags.add(tag));
+	}
+};

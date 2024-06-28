@@ -1,27 +1,39 @@
 import type { PageLoad } from './$types';
-import { loadPosts, matchPostType, type Post } from '$utils/postLoader';
-import { getCache, setCache } from '$utils/store';
+import { loadPosts, type Post } from '$utils/postLoader';
+import { getCache, getTocOptions, pushTocOptions, setCache } from '$utils/store';
+import type { Param } from '$utils/navigation';
+import { filterPosts } from '$utils/param';
 
 // load post metadata
 export const load: PageLoad = async ({ url }) => {
-	let posts = getCache();
+    let posts = getCache();
+    const params: Param = {};
 
-	// if we cannot find post metadata in memory, run the glob function
 	if (!posts) {
 		const avail = await loadPosts();
 		posts = avail;
 		setCache(posts);
 	}
 
-    // filter posts by their type/area (ctf, note) if the param is present in the url
-	const query = url.searchParams.get('type');
-	if (query) {
-		const params = query;
-		const filtered = matchPostType(query, posts as Post[]);
 
-        // pass param in loaded data to display page name
-		return { posts: filtered, params };
+	if (url.searchParams.size > 0) {
+		url.searchParams.forEach((val, key) => {
+            if (val) {
+			    params[key] = val;
+            }
+		});
+
+		const filtered = filterPosts(posts, params);
+		posts = filtered;
 	}
 
-	return { posts, params: undefined };
+    if (getTocOptions.length < 1) {
+        const tmp = await loadPosts();
+        pushTocOptions(tmp);
+    }
+
+    let tags = [...getTocOptions().tags];
+    let ctfs = [...getTocOptions().ctfs];
+
+	return { posts, params, tags, ctfs };
 };

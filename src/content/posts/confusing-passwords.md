@@ -4,7 +4,6 @@ link: "https://0x0539.net/play/minas_tirith/confusing_passwords"
 description: "This login system will give you the flag... as long as you can prove you're an admin!"
 from: "0x0539"
 date: "2023-06-16"
-published: true
 type: "ctf"
 tags: ["web"]
 ---

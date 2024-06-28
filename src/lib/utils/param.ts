@@ -1,23 +1,41 @@
 import { goto } from '$app/navigation';
 import { page } from '$app/stores';
-
 import type { Param } from './navigation';
+import type { Post } from './postLoader';
 
-// import { get, derived } from 'svelte/store';
-// export const currentUrl = derived(
-//     page,
-//     ($page) => (suffix: string) => $page.url + ' ' + suffix
-// );
+export const matchPostAttr = <T extends Record<string, any>>(
+	key: keyof T,
+	value: any,
+	items: T[]
+): T[] => {
+	return items.filter((item) => {
+        if (key == 'tag') {
+            return item[key.toString() + 's'].includes(value);
+        } else {
+            return item[key] === value;
+        }
+    });
+};
 
-export function updateParams(params: Param, path?: string, replace: boolean = false) {
+export const filterPosts = (posts: Post[], params: Record<string, string | null>): Post[] => {
+    let filteredPosts = posts;
+    let result = [];
+    Object.entries(params).forEach(([key, val]) => {
+        filteredPosts = (matchPostAttr(key as keyof Post, val, filteredPosts));
+        result.push(...filteredPosts);
+    });
+
+	return filteredPosts;
+};
+
+export function updateParams(params: Record<string, any>, path?: string, replace: boolean = false) {
     const unsubscribe = page.subscribe(($page) => {
         const url = new URL(path ? `${$page.url.origin}${path}` : $page.url.toString());
-
-        Object.entries(params).forEach(([key, value]) => {
-            if (!value) {
+        Object.entries(params).forEach(([key, val]) => {
+            if (!val) {
                 url.searchParams.delete(key);
             } else {
-                url.searchParams.set(key, value);
+                url.searchParams.set(key, val);
             }
         });
 
