@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { pages, type Param } from '$utils/navigation';
-	import { goto } from '$app/navigation';
-	import { page } from '$app/stores';
+	import { updateParams } from '$utils/param';
 
 	import HeroiconsArrowLongRight from '~icons/heroicons/arrow-long-right';
 	import Dropdown from './submodules/Dropdown.svelte';
@@ -10,12 +9,19 @@
 
 	let active = '';
 	const toggle = (name: string, param?: Param) => {
+		// handle setting URL params if a link that sets a URL
+        // param was clicked
 		if (param) {
-			console.log(param);
-			// $page.url.searchParams.set({param});
+			updateParams({ type: param.type });
 		}
+
+		// toggle state of the specified dropdown
 		active = active === name ? '' : name;
 	};
+
+	// toggles an opened dropdown state to closed by emptying the
+	// state of `active` if the clicked element does not contain a
+    // dropdown node
 
 	const handleCheckClick = (node: HTMLElement) => {
 		const handleClick = (event: MouseEvent) => {
@@ -53,7 +59,6 @@
 									/>
 								</div>
 							</NavigationLink>
-
 						{:else}
 							<ButtonNavigation
 								handleParentEvent={() => toggle(page.name, child.param)}

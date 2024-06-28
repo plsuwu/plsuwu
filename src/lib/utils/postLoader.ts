@@ -26,13 +26,14 @@ export interface Post {
     tags: string[];
 }
 
+export const slugFromPath = (path: string) => {
+    return path.match(/([\w-]+)\.(md)/i)?.[1] ?? null;
+};
+
 export const matchPostType = (query: string, posts: Post[]): Post[] => {
     return posts.filter((post) => post.type === query);
 };
 
-export const slugFromPath = (path: string) => {
-    return path.match(/([\w-]+)\.(md)/i)?.[1] ?? null;
-};
 
 /**
  * Loads post metadata from the markdown YAML frontmatter
@@ -54,7 +55,7 @@ export const loadPosts = (async (): Promise<Post[]> => {
 
     const postResolved = await Promise.all(postsPromise);
     const sorted = postResolved.sort((a, b) =>
-        new Date(a.date) > new Date(b.date) ? -1 : 1
+        new Date(a.date) > new Date(b.date) ? -1 : 1  // replace with a modular sorting func
     );
     return sorted;
 });

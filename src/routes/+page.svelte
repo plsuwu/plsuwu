@@ -1,31 +1,31 @@
 <script lang="ts">
-	import Post from "$components/posts/Post.svelte";
-import SquareBraceAElement from "$uic/squarebrace/SquareBraceAElement.svelte";
-	import SquareBraceText from "$uic/squarebrace/SquareBraceText.svelte";
+    import HeroiconsSparkles from '~icons/heroicons/sparkles';
+    import HeroiconsBookOpen from '~icons/heroicons/book-open';
+
+	import PostsMetaLayout from '$components/posts/PostsMetaLayout.svelte';
+	import SquareBraceAElement from '$uic/squarebrace/SquareBraceAElement.svelte';
+	import SquareBraceText from '$uic/squarebrace/SquareBraceText.svelte';
 
 	export let data;
 	$: posts = data.posts;
-
 </script>
 
-<div class="flex flex-col w-full">
+<div class="flex w-full flex-col">
 	<div
-		class="flex flex-row w-full md:w-1/3 justify-around transition-all duration-300 ease-in-out self-center mb-12 font-medium"
+		class="mb-12 flex w-full flex-row justify-around self-center font-medium transition-all duration-300 ease-in-out md:w-1/3"
 	>
-    <SquareBraceText classMod={''}>
-        <div>recent</div>
-    </SquareBraceText>
-    <SquareBraceAElement href={'/posts'}>
-        <div>view all</div>
-    </SquareBraceAElement>
+		<SquareBraceText classMod={''}>
+        <div class="flex flex-row space-x-2 items-center align-bottom mt-px">
+            <HeroiconsSparkles class="mt-0.5" />
+			<div>recent</div>
+        </div>
+		</SquareBraceText>
+		<SquareBraceAElement href={'/posts'}>
+        <div class="flex flex-row space-x-2 items-center align-bottom mt-px">
+			<div>view all</div>
+            <HeroiconsBookOpen class="mt-0.5" />
+        </div>
+		</SquareBraceAElement>
 	</div>
-	<div class="flex w-full flex-col justify-self-center text-center">
-		{#each posts as post}
-			<div
-				class="flex w-full px-8 sm:px-0 sm:w-[70%] 2xl:w-[45%] max-w-[725px] min-w-[380px] flex-row items-center justify-between space-x-4 space-y-2 self-center text-justify"
-			>
-            <Post metadata={post} />
-			</div>
-		{/each}
-	</div>
+	<PostsMetaLayout {posts} />
 </div>
