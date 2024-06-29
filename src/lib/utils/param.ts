@@ -32,7 +32,7 @@ export function updateParams(params: Record<string, any>, path?: string, replace
     const unsubscribe = page.subscribe(($page) => {
         const url = new URL(path ? `${$page.url.origin}${path}` : $page.url.toString());
         Object.entries(params).forEach(([key, val]) => {
-            if (!val) {
+            if (val === null) {
                 url.searchParams.delete(key);
             } else {
                 url.searchParams.set(key, val);

@@ -1,9 +1,12 @@
 <script lang="ts">
 	import type { Post as TypedPost } from '$utils/postLoader';
 	import { page } from '$app/stores';
-	import PostMeta from './PostMeta.svelte';
-	import CompToc from './common/tables-of-contents/CompTOC.svelte';
-	const params = $page.url.searchParams.get('type');
+
+	import CompToc from './common/tables-of-contents/CompToc.svelte';
+	import PostsToc from './common/tables-of-contents/PostsToc.svelte';
+    import PostMeta from './PostMeta.svelte';
+
+    const params = $page.url.searchParams.get('type');
 
 	export let posts: TypedPost[];
 	export let tags;
@@ -20,7 +23,7 @@
 	{#if posts}
 		{#each posts as post, i}
 			<div
-				class="hidden min-w-[380px] max-w-[725px] flex-row self-center border-b border-l-pink/30 transition-all duration-300 ease-in-out sm:w-[70%] sm:px-0 md:flex 2xl:w-[45%]"
+				class="min-w-[380px] max-w-[725px] flex-row self-center border-b border-l-pink/30 transition-all duration-300 ease-in-out sm:w-[70%] sm:px-0 md:flex 2xl:w-[45%]"
 			></div>
 			<div
 				class={`flex w-full min-w-[380px] max-w-[725px] flex-row items-center justify-between space-x-4 space-y-2 self-center overflow-hidden rounded-md px-8 text-justify transition-all duration-300 ease-in-out sm:w-[70%] sm:px-0 2xl:w-[45%]`}
@@ -35,3 +38,7 @@
 		{/each}
 	{/if}
 </div>
+
+{#if $page.url.pathname.includes('posts')}
+	<PostsToc />
+{/if}

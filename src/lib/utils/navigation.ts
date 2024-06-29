@@ -1,12 +1,12 @@
-type Element = Container | Page;
+export type Element = Container | Page;
 
-interface Page {
+export interface Page {
     name: string;
     href?: string;
     param?: Param;
 }
 
-interface Container {
+export interface Container {
     name: string;
     children: Page[];
 }
