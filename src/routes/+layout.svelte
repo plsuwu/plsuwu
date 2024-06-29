@@ -24,14 +24,12 @@
 				out:fade={{ delay: 0, duration: 100 }}
 				class="mb-8 flex min-h-full w-full flex-1 flex-row justify-center lg:my-12"
 			>
-
 				<!-- some kind of pretty spinner here -->
-
 			</div>
 		{:else}
 			<div
 				in:fade={{ delay: 100, duration: 350 }}
-				class="my-8 w-full flex-1 flex flex-row justify-center"
+				class="my-8 flex min-h-full w-full flex-1 flex-row justify-center"
 			>
 				<slot />
 			</div>

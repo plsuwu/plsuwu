@@ -17,17 +17,17 @@
 
 <div class="flex w-full flex-col">
 	<div
-		class="mb-12 flex w-full flex-row justify-around self-center font-medium transition-all duration-300 ease-in-out md:w-1/3"
+		class="mb-12 flex w-full flex-row justify-around self-center font-medium transition-all duration-300 ease-in-out lg:w-1/3"
 	>
 		<SquareBraceText classMod={''}>
         <div class="flex flex-row space-x-2 items-center align-bottom mt-px">
             <HeroiconsSparkles class="mt-0.5" />
-			<div>recent</div>
+			<div>recent posts</div>
         </div>
 		</SquareBraceText>
 		<SquareBraceAElement href={'/posts'}>
         <div class="flex flex-row space-x-2 items-center align-bottom mt-px">
-			<div>view all</div>
+			<div>view all posts</div>
             <HeroiconsBookOpen class="mt-0.5" />
         </div>
 		</SquareBraceAElement>
