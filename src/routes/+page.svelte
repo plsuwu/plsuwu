@@ -39,7 +39,7 @@
 	<PostsMetaLayout {tags} {ctfs} posts={recent} />
 
 	<!-- maybe put this on the side (or fix positioning), i commit for now... -->
-	<div class="mt-12 justify-items-end self-center lg:w-1/3">
+	<div class="flex flex-row mt-12 self-end items-center lg:w-1/3">
 		<SquareBraceAElement href={'/posts'}>
 			<div class="flex flex-row space-x-2">
 				<div class="inline-flex">...</div>
