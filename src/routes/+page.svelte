@@ -1,8 +1,10 @@
 <script lang="ts">
-    import type { PageData } from './$types';
+	import type { PageData } from './$types';
+	import type { Post } from '$utils/postLoader';
 
-    import HeroiconsSparkles from '~icons/heroicons/sparkles';
-    import HeroiconsBookOpen from '~icons/heroicons/book-open';
+	import HeroiconsSparkles from '~icons/heroicons/sparkles';
+	import HeroiconsBookOpen from '~icons/heroicons/book-open';
+	import HeroiconsArrowLongRight from '~icons/heroicons/arrow-long-right';
 
 	import PostsMetaLayout from '$components/posts/PostsMetaLayout.svelte';
 	import SquareBraceAElement from '$uic/squarebrace/SquareBraceAElement.svelte';
@@ -10,9 +12,11 @@
 
 	export let data: PageData;
 	$: posts = data.posts;
-    let tags = data.tags;
-    let ctfs = data.ctfs;
+	let tags = data.tags;
+	let ctfs = data.ctfs;
 
+	let recent: Post[];
+	recent = data.posts.slice(0, 3);
 </script>
 
 <div class="flex w-full flex-col">
@@ -20,17 +24,29 @@
 		class="mb-12 flex w-full flex-row justify-around self-center font-medium transition-all duration-300 ease-in-out lg:w-1/3"
 	>
 		<SquareBraceText classMod={''}>
-        <div class="flex flex-row space-x-2 items-center align-bottom mt-px">
-            <HeroiconsSparkles class="mt-0.5" />
-			<div>recent posts</div>
-        </div>
+			<div class="mt-px flex flex-row items-center space-x-2 align-bottom">
+				<HeroiconsSparkles class="mt-0.5" />
+				<div>recent posts</div>
+			</div>
 		</SquareBraceText>
 		<SquareBraceAElement href={'/posts'}>
-        <div class="flex flex-row space-x-2 items-center align-bottom mt-px">
-			<div>view all posts</div>
-            <HeroiconsBookOpen class="mt-0.5" />
-        </div>
+			<div class="mt-px flex flex-row items-center space-x-2 align-bottom">
+				<div>view all posts</div>
+				<HeroiconsBookOpen class="mt-0.5" />
+			</div>
 		</SquareBraceAElement>
 	</div>
-	<PostsMetaLayout {tags} {ctfs} {posts} />
+	<PostsMetaLayout {tags} {ctfs} posts={recent} />
+
+	<!-- maybe put this on the side (or fix positioning), i commit for now... -->
+	<div class="mt-12 justify-items-end self-center lg:w-1/3">
+		<SquareBraceAElement href={'/posts'}>
+			<div class="flex flex-row space-x-2">
+				<div class="inline-flex">...</div>
+				<div>more posts</div>
+				<HeroiconsArrowLongRight />
+			</div>
+		</SquareBraceAElement>
+	</div>
+	<!-- maybe put this on the side, i commit for now... -->
 </div>

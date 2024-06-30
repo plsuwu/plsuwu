@@ -6,6 +6,8 @@
 	<div
 		class="-z-50 flex flex-col items-center overflow-hidden whitespace-nowrap font-mono text-[10px] leading-[6px] tracking-[-0.25em]"
 	>
+    <a href='/'>
 		<Camila />
+    </a>
 	</div>
 </div>

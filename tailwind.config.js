@@ -8,14 +8,14 @@ export default {
             },
             colors: {
                 l: {
-                    darkpink: '#21084a',
+                    darkpink: '#422571',
                     pink: '#ff99be',
                     lightpink: '#ffc8dd',
                     darkblue: '#001529',
                     blue: '#85c4ff',
                     lightblue: '#bde0fe',
                     whitepink: '#fff0fc',
-                    whiteblue: '#f2f8ff',
+                    whiteblue: '#f9e5f5',
                 },
             },
             fontFamily: {
@@ -90,8 +90,8 @@ export default {
                     // in html markup
                     'blockquote': {
                         'display': 'flex',
-                        'margin-left': '2.25em',
-                        'margin-right': '2.25em',
+                        'margin-left': '15%',
+                        'margin-right': '15%',
                         'max-width': '100%',
                         'padding': '0.6em 1.5em',
                         'color': '#884461b9',
@@ -120,8 +120,8 @@ export default {
                         'margin-bottom': '0px',
                         'border': '3px solid #d99cc1',
                         'border-radius': '5px',
-                        'width': '100%',
-                        'height': '100%',
+                        'width': '75%',
+                        'height': '75%',
                         'overflow': 'visible',
                     },
                     'ul': {
