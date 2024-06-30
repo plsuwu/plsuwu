@@ -11,7 +11,6 @@
 	export let data: PageData;
 	$: params = $page.url.searchParams.get('type');
 	$: posts = data.posts;
-
 	$: ctfs = data.ctfs;
 	$: tags = data.tags;
 </script>
@@ -32,9 +31,9 @@
 			</div>
 		</SquareBraceText>
 	</div>
-	<div
-		class="mb-12 flex w-full flex-row justify-around self-center transition-all duration-300 ease-in-out md:w-1/3"
-	></div>
+	<!-- <div -->
+	<!-- 	class="mb-12 flex w-full flex-row justify-around self-center transition-all duration-300 ease-in-out md:w-1/3" -->
+	<!-- ></div> -->
 
 	<PostsMetaLayout {posts} {tags} {ctfs} />
 </div>

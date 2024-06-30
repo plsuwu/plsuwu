@@ -1,13 +1,13 @@
 <script lang="ts">
 	import SquareBraceButton from '$components/ui/squarebrace/SquareBraceButton.svelte';
-	import { pages, type Element } from '$utils/navigation';
+	import { pages } from '$utils/navigation';
 	import { updateParams } from '$utils/param';
 	import { thisIterInParams } from '$utils/thisIterInParams';
-	import type { Container, Param, Page } from '$utils/navigation';
+	import type { Container, Param } from '$utils/navigation';
 	import { page } from '$app/stores';
 
 	const urlParams = $page.url.searchParams;
-	const postsAreas = (pages.find((page) => page.name === 'posts') as Container)
+	const postLocations = (pages.find((page) => page.name === 'posts') as Container)
 		.children;
 
 	const setRoute = (param?: Param, path?: string) => {
@@ -28,7 +28,7 @@
 >
 	<div class="mb-2 mt-8 text-lg font-bold">categories</div>
 	<div class="flex flex-col items-start self-start text-left">
-		{#each postsAreas as { name, href, param }}
+		{#each postLocations as { name, href, param }}
 			{#if param}
 				<SquareBraceButton
 					handleParentEvent={() => setRoute({ type: param.type }, href)}

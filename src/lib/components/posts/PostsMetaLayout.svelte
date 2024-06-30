@@ -4,19 +4,18 @@
 
 	import CompToc from './common/tables-of-contents/CompToc.svelte';
 	import PostsToc from './common/tables-of-contents/PostsToc.svelte';
-    import PostMeta from './PostMeta.svelte';
-
-    const params = $page.url.searchParams.get('type');
+	import PostMeta from './PostMeta.svelte';
 
 	export let posts: TypedPost[];
 	export let tags;
 	export let ctfs;
+
+	const params = $page.url.searchParams.get('type');
 </script>
 
 {#if params && params.includes('ctf')}
 	<CompToc {ctfs} {tags} />
 {/if}
-
 <div
 	class="flex w-full flex-col justify-self-center text-center transition-all duration-300 ease-in-out"
 >
