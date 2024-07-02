@@ -1,4 +1,5 @@
 ---
+pub: true
 title: "Confusing Passwords"
 link: "https://0x0539.net/play/minas_tirith/confusing_passwords"
 description: "This login system will give you the flag... as long as you can prove you're an admin!"
@@ -183,7 +184,6 @@ With this type juggling exploit confirmed, we can throw together a quick python 
 // ...
 Welcome <?php echo $correctUsername; ?>. Since you've authenticated as an admin, here's the secret flag: <?php echo $flag; ?>`
 ```
->This could just as easily be replace with the opposite operation; something like `if not b'Login failed' in response`).
 
 In any case, this was the final exploit script:
 

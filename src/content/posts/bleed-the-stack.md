@@ -1,4 +1,5 @@
 ---
+pub: true
 title: "Bleed the Stack"
 link: "https://0x0539.net/play/fangorn/bleedthestack"
 description: "An amateur programmer decides that for his hello world program, he will echo whatever you say. Can you find his mistake?"

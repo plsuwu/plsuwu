@@ -1,4 +1,5 @@
 ---
+pub: true
 title: "Lockpick"
 link: "https://app.hackthebox.com/sherlocks/Lockpick"
 description: "Forela needs your help! A whole portion of our UNIX servers have been hit with what we think is ransomware."

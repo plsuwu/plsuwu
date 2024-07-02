@@ -1,4 +1,5 @@
 ---
+pub: true
 title: "Operation Eradication"
 description: "Oh no! A ransomware operator encrypted an environment, and exfiltrated data that they will soon use for blackmail and extortion if they don't receive payment!"
 from: "huntress (2023)"

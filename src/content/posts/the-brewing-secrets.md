@@ -1,4 +1,5 @@
 ---
+pub: true
 title: "the-brewing-secrets"
 link: "https://jellyc.tf/challenges#the_brewing_secrets-47"
 description: "Rumour has it Sakana stores the secret recipes for Phase Connect's coffee blends in his garage 'super secure laboratory'. Can you hack your way in?"

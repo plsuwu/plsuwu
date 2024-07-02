@@ -20,6 +20,7 @@ export type MdsvexResolver = () => Promise<MdsvexFile>;
  */
 export interface Post {
 	slug: string;
+    pub: boolean;
 	title: string;
 	description: string;
 	from: string;
@@ -51,7 +52,7 @@ export const loadPosts = async (): Promise<Post[]> => {
 	);
 
 	const postResolved = await Promise.all(postsPromise);
-	const sorted = postResolved.sort(
+	const sorted = postResolved.filter((post) =>  post.pub).sort(
 		(a, b) => (new Date(a.date) > new Date(b.date) ? -1 : 1) // replace with a modular sorting func
 	);
 

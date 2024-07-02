@@ -16,11 +16,8 @@
 </script>
 <!-- todo:
      -----
-
         - search,
         - ordering
-        - maybe change/remove that button on the home
-            page because its a bit ugly........
 -->
 
 <div class="flex w-full flex-col">
