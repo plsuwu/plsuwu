@@ -1,4 +1,5 @@
 ---
+pub: true
 title: "Speakfriend"
 description: "It seems like this website was compromised. We found this file that seems to be related... can you make any sense of these and uncover a flag?"
 from: "huntress (2023)"

@@ -1,4 +1,5 @@
 ---
+pub: true
 title: "Tragedy Redux"
 description: "We found this file as part of an attack chain that seemed to manipulate file contents to stage a payload. Can you make any sense of it?"
 from: "huntress (2023)"

@@ -1,4 +1,5 @@
 ---
+pub: true
 title: "Cozyhosting"
 link: "https://www.hackthebox.com/machines/cozyhosting"
 description: "A very simple HTB seasonal."

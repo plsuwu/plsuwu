@@ -1,22 +1,23 @@
 <script lang="ts">
 	import type { PageData } from './$types';
-	import type { Post } from '$utils/postLoader';
 
 	import HeroiconsSparkles from '~icons/heroicons/sparkles';
 	import HeroiconsBookOpen from '~icons/heroicons/book-open';
-	import HeroiconsArrowLongRight from '~icons/heroicons/arrow-long-right';
 
 	import PostsMetaLayout from '$components/posts/PostsMetaLayout.svelte';
 	import SquareBraceAElement from '$uic/squarebrace/SquareBraceAElement.svelte';
 	import SquareBraceText from '$uic/squarebrace/SquareBraceText.svelte';
+	import SquareBraceButton from '$components/ui/squarebrace/SquareBraceButton.svelte';
 
 	export let data: PageData;
-	$: posts = data.posts;
+    let loaded = 3;
 	let tags = data.tags;
 	let ctfs = data.ctfs;
 
-	let recent: Post[];
-	recent = data.posts.slice(0, 3);
+	$: recent = data.posts.slice(0, loaded);
+    function incrLoaded() {
+        loaded += 3;
+    }
 </script>
 
 <div class="flex w-full flex-col">
@@ -38,15 +39,21 @@
 	</div>
 	<PostsMetaLayout {tags} {ctfs} posts={recent} />
 
-	<!-- maybe put this on the side (or fix positioning), i commit for now... -->
-	<div class="flex flex-row mt-12 self-end items-center lg:w-1/3">
-		<SquareBraceAElement href={'/posts'}>
+	<div class="flex flex-row mt-12 self-center justify-center lg:w-1/3">
+{#if recent.length < data.posts.length}
+		<SquareBraceButton handleParentEvent={incrLoaded}>
 			<div class="flex flex-row space-x-2">
-				<div class="inline-flex">...</div>
-				<div>more posts</div>
-				<HeroiconsArrowLongRight />
+				<div class="inline-flex text-sm mt-0.5">... more?</div>
 			</div>
-		</SquareBraceAElement>
+		</SquareBraceButton>
+        {:else}
+        <SquareBraceText classMod={'opacity-50'}>
+			<div class="flex flex-row space-x-2 group">
+            <div class="inline-flex group opacity-50 text-sm mt-0.5">no more posts :{"<"}</div>
+			</div>
+        </SquareBraceText>
+{/if}
 	</div>
+
 	<!-- maybe put this on the side, i commit for now... -->
 </div>

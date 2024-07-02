@@ -1,4 +1,5 @@
 ---
+pub: true
 title: "Rock, Paper, Psychic"
 description: "Wanna play a game of rock, paper, scissors against a computer that can read your mind? Sounds fun, right?"
 from: "huntress (2023)"

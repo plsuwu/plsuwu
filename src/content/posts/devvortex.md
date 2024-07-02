@@ -1,4 +1,5 @@
 ---
+pub: true
 title: "DevVortex"
 link: "https://www.hackthebox.com/machines/devvortex"
 description: "Easy HackTheBox seasonal machine."

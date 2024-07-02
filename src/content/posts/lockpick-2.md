@@ -1,4 +1,5 @@
 ---
+pub: true
 title: "Lockpick 2"
 link: "https://app.hackthebox.com/sherlocks/Lockpick2.0"
 description: "We've been hit by Ransomware again, but this time the threat actor seems to have upped their skillset."

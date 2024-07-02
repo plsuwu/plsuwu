@@ -4,13 +4,11 @@ import { setCache, getCache, pushTocOptions, getTocOptions } from '$utils/store'
 
 export const load: PageServerLoad = async () => {
 	let posts = getCache();
-
 	if (!posts) {
 		const avail = await loadPosts();
 		posts = avail;
 		setCache(posts);
 	}
-
 
     if (getTocOptions.length < 1) {
         const tmp = await loadPosts();

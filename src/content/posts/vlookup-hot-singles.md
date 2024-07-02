@@ -1,4 +1,5 @@
 ---
+pub: true
 title: "vlookup-hot-singles"
 link: "#"
 description: "looks like this is some kind of dating site for nerds? weird, figure out who the admin is and access their panel"
