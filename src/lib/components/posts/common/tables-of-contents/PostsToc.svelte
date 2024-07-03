@@ -5,6 +5,7 @@
 	import { thisIterInParams } from '$utils/thisIterInParams';
 	import type { Container, Param } from '$utils/navigation';
 	import { page } from '$app/stores';
+	import Search from '$components/ui/Search.svelte';
 
 	const urlParams = $page.url.searchParams;
 	const postLocations = (pages.find((page) => page.name === 'posts') as Container)
@@ -24,9 +25,9 @@
 </script>
 
 <div
-	class="-ml-38 fixed mt-28 hidden w-1/5 flex-col items-start self-end text-left xl:flex 3xl:w-1/4"
+	class="-ml-38 fixed mt-14 hidden w-1/5 flex-col items-start self-end text-left xl:flex 3xl:w-1/4"
 >
-	<div class="mb-2 mt-8 text-lg font-bold">categories</div>
+	<div class="mb-2 text-lg font-bold">categories</div>
 	<div class="flex flex-col items-start self-start text-left">
 		{#each postLocations as { name, href, param }}
 			{#if param}
@@ -42,5 +43,9 @@
 				</SquareBraceButton>
 			{/if}
 		{/each}
+
+		<div class="mt-8 inline-flex self-center">
+			<Search />
+		</div>
 	</div>
 </div>

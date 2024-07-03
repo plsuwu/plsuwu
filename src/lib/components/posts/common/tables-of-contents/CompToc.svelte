@@ -1,32 +1,31 @@
 <script lang="ts">
 	import SquareBraceButton from '$components/ui/squarebrace/SquareBraceButton.svelte';
 	import { updateParams } from '$utils/param';
-    import { thisIterInParams } from '$utils/thisIterInParams';
+	import { thisIterInParams } from '$utils/thisIterInParams';
 	import type { Param } from '$utils/navigation';
 	import { page } from '$app/stores';
 
 	export let ctfs;
 	export let tags;
-    const urlParams = $page.url.searchParams;
+	const urlParams = $page.url.searchParams;
 
 	const setRoute = (param?: Param, path?: string) => {
 		// handle setting URL params if a link that sets a URL
 		// param was clicked
 		if (param) {
 			Object.entries(param).forEach(([key, val]) => {
-                if (!thisIterInParams({ [key]: val }, urlParams)) {
-				    updateParams({ type: 'ctf', [key]: val }, path ?? undefined);
-                } else {
-                    updateParams({ [key]: null }, path ?? undefined);
-                }
+				if (!thisIterInParams({ [key]: val }, urlParams)) {
+					updateParams({ type: 'ctf', [key]: val }, path ?? undefined);
+				} else {
+					updateParams({ [key]: null }, path ?? undefined);
+				}
 			});
 		}
 	};
-
 </script>
 
 <div
-	class="-ml-38 fixed mt-28 hidden w-1/5 flex-col items-end text-right xl:flex 3xl:w-1/4"
+	class="-ml-38 fixed mt-14 hidden w-1/5 flex-col items-end text-right xl:flex 3xl:w-1/4"
 >
 	<div class="mb-2 text-lg font-bold">ctf events {'&'} sites</div>
 	<div class="flex flex-col items-end self-end text-right">

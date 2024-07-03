@@ -1,5 +1,7 @@
 <script lang="ts">
 	import { pages, type Param } from '$utils/navigation';
+	// param should probably be in param.ts, no?
+	// look at reorganizing utility funcs
 	import { updateParams } from '$utils/param';
 
 	import HeroiconsArrowLongRight from '~icons/heroicons/arrow-long-right';
@@ -8,12 +10,13 @@
 	import ButtonNavigation from './submodules/ButtonNavigation.svelte';
 
 	let active = '';
-	const setRoute = (name: string, param?: Param, path?: string) => {
+	const route = (name: string, param?: Param, path?: string) => {
 		if (param) {
 			updateParams({ type: param.type }, path);
 		}
 
 		active = active === name ? '' : name;
+		return active;
 	};
 
 	const handleCheckClick = (node: HTMLElement) => {
@@ -36,12 +39,12 @@
 	<ul use:handleCheckClick class="flex flex-row space-x-8 font-bold">
 		{#each pages as page}
 			{#if 'children' in page}
-				<Dropdown name={page.name} {active} {setRoute}>
+				<Dropdown name={page.name} {active} handleParentEvent={route}>
 					{#each page.children as child}
 						{#if !child.param && child.href}
 							<NavigationLink
 								handleParentEvent={() =>
-									setRoute(page.name, child.param, child.href)}
+									route(page.name, child.param, child.href)}
 								href={child.href}
 							>
 								<div
@@ -56,7 +59,7 @@
 						{:else if child.param}
 							<ButtonNavigation
 								handleParentEvent={() =>
-									setRoute(page.name, child.param, child.href)}
+									route(page.name, child.param, child.href)}
 							>
 								<div
 									class="mx-2 my-1 inline-flex w-full justify-between rounded-md border border-l-lightpink p-1 px-4"
@@ -71,10 +74,7 @@
 					{/each}
 				</Dropdown>
 			{:else if page.href}
-				<NavigationLink
-					handleParentEvent={() => setRoute(active)}
-					href={page.href}
-				>
+				<NavigationLink handleParentEvent={() => route(active)} href={page.href}>
 					{page.name}
 				</NavigationLink>
 			{/if}

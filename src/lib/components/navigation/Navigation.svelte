@@ -1,11 +1,10 @@
 <script lang="ts">
-
 	import Desktop from './common/Desktop.svelte';
 	import Phone from './common/Phone.svelte';
 </script>
 
 <!-- <div class="sm:hidden"> -->
-<!-- 	<Phone /> -->
+<!-- <Phone /> -->
 <!-- </div> -->
 
 <!-- <div class="hidden sm:block"> -->

@@ -7,11 +7,11 @@
 
 	export let name: string;
 	export let active: string;
-	export let setRoute: (name: string) => void;
+	export let handleParentEvent: (data: string) => void;
 
 	const handleClick = (event: MouseEvent) => {
 		event.stopPropagation();
-		setRoute(name);
+		handleParentEvent(name);
 	};
 </script>
 
@@ -28,7 +28,7 @@
 
 	{#if active === name}
 		<ul
-			class={`absolute -ml-[0.15rem] mt-8 w-52 min-w-52 rounded-md border border-l-pink/25 backdrop-blur-sm bg-white/75 z-50`}
+			class={`absolute z-50 -ml-[0.15rem] mt-8 w-52 min-w-52 rounded-md border border-l-pink/25 bg-white/75 backdrop-blur-sm`}
 			in:fade={{ duration: 200, easing: expoIn }}
 			out:fade={{ duration: 200, easing: expoOut }}
 		>

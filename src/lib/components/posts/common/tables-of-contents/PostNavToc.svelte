@@ -26,7 +26,7 @@
 </script>
 
 <div
-	class="-ml-38 fixed mt-28 hidden w-1/6 flex-col items-end self-start text-left transition-all delay-150 xl:flex 3xl:w-1/5"
+	class="-ml-38 fixed mt-14 hidden w-1/6 flex-col items-end self-start text-left transition-all delay-150 xl:flex 3xl:w-1/5"
 >
 	<div class="mb-2 mt-8 text-lg font-bold">nav</div>
 	<div class="flex flex-col items-end self-end text-left">
@@ -45,10 +45,10 @@
 				class={`${yPos > DISPLAY_BUTTON_YPOS ? 'flex flex-col items-end self-end text-left' : 'hidden'}`}
 			>
 				<SquareBraceButton handleParentEvent={handleScrollToTop}>
-                <div class="mt-1.5 flex flex-row space-x-2 text-xs">
-					<HeroiconsArrowLongUp class="text-[0.75rem]" />
-					<div class="inline-flex justify-center">top</div>
-                </div>
+					<div class="mt-1.5 flex flex-row space-x-2 text-xs">
+						<HeroiconsArrowLongUp class="text-[0.75rem]" />
+						<div class="inline-flex justify-center">top</div>
+					</div>
 				</SquareBraceButton>
 			</div>
 		</div>

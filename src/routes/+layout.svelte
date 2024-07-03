@@ -7,6 +7,7 @@
 	import PageHead from '$uic/PageHead.svelte';
 	import '../app.css';
 	import Footer from '$components/footer/Footer.svelte';
+	import { expoInOut } from 'svelte/easing';
 </script>
 
 <PageHead />
@@ -18,11 +19,12 @@
 	</div>
 
 	{#key $page.url}
-			<div
-				class="my-8 flex min-h-full w-full flex-1 flex-row justify-center"
-			>
-				<slot />
-			</div>
+		<div
+			in:fade={{ delay: 150, duration: 300, easing: expoInOut }}
+			class="my-8 flex min-h-full w-full flex-1 flex-row justify-center"
+		>
+			<slot />
+		</div>
 	{/key}
 	<div class="mt-24">
 		<Footer />
