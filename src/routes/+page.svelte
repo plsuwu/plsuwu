@@ -10,14 +10,14 @@
 	import SquareBraceButton from '$components/ui/squarebrace/SquareBraceButton.svelte';
 
 	export let data: PageData;
-    let loaded = 3;
+	let loaded = 5;
 	let tags = data.tags;
 	let ctfs = data.ctfs;
 
 	$: recent = data.posts.slice(0, loaded);
-    function incrLoaded() {
-        loaded += 3;
-    }
+	function incrLoaded() {
+		loaded += 5;
+	}
 </script>
 
 <div class="flex w-full flex-col">
@@ -39,20 +39,22 @@
 	</div>
 	<PostsMetaLayout {tags} {ctfs} posts={recent} />
 
-	<div class="flex flex-row mt-12 self-center justify-center lg:w-1/3">
-{#if recent.length < data.posts.length}
-		<SquareBraceButton handleParentEvent={incrLoaded}>
-			<div class="flex flex-row space-x-2">
-				<div class="inline-flex text-sm mt-0.5">... more?</div>
-			</div>
-		</SquareBraceButton>
-        {:else}
-        <SquareBraceText classMod={'opacity-50'}>
-			<div class="flex flex-row space-x-2 group">
-            <div class="inline-flex group opacity-50 text-sm mt-0.5">no more posts :{"<"}</div>
-			</div>
-        </SquareBraceText>
-{/if}
+	<div class="mt-12 flex flex-row justify-center self-center lg:w-1/3">
+		{#if recent.length < data.posts.length}
+			<SquareBraceButton handleParentEvent={incrLoaded}>
+				<div class="flex flex-row space-x-2">
+					<div class="mt-0.5 inline-flex text-sm">... more?</div>
+				</div>
+			</SquareBraceButton>
+		{:else}
+			<SquareBraceText classMod={'opacity-50'}>
+				<div class="group flex flex-row space-x-2">
+					<div class="group mt-0.5 inline-flex text-sm opacity-50">
+						no more posts :{'<'}
+					</div>
+				</div>
+			</SquareBraceText>
+		{/if}
 	</div>
 
 	<!-- maybe put this on the side, i commit for now... -->

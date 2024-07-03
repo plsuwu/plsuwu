@@ -5,6 +5,7 @@
 	import CompToc from './common/tables-of-contents/CompToc.svelte';
 	import PostsToc from './common/tables-of-contents/PostsToc.svelte';
 	import PostMeta from './PostMeta.svelte';
+	import Search from '$components/ui/Search.svelte';
 
 	export let posts: TypedPost[];
 	export let tags;
