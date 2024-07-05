@@ -20,7 +20,7 @@
 
 	{#key $page.url}
 		<div
-			in:fade={{ delay: 150, duration: 300, easing: expoInOut }}
+			in:fade={{ delay: 100, duration: 200, easing: expoInOut }}
 			class="my-8 flex min-h-full w-full flex-1 flex-row justify-center"
 		>
 			<slot />

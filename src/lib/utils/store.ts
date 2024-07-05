@@ -7,8 +7,8 @@ interface Cacheable<T = any> {
 export let cache: Cacheable;
 export function setCache(data: Cacheable) {
     // dont add these to a post's searchterm string
-	const omitted = new Set(['pub', 'link', 'date']);
-	const haystack = Object.entries(data.posts).map(([key, val]) => {
+	const omitted = new Set(['pub', 'slug', 'link', 'date']);
+	const haystack = Object.entries(data.posts).map(([_, val]) => {
 		const vals = Object.entries(val)
 			.filter(([field]) => !omitted.has(field))
 			.map(([_, fieldVal]) => {
@@ -27,7 +27,7 @@ export function setCache(data: Cacheable) {
 		haystack: haystack,
 	};
 
-	console.log(cache);
+    return getCache();
 }
 
 export function getCache() {

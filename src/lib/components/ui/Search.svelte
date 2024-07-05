@@ -30,9 +30,6 @@
 	const handleSearch = (query: string) => {
 		// console.log('searching:', query, `(length of ${query.length})`);
         setRoute({ s: query });
-		const result = runSearch(cache.haystack, query);
-
-		return result;
 	};
 
 	const debounced = debounce(handleSearch, 250);
@@ -44,8 +41,8 @@
 
 	function handleInput(event: Event) {
 		const target = event.target as HTMLInputElement;
-		let res = debounced(target.value);
-		console.log(res);
+		debounced(target.value);
+		// console.log(res);
 	}
 </script>
 

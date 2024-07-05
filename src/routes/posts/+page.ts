@@ -10,11 +10,11 @@ export const load: PageLoad = async ({ url }) => {
 	let cache = getCache();
 	const params: Param = {};
 
-	if (!cache) {
+	if (!cache || !cache.posts || !cache.haystack) {
 		const posts = await loadPosts();
 		// console.log({ posts: posts })
-		cache = { posts: posts };
-		setCache(cache);
+		setCache({ posts: posts });
+        cache = getCache();
 	}
 
 	let postQuery: string | null = null;
@@ -30,16 +30,19 @@ export const load: PageLoad = async ({ url }) => {
 			}
 		});
 
-		let filtered = filterPosts(cache.posts, params);
 
 
-        // how the fuck......
-		if (postQuery !== null) {
-			const searchResult = runSearch(cache.haystack, postQuery);
+        let currentPosts;
+		if (postQuery != null) {
+            console.log('searching with haystack: ', cache.haystack);
+			currentPosts = runSearch(cache.haystack, postQuery).map((res => res.post));
+		} else {
+            currentPosts = cache.posts;
+        }
+        console.log(currentPosts);
+        let filtered = filterPosts(currentPosts, params);
 
-			console.log(searchResult);
-		}
-
+        console.log(filtered);
 		cache = { posts: filtered };
 	}
 

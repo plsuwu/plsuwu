@@ -32,7 +32,7 @@
 		{#each ctfs as from}
 			<SquareBraceButton
 				handleParentEvent={() => setRoute({ type: 'ctf', from })}
-				opacityMod={`${thisIterInParams({ from }, urlParams) ? 'opacity-100' : ''}`}
+				opacityMod={`${thisIterInParams({ from }, urlParams) ? 'opacity-100 brightness-75' : ''}`}
 			>
 				{#if thisIterInParams({ from }, urlParams)}
 					<div class="opacity-100">{from}</div>
@@ -48,7 +48,7 @@
 		{#each tags as tag}
 			<SquareBraceButton
 				handleParentEvent={() => setRoute({ type: 'ctf', tag })}
-				opacityMod={`${thisIterInParams({ tag }, urlParams) ? 'opacity-100' : ''}`}
+				opacityMod={`${thisIterInParams({ tag }, urlParams) ? 'opacity-100 brightness-75' : ''}`}
 			>
 				{#if thisIterInParams({ tag }, urlParams)}
 					<div class="opacity-100">{tag}</div>

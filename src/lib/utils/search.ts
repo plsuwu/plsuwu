@@ -1,15 +1,29 @@
-import type { Post } from './postLoader';
 import { cache } from './store';
 
-interface MatchedResult {
-	item: string;
-	distance: number;
+// what the fuck
+export function debounce<T extends (...args: any[]) => void>(
+	func: T,
+	wait: number
+): (...args: Parameters<T>) => void {
+	let timeout: ReturnType<typeof setTimeout>;
+
+	return function (this: ThisParameterType<T>, ...args: Parameters<T>) {
+		const context = this;
+
+		clearTimeout(timeout);
+		timeout = setTimeout(() => func.apply(context, args), wait);
+	};
 }
 
 const damerauLevenshtein = (source: string, target: string): number => {
 	const sourceLen = source.length;
 	const targetLen = target.length;
 
+    // base cases:
+    // if either is empty, return the opposing item
+    //
+    // this was in the pseudocode but i dont think our
+    // search function really needs to worry about this
 	if (sourceLen === 0) return targetLen;
 	if (targetLen === 0) return sourceLen;
 
@@ -27,9 +41,9 @@ const damerauLevenshtein = (source: string, target: string): number => {
 			const cost = source[i - 1] === target[j - 1] ? 0 : 1;
 
 			matrix[i][j] = Math.min(
-				matrix[i - 1][j] + 1, // del
-				matrix[i][j - 1] + 1, // ins
-				matrix[i - 1][j - 1] + cost // sub
+				matrix[i - 1][j] + 1,               // deletion
+				matrix[i][j - 1] + 1,               // insertion
+				matrix[i - 1][j - 1] + cost         // substitution
 			);
 
 			if (
@@ -40,13 +54,12 @@ const damerauLevenshtein = (source: string, target: string): number => {
 			) {
 				matrix[i][j] = Math.min(
 					matrix[i][j],
-					matrix[i - 2][j - 2] + cost // trans
+					matrix[i - 2][j - 2] + cost     // transposition
 				);
 			}
 		}
 	}
 
-	// console.log(matrix);
 	return matrix[sourceLen][targetLen];
 };
 
@@ -57,8 +70,7 @@ const normalized = (distance: number, sourceLen: number, targetLen: number): num
 
 const getMinDistance = (needle: string, haystack: string): number => {
 	// base case:
-    // if search term is longer than the current post string,
-    // simply run the search.
+	// if search term is longer than the current post string, simply run the search.
 	if (needle.length > haystack.length) {
 		return damerauLevenshtein(needle, haystack);
 	}
@@ -75,7 +87,7 @@ const getMinDistance = (needle: string, haystack: string): number => {
 };
 
 export function runSearch(haystack: string[], needle: string): any[] {
-	const maxDistance = needle.length;
+	const maxDistance = needle.length / 2;
 
 	const posts = haystack.map((post, idx) => ({
 		postIndex: idx,
@@ -85,25 +97,11 @@ export function runSearch(haystack: string[], needle: string): any[] {
 		.map(({ postIndex, fields }) => {
 			const distance = getMinDistance(needle.toLowerCase(), fields.toLowerCase());
 			const similarity = 1 - normalized(distance, needle.length, fields.length);
-			return { posts: cache.posts[postIndex], distance, similarity };
+			return { post: cache.posts[postIndex], postIndex, distance, similarity };
 		})
 		.filter((res) => res.distance <= maxDistance)
 		.sort((a, b) => b.similarity - a.similarity);
 
-    return results;
-}
-
-// what the fuck
-export function debounce<T extends (...args: any[]) => void>(
-	func: T,
-	wait: number
-): (...args: Parameters<T>) => void {
-	let timeout: ReturnType<typeof setTimeout>;
-
-	return function (this: ThisParameterType<T>, ...args: Parameters<T>) {
-		const context = this;
-
-		clearTimeout(timeout);
-		timeout = setTimeout(() => func.apply(context, args), wait);
-	};
+	// console.log(results);
+	return results;
 }
