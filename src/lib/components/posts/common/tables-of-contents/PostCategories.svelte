@@ -36,10 +36,10 @@
 			{#if param}
 				<SquareBraceButton
 					handleParentEvent={() => setRoute({ type: param.type }, href)}
-					opacityMod={`${thisIterInParams({ type: param.type }, urlParams) ? 'opacity-100' : ''}`}
+					opacityMod={`${thisIterInParams({ type: param.type }, urlParams) ? 'opacity-100 brightness-75' : ''}`}
 				>
 					{#if thisIterInParams({ type: param.type }, urlParams)}
-						<div class="opacity-100">{name}</div>
+						<div class="opacity-100 brightness-75">{name}</div>
 					{:else}
 						<div>{name}</div>
 					{/if}
