@@ -10,6 +10,8 @@
 	$: posts = data.posts;
 	$: ctfs = data.ctfs;
 	$: tags = data.tags;
+
+    // console.log(data);
 </script>
 
 <!-- todo:

@@ -1,9 +1,35 @@
 import { loadPosts, type Post } from './postLoader';
 
-export let cache: Post[] | null;
-export function setCache(data: Post[]) {
-	cache = data;
+interface Cacheable<T = any> {
+	[key: string | number]: T[];
 }
+
+export let cache: Cacheable;
+export function setCache(data: Cacheable) {
+    // dont add these to a post's searchterm string
+	const omitted = new Set(['pub', 'link', 'date']);
+	const haystack = Object.entries(data.posts).map(([key, val]) => {
+		const vals = Object.entries(val)
+			.filter(([field]) => !omitted.has(field))
+			.map(([_, fieldVal]) => {
+				if (Array.isArray(fieldVal)) {
+					return fieldVal.join(' ');
+				}
+
+				return fieldVal;
+			});
+
+		return vals.join(' ');
+	});
+
+	cache = {
+		posts: data.posts,
+		haystack: haystack,
+	};
+
+	console.log(cache);
+}
+
 export function getCache() {
 	return cache;
 }
@@ -12,6 +38,7 @@ export let ctfs = new Set<string>();
 export let tags = new Set<string>();
 
 export function getTocOptions() {
+	// maybe refactor to allow for better generalization
 	return { tags, ctfs };
 }
 

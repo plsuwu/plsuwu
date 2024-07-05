@@ -19,12 +19,12 @@ export type MdsvexResolver = () => Promise<MdsvexFile>;
  * ---
  */
 export interface Post {
-	slug: string;
-    pub: boolean;
+	slug: string;   // url slug
+    pub: boolean;   // is the post 'public' or not
 	title: string;
 	description: string;
-	from: string;
-	date: string;
+	from: string;   // name of a website that a post references
+	date: string;   // date of original post
 	type: string;
 	tags: string[];
 }

@@ -1,13 +1,13 @@
 <script lang="ts">
 	import HeroiconsArrowUturnLeft from '~icons/heroicons/arrow-uturn-left';
 	import HeroiconsArrowLongUp from '~icons/heroicons/arrow-long-up';
+    import SquareBraceButton from '$components/ui/squarebrace/SquareBraceButton.svelte';
 	import { goto, afterNavigate } from '$app/navigation';
 	import { base } from '$app/paths';
-
-	import SquareBraceButton from '$components/ui/squarebrace/SquareBraceButton.svelte';
 	import { scrollToTop } from '$utils/scrollToTop';
 
-	const DISPLAY_BUTTON_YPOS = 365;
+	const DISPLAY_BUTTON_YPOS = 365; // scroll amount (px?) before `[ top ]` button is displayed
+
 	let previousPage: string = base;
 	let yPos = 0;
 

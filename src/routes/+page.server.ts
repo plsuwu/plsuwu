@@ -3,11 +3,11 @@ import { loadPosts } from '$utils/postLoader';
 import { setCache, getCache, pushTocOptions, getTocOptions } from '$utils/store';
 
 export const load: PageServerLoad = async () => {
-	let posts = getCache();
-	if (!posts) {
-		const avail = await loadPosts();
-		posts = avail;
-		setCache(posts);
+	let cache = getCache();
+	if (!cache) {
+		const posts = await loadPosts();
+		cache = { posts: posts };
+		setCache(cache);
 	}
 
     if (getTocOptions.length < 1) {
@@ -17,6 +17,8 @@ export const load: PageServerLoad = async () => {
 
     let tags = [...getTocOptions().tags];
     let ctfs = [...getTocOptions().ctfs];
+    const posts = cache.posts;
+    getCache();
 
 	return { posts, tags, ctfs };
 };
