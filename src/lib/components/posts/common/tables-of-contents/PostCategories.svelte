@@ -8,8 +8,7 @@
 	import Search from '$components/ui/Search.svelte';
 
 	const urlParams = $page.url.searchParams;
-	const postLocations = (pages.find((page) => page.name === 'posts') as Container)
-		.children;
+	const postLocations = (pages.find((page) => page.name === 'posts') as Container).children;
 
 	const setRoute = (param?: Param, path?: string) => {
 		if (param) {
@@ -27,8 +26,12 @@
 <div
 	class="-ml-38 fixed mt-14 hidden w-1/5 flex-col items-start self-end text-left xl:flex 3xl:w-1/4"
 >
+<div class="mb-8 flex flex-col items-start self-start text-left">
+<Search />
+</div>
 	<div class="mb-2 text-lg font-bold">categories</div>
 	<div class="flex flex-col items-start self-start text-left">
+
 		{#each postLocations as { name, href, param }}
 			{#if param}
 				<SquareBraceButton
@@ -44,8 +47,5 @@
 			{/if}
 		{/each}
 
-		<div class="mt-8 inline-flex self-center">
-			<Search />
-		</div>
 	</div>
 </div>

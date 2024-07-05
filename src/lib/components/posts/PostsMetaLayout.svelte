@@ -3,9 +3,8 @@
 	import { page } from '$app/stores';
 
 	import CompToc from './common/tables-of-contents/CompToc.svelte';
-	import PostsToc from './common/tables-of-contents/PostsToc.svelte';
+	import PostCategories from './common/tables-of-contents/PostCategories.svelte';
 	import PostMeta from './PostMeta.svelte';
-	import Search from '$components/ui/Search.svelte';
 
 	export let posts: TypedPost[];
 	export let tags;
@@ -40,5 +39,5 @@
 </div>
 
 {#if $page.url.pathname.includes('posts')}
-	<PostsToc />
+	<PostCategories />
 {/if}
