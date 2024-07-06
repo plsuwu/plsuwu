@@ -6,7 +6,7 @@
 	import Footer from '$components/footer/Footer.svelte';
 	import PageHead from '$uic/PageHead.svelte';
 	import { navigating, page } from '$app/stores';
-	import { expoIn, expoOut } from 'svelte/easing';
+	import { expoIn, expoInOut, expoOut } from 'svelte/easing';
 	import { fade } from 'svelte/transition';
 	import { afterNavigate } from '$app/navigation';
 	import { setNavigatedFrom } from '$utils/store';
@@ -33,8 +33,7 @@
 	{#key $page.url.pathname}
 		{#await $navigating?.complete}
 			<div
-				in:fade={{ delay: 50, duration: 250, easing: expoIn }}
-				out:fade={{ delay: 50, duration: 100, easing: expoOut }}
+				in:fade={{ delay: 100, duration: 350, easing: expoInOut }}
 				class="my-8 flex min-h-full w-full flex-1 flex-col items-center self-center"
 			>
 				<div class="mb-2 text-xl font-semibold">{'>///<'}</div>
@@ -43,8 +42,7 @@
 			</div>
 		{:then}
 			<div
-				in:fade={{ delay: 50, duration: 250, easing: expoIn }}
-				out:fade={{ delay: 50, duration: 100, easing: expoOut }}
+				in:fade={{ delay: 100, duration: 350, easing: expoInOut }}
 				class="my-8 flex min-h-full w-full flex-1 flex-row justify-center"
 			>
 				{#key $page.url}

@@ -1,7 +1,6 @@
 <script lang="ts">
 	import type { PageData } from './$types';
 	import type { SvelteComponent } from 'svelte';
-    import { navigatedFrom } from '$utils/store';
 	import ReaderSiteNav from '$components/posts/common/tables-of-contents/ReaderSiteNav.svelte';
 	import PhoneReaderTop from '$components/posts/common/small-formfactor/PhoneReaderTop.svelte';
 	import PhoneReaderBack from '$components/posts/common/small-formfactor/PhoneReaderBack.svelte';

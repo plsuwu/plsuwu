@@ -61,12 +61,15 @@ export default {
 						'font-family': 'monospace',
 						'word-break': 'break-word',
 						'border-radius': '1em',
-						padding: '0.1em 0.5em',
+						padding: '0 0.5em',
 						'font-style': 'italic',
 						'white-space': 'normal',
 						color: '#884461',
 						'background-color': '#f6d1e7',
 						'font-weight': '550',
+                        'font-size': '0.9rem',
+                        'letter-spacing': '0px',
+                        'line-height': '1.2em',
 					},
 
 					// <aside/> should realistically only appear at the top of our docs
@@ -87,9 +90,9 @@ export default {
 					// <blockquote/> elements by mdsvex in our svelte markup
 					blockquote: {
 						display: 'flex',
-						'margin-left': '12%',
-						'margin-right': '12%',
-						'max-width': '90%',
+						'margin-left': '25%',
+						'margin-right': '25%',
+						'max-width': '100%',
 						padding: '0.6em 1.5em',
 						color: '#884461',
 						'background-color': '#ffeeff',
@@ -124,8 +127,8 @@ export default {
 						'margin-bottom': '0px',
 						border: '3px solid #d99cc1',
 						'border-radius': '5px',
-						width: '95%',
-						height: '95%',
+						width: '60%',
+						height: '60%',
 						overflow: 'visible',
 					},
 					ul: {

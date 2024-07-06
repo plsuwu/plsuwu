@@ -44,8 +44,8 @@ export const pages: Element[] = [
 		children: [
 			{ name: 'all posts', href: '/posts' },
 			{ name: 'ctf', href: '/posts', param: { type: 'ctf' } },
-            { name: 'general', href: '/posts', param: { type: 'general' } },
 			{ name: 'notes', href: '/posts', param: { type: 'note' } },
+            // { name: 'general', href: '/posts', param: { type: 'general' } },
 		],
 	},
 	{ name: 'about', href: '/about' },
