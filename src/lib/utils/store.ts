@@ -1,13 +1,16 @@
-import { loadPosts, type Post } from './postLoader';
+import type { Post } from './post';
 
 interface Cacheable<T = any> {
 	[key: string | number]: T[];
 }
 
 export let cache: Cacheable;
+export let ctfs = new Set<string>();
+export let tags = new Set<string>();
+
 export function setCache(data: Cacheable) {
-    // dont add these to a post's searchterm string
-	const omitted = new Set(['pub', 'slug', 'link', 'date']);
+    // omit these fields from our cached haystack array
+    const omitted = new Set(['pub', 'slug', 'link', 'date']);
 	const haystack = Object.entries(data.posts).map(([_, val]) => {
 		const vals = Object.entries(val)
 			.filter(([field]) => !omitted.has(field))
@@ -22,20 +25,21 @@ export function setCache(data: Cacheable) {
 		return vals.join(' ');
 	});
 
+    // run haystack creation (results in slightly slower first pageload
+    // on the server) so we dont have to worry about haystack creation
+    // every time we run a search
 	cache = {
 		posts: data.posts,
 		haystack: haystack,
 	};
 
-    return getCache();
+    return cache;
 }
 
 export function getCache() {
 	return cache;
 }
 
-export let ctfs = new Set<string>();
-export let tags = new Set<string>();
 
 export function getTocOptions() {
 	// maybe refactor to allow for better generalization

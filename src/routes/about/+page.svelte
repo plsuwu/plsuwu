@@ -1,10 +1,9 @@
 <script lang="ts">
-	import { fetchIcon, links } from '$utils/fetchIcon';
+	import { fetchIcon, links } from '$utils/navigation';
 </script>
 
 <div class="mx-auto w-full rounded-xl py-12 xl:py-24 text-center lg:max-w-[66%]">
 	<div class="mb-2 text-lg font-bold">cybersecurity vagueposts.</div>
-	<!-- <div class="mb-8 italic opacity-50"></div> -->
 	<div class="my-8 xl:my-16 flex flex-col space-y-2">
 		{#each links as link}
 			<a

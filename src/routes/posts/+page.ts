@@ -1,9 +1,9 @@
 import type { PageLoad } from './$types';
-import { loadPosts, type Post } from '$utils/postLoader';
+import type { Param } from '$utils/param';
 import { getCache, getTocOptions, pushTocOptions, setCache } from '$utils/store';
-import type { Param } from '$utils/navigation';
+import { load as loadPosts } from '$utils/post';
 import { filterPosts } from '$utils/param';
-import { runSearch } from '$utils/search';
+import { search } from '$utils/search';
 
 // load post metadata
 export const load: PageLoad = async ({ url }) => {
@@ -12,7 +12,6 @@ export const load: PageLoad = async ({ url }) => {
 
 	if (!cache || !cache.posts || !cache.haystack) {
 		const posts = await loadPosts();
-		// console.log({ posts: posts })
 		setCache({ posts: posts });
         cache = getCache();
 	}
@@ -30,19 +29,14 @@ export const load: PageLoad = async ({ url }) => {
 			}
 		});
 
-
-
         let currentPosts;
 		if (postQuery != null) {
-            console.log('searching with haystack: ', cache.haystack);
-			currentPosts = runSearch(cache.haystack, postQuery).map((res => res.post));
+			currentPosts = search(cache.haystack, postQuery).map((res => res.post));
 		} else {
             currentPosts = cache.posts;
         }
-        console.log(currentPosts);
-        let filtered = filterPosts(currentPosts, params);
 
-        console.log(filtered);
+        let filtered = filterPosts(currentPosts, params);
 		cache = { posts: filtered };
 	}
 

@@ -1,13 +1,10 @@
 <script lang="ts">
-	import { pages, type Param } from '$utils/navigation';
-	// param should probably be in param.ts, no?
-	// look at reorganizing utility funcs
-	import { updateParams } from '$utils/param';
-
 	import HeroiconsArrowLongRight from '~icons/heroicons/arrow-long-right';
 	import Dropdown from './submodules/Dropdown.svelte';
 	import NavigationLink from './submodules/NavigationLink.svelte';
 	import ButtonNavigation from './submodules/ButtonNavigation.svelte';
+    import { updateParams, type Param } from '$utils/param';
+	import { pages } from '$utils/navigation';
 
 	let active = '';
 	const route = (name: string, param?: Param, path?: string) => {

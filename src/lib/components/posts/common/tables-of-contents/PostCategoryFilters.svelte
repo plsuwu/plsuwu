@@ -1,11 +1,11 @@
 <script lang="ts">
+    import type { Container } from '$utils/navigation';
+    import type { Param } from '$utils/param';
 	import SquareBraceButton from '$components/ui/squarebrace/SquareBraceButton.svelte';
+    import Search from '$components/ui/Search.svelte';
+    import { page } from '$app/stores';
 	import { pages } from '$utils/navigation';
-	import { updateParams } from '$utils/param';
-	import { thisIterInParams } from '$utils/thisIterInParams';
-	import type { Container, Param } from '$utils/navigation';
-	import { page } from '$app/stores';
-	import Search from '$components/ui/Search.svelte';
+	import { updateParams, paramsContain } from '$utils/param';
 
 	const urlParams = $page.url.searchParams;
 	const postLocations = (pages.find((page) => page.name === 'posts') as Container).children;
@@ -13,7 +13,7 @@
 	const setRoute = (param?: Param, path?: string) => {
 		if (param) {
 			Object.entries(param).forEach(([key, val]) => {
-				if (!thisIterInParams({ [key]: val }, urlParams)) {
+				if (!paramsContain({ [key]: val }, urlParams)) {
 					updateParams({ type: 'ctf', [key]: val }, path ?? undefined);
 				} else {
 					updateParams({ [key]: null }, path ?? undefined);
@@ -36,9 +36,9 @@
 			{#if param}
 				<SquareBraceButton
 					handleParentEvent={() => setRoute({ type: param.type }, href)}
-					opacityMod={`${thisIterInParams({ type: param.type }, urlParams) ? 'opacity-100 brightness-75' : ''}`}
+					opacityMod={`${paramsContain({ type: param.type }, urlParams) ? 'opacity-100 brightness-75' : ''}`}
 				>
-					{#if thisIterInParams({ type: param.type }, urlParams)}
+					{#if paramsContain({ type: param.type }, urlParams)}
 						<div class="opacity-100 brightness-75">{name}</div>
 					{:else}
 						<div>{name}</div>

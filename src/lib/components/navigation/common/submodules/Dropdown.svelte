@@ -1,9 +1,8 @@
 <script lang="ts">
+    import HeroiconsChevronUp from '~icons/heroicons/chevron-up';
+    import ButtonNavigation from './ButtonNavigation.svelte';
+    import { expoIn, expoOut } from 'svelte/easing';
 	import { fade } from 'svelte/transition';
-	import { expoIn, expoOut } from 'svelte/easing';
-
-	import HeroiconsChevronUp from '~icons/heroicons/chevron-up';
-	import ButtonNavigation from './ButtonNavigation.svelte';
 
 	export let name: string;
 	export let active: string;

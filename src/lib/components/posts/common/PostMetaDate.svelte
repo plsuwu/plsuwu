@@ -1,21 +1,9 @@
 <script lang="ts">
-	import type { Param } from '$utils/navigation';
-	import { updateParams } from '$utils/param';
-
-	// export let from: string;
 	export let type: string;
 	export let tags: string[];
 	export let date: string;
-	const formatted = new Date(date).toLocaleDateString();
 
-    // this should be a util
-	const setRoute = (param?: Param, path?: string) => {
-		if (param) {
-			Object.entries(param).forEach(([key, val]) => {
-				updateParams({ type: 'ctf', [key]: val }, path ?? undefined);
-			});
-		}
-	};
+	const formatted = new Date(date).toLocaleDateString();
 </script>
 
 <div class="mb-2 flex w-full flex-col justify-end">

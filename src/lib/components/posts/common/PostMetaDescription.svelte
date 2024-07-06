@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { truncate } from '$utils/truncate';
+    import { truncate } from '$utils/post';
 
     export let description: string;
     const formatted = truncate(description);
