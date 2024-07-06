@@ -3,7 +3,7 @@ export const scrollToTop = () => {
 		const pos = document.documentElement.scrollTop || document.body.scrollTop;
 		if (pos > 0) {
 			window.requestAnimationFrame(scrollToTop);
-			window.scrollTo(0, pos - pos / 4);
+			window.scrollTo(0, pos - pos / 24);
 		}
 	}
 };

@@ -1,5 +1,5 @@
 import { error } from '@sveltejs/kit';
-import { slugFromPath, type MdsvexResolver } from '$utils/postLoader';
+import { slugFromPath, type MdsvexResolver } from '$utils/post';
 import type { PageLoad } from './$types';
 
 export const load: PageLoad = async ({ params }) => {

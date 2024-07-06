@@ -1,6 +1,6 @@
 <script lang="ts">
 	// this would block the pageload if run from the server, right?? ...right?
-	import { fetchIcon, links } from '$utils/fetchIcon';
+	import { fetchIcon, links } from '$utils/navigation';
 	import SquareBraceButton from '$uic/squarebrace/SquareBraceButton.svelte';
 
 	$: text = 'uwu';

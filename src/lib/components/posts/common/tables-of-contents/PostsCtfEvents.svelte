@@ -1,20 +1,17 @@
 <script lang="ts">
 	import SquareBraceButton from '$components/ui/squarebrace/SquareBraceButton.svelte';
-	import { updateParams } from '$utils/param';
-	import { thisIterInParams } from '$utils/thisIterInParams';
-	import type { Param } from '$utils/navigation';
-	import { page } from '$app/stores';
+    import type { Param } from '$utils/param';
+    import { page } from '$app/stores';
+	import { updateParams, paramsContain } from '$utils/param';
 
 	export let ctfs;
 	export let tags;
-	const urlParams = $page.url.searchParams;
+	const urlParams = $page.url.searchParams; // what is this doing lol
 
 	const setRoute = (param?: Param, path?: string) => {
-		// handle setting URL params if a link that sets a URL
-		// param was clicked
 		if (param) {
 			Object.entries(param).forEach(([key, val]) => {
-				if (!thisIterInParams({ [key]: val }, urlParams)) {
+				if (!paramsContain({ [key]: val }, urlParams)) {
 					updateParams({ type: 'ctf', [key]: val }, path ?? undefined);
 				} else {
 					updateParams({ [key]: null }, path ?? undefined);
@@ -32,9 +29,9 @@
 		{#each ctfs as from}
 			<SquareBraceButton
 				handleParentEvent={() => setRoute({ type: 'ctf', from })}
-				opacityMod={`${thisIterInParams({ from }, urlParams) ? 'opacity-100 brightness-75' : ''}`}
+				opacityMod={`${paramsContain({ from }, urlParams) ? 'opacity-100 brightness-75' : ''}`}
 			>
-				{#if thisIterInParams({ from }, urlParams)}
+				{#if paramsContain({ from }, urlParams)}
 					<div class="opacity-100">{from}</div>
 				{:else}
 					<div>{from}</div>
@@ -48,9 +45,9 @@
 		{#each tags as tag}
 			<SquareBraceButton
 				handleParentEvent={() => setRoute({ type: 'ctf', tag })}
-				opacityMod={`${thisIterInParams({ tag }, urlParams) ? 'opacity-100 brightness-75' : ''}`}
+				opacityMod={`${paramsContain({ tag }, urlParams) ? 'opacity-100 brightness-75' : ''}`}
 			>
-				{#if thisIterInParams({ tag }, urlParams)}
+				{#if paramsContain({ tag }, urlParams)}
 					<div class="opacity-100">{tag}</div>
 				{:else}
 					<div>{tag}</div>

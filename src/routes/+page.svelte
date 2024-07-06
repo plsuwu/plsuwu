@@ -1,22 +1,21 @@
 <script lang="ts">
 	import type { PageData } from './$types';
-
 	import HeroiconsSparkles from '~icons/heroicons/sparkles';
 	import HeroiconsBookOpen from '~icons/heroicons/book-open';
-
-	import PostsMetaLayout from '$components/posts/PostsMetaLayout.svelte';
+	import PostsMetadataLayout from '$components/posts/PostsMetadataLayout.svelte';
+    import SquareBraceButton from '$uic/squarebrace/SquareBraceButton.svelte';
 	import SquareBraceAElement from '$uic/squarebrace/SquareBraceAElement.svelte';
 	import SquareBraceText from '$uic/squarebrace/SquareBraceText.svelte';
-	import SquareBraceButton from '$components/ui/squarebrace/SquareBraceButton.svelte';
+    const LOADED_POST_CHUNK_SIZE = 5;
 
 	export let data: PageData;
-	let loaded = 5;
+	let loaded = LOADED_POST_CHUNK_SIZE;
 	let tags = data.tags;
 	let ctfs = data.ctfs;
 
 	$: recent = data.posts.slice(0, loaded);
 	function incrLoaded() {
-		loaded += 5;
+	    loaded += LOADED_POST_CHUNK_SIZE;
 	}
 </script>
 
@@ -37,7 +36,7 @@
 			</div>
 		</SquareBraceAElement>
 	</div>
-	<PostsMetaLayout {tags} {ctfs} posts={recent} />
+	<PostsMetadataLayout {tags} {ctfs} posts={recent} />
 
 	<div class="mt-12 flex flex-row justify-center self-center lg:w-1/3">
 		{#if recent.length < data.posts.length}

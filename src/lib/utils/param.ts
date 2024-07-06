@@ -1,6 +1,12 @@
+import type { Post } from './post';
 import { goto } from '$app/navigation';
 import { page } from '$app/stores';
-import type { Post } from './postLoader';
+
+export type Param = Record<string, string | null>;
+
+export const paramsContain = (needle: Record<string, string | null>, haystack: URLSearchParams) => {
+    return Object.entries(needle).some(([key, val]) => haystack.has(key, val as string));
+};
 
 export const matchPostAttr = <T extends Record<string, any>>(
 	key: keyof T,

@@ -1,6 +1,6 @@
 <script lang="ts">
-	import SquareBraceAElement from '$components/ui/squarebrace/SquareBraceAElement.svelte';
 	import HeroiconsArrowLongRight from '~icons/heroicons/arrow-long-right';
+    import SquareBraceAElement from '$components/ui/squarebrace/SquareBraceAElement.svelte';
 
 	export let slug;
 </script>

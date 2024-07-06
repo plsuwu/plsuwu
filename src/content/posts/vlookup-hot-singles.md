@@ -1,7 +1,7 @@
 ---
 pub: true
 title: "vlookup-hot-singles"
-link: "#"
+link: "https://github.com/jellyctf/challenges/tree/main/web/vlookup_hot_singles"
 description: "looks like this is some kind of dating site for nerds? weird, figure out who the admin is and access their panel"
 from: "jellyCTF"
 date: "2024-06-24"
@@ -11,15 +11,15 @@ tags: ["web"]
 
 # vlookup-hot-singles
 
-This challenge is actually two challenges, but I've condensed it into the one writeup because the first one was stupid easy and
-I kind of want to go over it for the sake of being thorough and complete.
+This challenge was technically two separate challenges; I've condensed them into this single writeup because even though the first
+challenge was stupid easy, I still kind of want to go over it for the sake of completionism.
 
 <!-- <a href="##vlookup-hot-singles_(2)">jump to the second challenge</a> -->
 
-## vlookup-hot-singles_(1)
+## vlookup-hot-singles (chal 1)
 
 <aside>
-<a href="https://jellyc.tf/challenges#vlookup_hot_singles-8">vlookup-hot-singles 1 @ {from}</a><br/>
+<a href={link}>vlookup-hot-singles @ {from}</a><br/>
 looks like this is some kind of dating site for nerds? weird, figure out who the admin is and access their panel.
 </aside>
 
@@ -47,9 +47,9 @@ We can then replace our issued token with the modified one and navigate to the `
 
 ![authed-admin-endpoint](/img/vlookup_hot_singles_img/flag_one.png)
 
-## vlookup-hot-singles_(2)
+## vlookup-hot-singles (chal 2)
 <aside>
-<a href="https://jellyc.tf/challenges#vlookup_hot_singles-8">vlookup-hot-singles-2 @ {from}</a><br/>
+<a href={link}>vlookup-hot-singles-2 @ {from}</a><br/>
 oh. it's her. well, see if you can get the flag at /app/flag.txt and then get out of there
 </aside>
 
@@ -188,4 +188,4 @@ opening `docProps/core.xml` again, we get our flag:
 
 ### addendum
 
-thank you for reminding me that i hate microsoft and foster nothing but microsoft hate this is a microsoft hate writeup die die d
+thank you for reminding me that i hate microsoft and foster nothing but microsoft hate this is a microsoft hate writeup die die die die d

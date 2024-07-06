@@ -2,24 +2,27 @@
 	import HeroiconsArrowUturnLeft from '~icons/heroicons/arrow-uturn-left';
 	import HeroiconsArrowLongUp from '~icons/heroicons/arrow-long-up';
     import SquareBraceButton from '$components/ui/squarebrace/SquareBraceButton.svelte';
-	import { goto, afterNavigate } from '$app/navigation';
-	import { base } from '$app/paths';
-	import { scrollToTop } from '$utils/scrollToTop';
+    import { base } from '$app/paths';
+    import { goto, afterNavigate } from '$app/navigation';
+	import { scrollToTop } from '$utils/interaction';
 
-	const DISPLAY_BUTTON_YPOS = 365; // scroll amount (px?) before `[ top ]` button is displayed
+    export let displayTopScrollAt: number;
+    export let yPos: number;
 
 	let previousPage: string = base;
-	let yPos = 0;
-
 	const handleScrollToTop = () => {
 		scrollToTop();
 	};
 
+    // push any url params in the referring url to the window history if they exist,
+    // such that we can navigate back to the previous page with all the applied filters,
+    // or the base url if the referring url did not define any params
 	afterNavigate(({ from }) => {
 		let prevParams = from?.url.searchParams;
 		previousPage = `${from?.url.pathname || previousPage}?${prevParams}`;
 	});
 
+    // call a goto on the referring URL when the user clicks the `[<- back]` button
 	const goBack = () => {
 		goto(previousPage);
 	};
@@ -37,12 +40,12 @@
 			</div>
 		</SquareBraceButton>
 
-		<!-- does this need to be a double `if` check here?? needs to be refactored -->
+		<!-- do we need to check the yPos twice here? -->
 		<div
-			class={`transition-all duration-300 ease-in-out ${yPos > DISPLAY_BUTTON_YPOS ? 'opacity-100' : 'opacity-0'} `}
+			class={`transition-all duration-300 ease-in-out ${yPos > displayTopScrollAt ? 'opacity-100' : 'opacity-0'} `}
 		>
 			<div
-				class={`${yPos > DISPLAY_BUTTON_YPOS ? 'flex flex-col items-end self-end text-left' : 'hidden'}`}
+				class={`${yPos > displayTopScrollAt ? 'flex flex-col items-end self-end text-left' : 'hidden'}`}
 			>
 				<SquareBraceButton handleParentEvent={handleScrollToTop}>
 					<div class="mt-1.5 flex flex-row space-x-2 text-xs">

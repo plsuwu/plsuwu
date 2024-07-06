@@ -1,13 +1,13 @@
 import type { PageServerLoad } from './$types';
-import { loadPosts } from '$utils/postLoader';
+import { load as loadPosts } from '$utils/post';
 import { setCache, getCache, pushTocOptions, getTocOptions } from '$utils/store';
 
 export const load: PageServerLoad = async () => {
 	let cache = getCache();
-	if (!cache) {
+	if (!cache || !cache.posts || !cache.haystack) {
 		const posts = await loadPosts();
-		cache = { posts: posts };
-		setCache(cache);
+		setCache({ posts: posts });
+        cache = getCache();
 	}
 
     if (getTocOptions.length < 1) {
