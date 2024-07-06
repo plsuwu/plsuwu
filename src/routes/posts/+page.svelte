@@ -13,12 +13,6 @@
     // console.log(data);
 </script>
 
-<!-- todo:
-     -----
-        - search,
-        - ordering
--->
-
 <div class="flex w-full flex-col">
 	<div
 		class="mb-12 flex w-full flex-col justify-around self-center font-medium transition-all duration-300 ease-in-out lg:w-1/3"
