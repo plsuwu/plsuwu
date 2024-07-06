@@ -59,7 +59,7 @@ Extracting the archive (via a quick `7z x main.7z` command), we can run some bas
 
 ```bash
 $ file main
-main: ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, \\
+main: ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, \
 BuildID[sha1]=f020f8b12bc1a0b0f3122413b698344bfbfd1d9d, for GNU/Linux 3.2.0, not stripped
 ```
 > `file` output ...
@@ -84,7 +84,7 @@ d45b-7b7H
 0-4097-9H
 279-98a4H
 aef0353eH
-[]A\\A]A^A_
+[]A\A]A^A_
 %s:%s
 :*3$"
 GCC: (Ubuntu 9.4.0-1ubuntu1~20.04.1) 9.4.0
@@ -174,9 +174,9 @@ It seems like the binary makes an unencrypted request to the server, meaning we 
 Let’s use those in our own curl request and see what happens:
 
 ```bash
-pls@RUBY~$ curl 34.123.197.237:32032 -H 'GET / HTTP/1.1' \\
--H 'Host: 34.123.197.237:32032' \\
--H 'User-Agent: Mozilla/5.0 93bed45b-7b70-4097-9279-98a4aef0353e' \\
+pls@RUBY~$ curl 34.123.197.237:32032 -H 'GET / HTTP/1.1' \
+-H 'Host: 34.123.197.237:32032' \
+-H 'User-Agent: Mozilla/5.0 93bed45b-7b70-4097-9279-98a4aef0353e' \
 -H 'Accept: */*'
 curl: (56) Recv failure: Connection reset by peer
 ```
@@ -184,9 +184,9 @@ curl: (56) Recv failure: Connection reset by peer
 Unlucky, maybe instead of an IP, we need to make a request to the URL itself (the server's SSL certificate is self-signed rather than CA-signed, so we need to tell `curl` that it should skip the certificate validity check using the `--insecure` arg):
 
 ```bash
-curl https://chal.ctf.games:32032 --insecure -H 'GET / HTTP/1.1' \\
--H 'Host: 34.123.197.237:32032' \\
--H 'User-Agent: Mozilla/5.0 93bed45b-7b70-4097-9279-98a4aef0353e' \\
+curl https://chal.ctf.games:32032 --insecure -H 'GET / HTTP/1.1' \
+-H 'Host: 34.123.197.237:32032' \
+-H 'User-Agent: Mozilla/5.0 93bed45b-7b70-4097-9279-98a4aef0353e' \
 -H 'Accept: */*'
 <!doctype html>
 <html lang=en>
@@ -198,9 +198,9 @@ curl https://chal.ctf.games:32032 --insecure -H 'GET / HTTP/1.1' \\
 Add `-L` so `curl` will follow the redirect, and the server responds with the flag:
 
 ```sh
-curl  https://chal.ctf.games:32032 --insecure -H 'GET / HTTP/1.1' \\
--H 'Host: 34.123.197.237:32032' \\
--H 'User-Agent: Mozilla/5.0 93bed45b-7b70-4097-9279-98a4aef0353e' \\
+curl  https://chal.ctf.games:32032 --insecure -H 'GET / HTTP/1.1' \
+-H 'Host: 34.123.197.237:32032' \
+-H 'User-Agent: Mozilla/5.0 93bed45b-7b70-4097-9279-98a4aef0353e' \
 -H 'Accept: */*' -L
 flag{redacted}
 ```

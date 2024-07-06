@@ -9,9 +9,9 @@
 	</div>
 	<div class="flex w-full flex-row justify-end text-end font-medium whitespace-nowrap mt-2 tracking-tighter">
 		<div class="w-full inline-flex justify-end lg:justify-start text-xs lg:text-sm">
-			<div class="text-end font-mono italic">/</div><div
-				class="text-end indent-2 font-mono italic opacity-50">{from}</div
-			><div class="text-end font-mono italic">&nbsp;/</div>
+			<div class="text-end font-mono italic inline-flex">/</div><div
+				class="inline-flex text-end indent-2 font-mono italic opacity-50 text-sm lg:text-base">{from}</div
+			><div class="text-end font-mono italic inline-flex">&nbsp;/</div>
 		</div>
 	</div>
 </div>

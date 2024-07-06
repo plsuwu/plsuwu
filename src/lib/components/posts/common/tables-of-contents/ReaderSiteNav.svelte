@@ -1,30 +1,20 @@
 <script lang="ts">
 	import HeroiconsArrowUturnLeft from '~icons/heroicons/arrow-uturn-left';
 	import HeroiconsArrowLongUp from '~icons/heroicons/arrow-long-up';
-    import SquareBraceButton from '$components/ui/squarebrace/SquareBraceButton.svelte';
-    import { base } from '$app/paths';
-    import { goto, afterNavigate } from '$app/navigation';
+	import SquareBraceButton from '$components/ui/squarebrace/SquareBraceButton.svelte';
 	import { scrollToTop } from '$utils/interaction';
+	import { navigatedFrom } from '$utils/store';
+	import { goto } from '$app/navigation';
 
-    export let displayTopScrollAt: number;
-    export let yPos: number;
+	const goBack = () => {
+		goto(navigatedFrom);
+	};
+	export let displayTopScrollAt: number;
+	export let yPos: number;
+	$: showTopButton = yPos > displayTopScrollAt;
 
-	let previousPage: string = base;
 	const handleScrollToTop = () => {
 		scrollToTop();
-	};
-
-    // push any url params in the referring url to the window history if they exist,
-    // such that we can navigate back to the previous page with all the applied filters,
-    // or the base url if the referring url did not define any params
-	afterNavigate(({ from }) => {
-		let prevParams = from?.url.searchParams;
-		previousPage = `${from?.url.pathname || previousPage}?${prevParams}`;
-	});
-
-    // call a goto on the referring URL when the user clicks the `[<- back]` button
-	const goBack = () => {
-		goto(previousPage);
 	};
 </script>
 
@@ -42,10 +32,10 @@
 
 		<!-- do we need to check the yPos twice here? -->
 		<div
-			class={`transition-all duration-300 ease-in-out ${yPos > displayTopScrollAt ? 'opacity-100' : 'opacity-0'} `}
+			class={`transition-all duration-300 ease-in-out ${showTopButton ? 'opacity-100' : 'opacity-0'} `}
 		>
 			<div
-				class={`${yPos > displayTopScrollAt ? 'flex flex-col items-end self-end text-left' : 'hidden'}`}
+				class={`${showTopButton ? 'flex flex-col items-end self-end text-left' : 'hidden'}`}
 			>
 				<SquareBraceButton handleParentEvent={handleScrollToTop}>
 					<div class="mt-1.5 flex flex-row space-x-2 text-xs">

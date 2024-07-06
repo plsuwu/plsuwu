@@ -1,3 +1,4 @@
+import { base } from '$app/paths';
 import { updateParams, type Param } from './param';
 
 export type IconModule = typeof import('~icons/*');
@@ -43,6 +44,7 @@ export const pages: Element[] = [
 		children: [
 			{ name: 'all posts', href: '/posts' },
 			{ name: 'ctf', href: '/posts', param: { type: 'ctf' } },
+            { name: 'general', href: '/posts', param: { type: 'general' } },
 			{ name: 'notes', href: '/posts', param: { type: 'note' } },
 		],
 	},

@@ -10,6 +10,7 @@ export interface Post {
 	tags: string[];
 }
 
+// default truncation length of (138 - 4) chars
 export const truncate = (text: string, length: number = 138): string => {
     return text.length > length ? text.slice(0, length - 4).trimEnd() + '...' : text;
 }

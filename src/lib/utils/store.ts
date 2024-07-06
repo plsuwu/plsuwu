@@ -1,4 +1,5 @@
 import type { Post } from './post';
+import { base } from '$app/paths';
 
 interface Cacheable<T = any> {
 	[key: string | number]: T[];
@@ -7,6 +8,17 @@ interface Cacheable<T = any> {
 export let cache: Cacheable;
 export let ctfs = new Set<string>();
 export let tags = new Set<string>();
+
+// does this run serverside or clientside?
+// is this ok to be doing??
+export let navigatedFrom: string = base;
+export const setNavigatedFrom = (url: string) => {
+    if (url != '/undefined') {
+        navigatedFrom = url;
+    } else {
+        navigatedFrom = '/';
+    }
+}
 
 export function setCache(data: Cacheable) {
     // omit these fields from our cached haystack array
