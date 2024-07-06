@@ -44,14 +44,15 @@
 			{/if}
 		{/each}
 
+    <!-- quite likely that there is a better way to do this but we just if/else if/else and so on for now -->
 	{:else if searchQueryParam != null && posts.length < 1}
     <!-- no matching content for given search term -->
 		<SquareBraceText classMod={'text-lg'}>
 			<div class="inline-flex text-sm opacity-75">
-				the term {'"'}<span
+				no metadata matching query {'"'}<span
 					class="font-semibold italic text-l-lightpink opacity-100 brightness-75"
 					>{searchQueryParam}</span
-				>{'"'} doesn't match any document metadata {':<'}
+				>{'"'} {':<'}
 			</div>
 		</SquareBraceText>
 		{#if hasAppliedFilter}

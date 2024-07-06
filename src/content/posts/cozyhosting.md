@@ -132,7 +132,7 @@ $ (remote) app@cozyhosting:/app$ psql -h localhost -U postgres
 
 [...]
 
-postgres=# \\\\list
+postgres=# \\list
                                    List of databases
     Name     |  Owner   | Encoding |   Collate   |    Ctype    |   Access privileges
 -------------+----------+----------+-------------+-------------+-----------------------
@@ -144,10 +144,10 @@ postgres=# \\\\list
              |          |          |             |             | postgres=CTc/postgres
 (4 rows)
 
-postgres=# \\\\c cozyhosting
+postgres=# \\c cozyhosting
 SSL connection (protocol: TLSv1.3, cipher: TLS_AES_256_GCM_SHA384, bits: 256, compression: off)
 You are now connected to database "cozyhosting" as user "postgres".
-cozyhosting=# \\\\d
+cozyhosting=# \\d
               List of relations
  Schema |     Name     |   Type   |  Owner
 --------+--------------+----------+----------
@@ -238,7 +238,7 @@ Finally, lets see what privilege escalation options might be available to us bef
 (remote) josh@cozyhosting:/tmp$ sudo -l
 [sudo] password for josh:
 Matching Defaults entries for josh on localhost:
-    env_reset, mail_badpass, secure_path=/usr/local/sbin\\\\:/usr/local/bin\\\\:/usr/sbin\\\\:/usr/bin\\\\:/sbin\\\\:/bin\\\\:/snap/bin,
+    env_reset, mail_badpass, secure_path=/usr/local/sbin\\:/usr/local/bin\\:/usr/sbin\\:/usr/bin\\:/sbin\\:/bin\\:/snap/bin,
     use_pty
 
 User josh may run the following commands on localhost:

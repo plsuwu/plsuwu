@@ -54,7 +54,7 @@ host_list: list[str] = (open(
     "/home/please/git/red_tools/SecLists/Discovery/DNS/subdomains-top1million-5000.txt")
                         .read()
                         .strip()
-                        .split("\\n")
+                        .split("\n")
     )
 
 
@@ -210,7 +210,7 @@ dumb
 \[please@ruby\]:\[~\] \$ echo $TERM; stty -a                                                                                                                       148 ↵
 tmux-256color
 speed 38400 baud; rows 74; columns 164; line = 0;
-intr = ^C; quit = ^\\; erase = ^?; kill = ^U; eof = ^D; eol = <undef>; eol2 = <undef>; swtch = <undef>; start = ^Q; stop = ^S; susp = ^Z; rprnt = ^R; werase = ^W;
+intr = ^C; quit = ^\; erase = ^?; kill = ^U; eof = ^D; eol = <undef>; eol2 = <undef>; swtch = <undef>; start = ^Q; stop = ^S; susp = ^Z; rprnt = ^R; werase = ^W;
 lnext = ^V; discard = ^O; min = 1; time = 0;
 -parenb -parodd -cmspar cs8 -hupcl -cstopb cread -clocal -crtscts
 -ignbrk -brkint -ignpar -parmrk -inpck -istrip -inlcr -igncr icrnl ixon -ixoff -iuclc -ixany -imaxbel iutf8
@@ -256,7 +256,7 @@ Recalling the information scraped from the vulnerable Joomla! service, we can lo
 ```bash
 www-data@devvortex:/home/logan$ mysql --user=lewis --password=P4ntherg0t1n5r3c0n## --host=localhost
 mysql: [Warning] Using a password on the command line interface can be insecure.
-Welcome to the MySQL monitor.  Commands end with ; or \\g.
+Welcome to the MySQL monitor.  Commands end with ; or \g.
 Your MySQL connection id is 62
 Server version: 8.0.35-0ubuntu0.20.04.1 (Ubuntu)
 
@@ -266,7 +266,7 @@ Oracle is a registered trademark of Oracle Corporation and/or its
 affiliates. Other names may be trademarks of their respective
 owners.
 
-Type 'help;' or '\\h' for help. Type '\\c' to clear the current input statement.
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
 ```
 
 Running a few SQL commands to focus in on potential account credentials, we are able to print off the `users` table:
@@ -362,7 +362,7 @@ We can check `logan`'s `sudoer` entry with `sudo -l`, we know that they’re abl
 logan@devvortex:~$ sudo -l
 [sudo] password for logan:
 Matching Defaults entries for logan on devvortex:
-    env_reset, mail_badpass, secure_path=/usr/local/sbin\\:/usr/local/bin\\:/usr/sbin\\:/usr/bin\\:/sbin\\:/bin\\:/snap/bin
+    env_reset, mail_badpass, secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin\:/snap/bin
 
 User logan may run the following commands on devvortex:
     (ALL : ALL) /usr/bin/apport-cli

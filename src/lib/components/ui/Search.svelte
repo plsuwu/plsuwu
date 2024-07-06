@@ -29,7 +29,10 @@
 	});
 
 	const handleSearch = (query: string) => {
-		setRoute({ s: query });
+        // don't clear the search input if a user searches multiple times
+        if (query !== urlParams.get('s')) {
+		    setRoute({ s: query });
+        }
 	};
 
 	const debounced = debounce(handleSearch, 250);

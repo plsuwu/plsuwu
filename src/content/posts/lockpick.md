@@ -107,7 +107,7 @@ main()
 The result is the following output
 
 ```python
-PS C:\\Users\\please\\Desktop\\lockpick1> python cycle.py
+PS C:\Users\please\Desktop\lockpick1> python cycle.py
 co2_London
 [DECRYPTED FILE ./forela-criticaldata/co2_London]
 complaints.csv.24bes
