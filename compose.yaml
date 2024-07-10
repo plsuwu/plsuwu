@@ -1,7 +1,7 @@
 services:
     app:
-        image: plsuwu/plsuwu:latest
-        ports:
-            - 3000:3000
-        environment:
-          NODE_ENV: production
+      build:
+        context: .
+
+      ports:
+          - 3000:3000
