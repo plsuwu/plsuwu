@@ -1,7 +1,7 @@
 # taken _mostly_ from the bun containerization guide
 # https://bun.sh/guides/ecosystem/docker
 
-# alpine for small image footprint
+# use alpine for small image footprint
 FROM oven/bun:alpine AS base
 WORKDIR /usr/src/app
 

@@ -1,11 +1,14 @@
 import { cache } from './store';
 
+
 // what the fuck
+// in retrospect, i don't think this is what i want from this function
 export function debounce<T extends (...args: any[]) => void>(
 	func: T,
 	wait: number
 ): (...args: Parameters<T>) => void {
 	let timeout: ReturnType<typeof setTimeout>;
+
 	return function (this: ThisParameterType<T>, ...args: Parameters<T>) {
 		const context = this;
 
@@ -38,11 +41,10 @@ const getMinDistance = (needle: string, haystack: string): number => {
 	return minDistance;
 };
 
+// Damerau-Levenshtein distance algorithm
 const damerauLevenshtein = (source: string, target: string): number => {
-	// if (source.length === 0) return target.length;
-	// if (target.length === 0) return source.length;
-
 	const matrix: number[][] = [];
+
 	for (let i = 0; i <= source.length; ++i) {
 		matrix[i] = [i];
 	}

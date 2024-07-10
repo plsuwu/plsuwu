@@ -1,14 +1,15 @@
 <script lang="ts">
 	export let handleParentEvent: ((event: MouseEvent) => void) | undefined;
-	export let opacityMod: string = '';
+	export let opacityMod: string | undefined = undefined;
+    export let classMod: string | undefined = undefined;
 </script>
 
 <button
 	on:click={handleParentEvent}
-	class={`group flex flex-row justify-center space-x-2 group-hover:opacity-100`}
+	class={`group flex flex-row justify-center space-x-2 group-hover:opacity-100 ${classMod}`}
 >
 	<div
-		class={`${opacityMod ? `${opacityMod} font-medium text-l-pink` : 'opacity-25'} group  transition-all duration-300 ease-in-out group-hover:opacity-100`}
+		class={`${opacityMod ? `${opacityMod} font-medium text-l-pink` : 'opacity-25'} group  transition-all duration-300 ease-in-out group-hover:opacity-100 `}
 	>
 		[
 	</div>

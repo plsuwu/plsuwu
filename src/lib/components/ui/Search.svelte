@@ -21,7 +21,6 @@
 	};
 
 	let query: string | null = null;
-
 	onMount(() => {
 		if (urlParams.get('s') != null) {
 			query = urlParams.get('s');
@@ -36,7 +35,6 @@
 	};
 
 	const debounced = debounce(handleSearch, 250);
-
 	function handleClear() {
 		setRoute({ s: null });
 		query = null;

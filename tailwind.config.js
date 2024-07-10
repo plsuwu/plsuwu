@@ -29,19 +29,27 @@ export default {
 					// <pre/> so we have to do some cursed stylesheet selection wrangling:
 
 					// all <p/> elements if they are not wrapped in a <blockquote/>
-					'p:not(blockquote > p)': {
+					'p:not(blockquote > p):not(:has(+ blockquote))': {
 						'font-family': "'Noto Sans', sans",
 						'text-align': 'justify',
-						margin: '1.5rem',
+						margin: '1.3rem',
 						'font-size': '1rem',
 						'line-height': '1.25rem',
 					},
 
+                    // 'p:(blockquote:has(> p))': {
+                    //     // 'font-family': "'Noto Sans', sans-serif",
+                    //     margin: '0rem',
+                    //     padding: '0em',
+                    //     'font-size': '1rem',
+                    //     'line-height': '1.25rem',
+                    // },
+
 					// reset bottom margin on <p/> elements that wrap an <img/>
 					// apparently these `:has` selectors are not particularly well-supported across browsers
-					'p:has(> img)': {
-						'margin-bottom': '0',
-					},
+					// 'p:has(img) :has(button)': {
+					// 	'margin-bottom': '0',
+					// },
 
 					// code block
 					pre: {
@@ -90,8 +98,12 @@ export default {
 					// <blockquote/> elements by mdsvex in our svelte markup
 					blockquote: {
 						display: 'flex',
-						'margin-left': '25%',
-						'margin-right': '25%',
+                        'margin-left': '12%',
+						'margin-right': '12%',
+                        '@media (min-width: 640px)': {
+                            'margin-left': '27%',
+                            'margin-right': '27%',
+                        },
 						'max-width': '100%',
 						padding: '0.6em 1.5em',
 						color: '#884461',
@@ -109,7 +121,14 @@ export default {
 						content: "''",
 						'border-left': '3px solid #d99cc1',
 					},
-
+                    'button': {
+                        'width': '100%',
+                        'display': 'flex',
+                        'flex-wrap': 'nowrap',
+                        'justify-items': 'center',
+                        'margin': '0',
+                        'padding': '0',
+                    },
 					// TODO:
 					// fix this general <img/> --> not quite the right selector so we're just
 					// using this to clobber everything, but we want to only remove the
@@ -119,16 +138,32 @@ export default {
 					// <p><img/><p>
 					// ```)
 					'img:not(blockquote img)': {
-						padding: '0.25em',
+						padding: '0.2em',
 						display: 'flex',
 						'z-index': '-5',
 						'justify-content': 'center',
 						margin: '1rem auto',
-						'margin-bottom': '0px',
+						'margin-bottom': '0',
 						border: '3px solid #d99cc1',
 						'border-radius': '5px',
-						width: '60%',
-						height: '60%',
+                        // smallest
+						width: '99%',
+						height: '99%',
+                        // small non-mobile
+                        '@media (min-width: 640px)': {
+						    width: '75%',
+						    height: '75%',
+                        },
+                        // med non-mobile; kind of an awkward resolution
+                        '@media (min-width: 1024px)': {
+						    width: '55%',
+						    height: '55%',
+                        },
+                        // reg desktop
+                        '@media (min-width: 1280px)': {
+						    width: '65%',
+						    height: '65%',
+                        },
 						overflow: 'visible',
 					},
 					ul: {

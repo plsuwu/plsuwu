@@ -1,4 +1,5 @@
 export type MdsvexResolver = () => Promise<MdsvexFile>;
+
 export interface Post {
 	slug: string;
     pub: boolean;
@@ -8,6 +9,11 @@ export interface Post {
 	date: string;
 	type: string;
 	tags: string[];
+}
+export interface MergedPost {
+    ref: number;
+    meta: Post;
+    merge: string;
 }
 
 // default truncation length of (138 - 4) chars
