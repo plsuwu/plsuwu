@@ -26,7 +26,7 @@ export const transformMarkup = (document: Document, currUrl: string) => {
 
         img.parentNode?.insertBefore(btn, img);
         btn.appendChild(img);
-        btn.addEventListener('click', () => toggleModalState(img.src));
+        btn.addEventListener('click', () => toggleModalState(img.src.replace('.png', '.webp')));
         btn.addEventListener('keydown', ((e) => { if (e.key === 'Escape') { toggleModalState() }}));
     });
 

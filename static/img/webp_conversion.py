@@ -5,6 +5,7 @@ import subprocess
 import os
 import shlex
 
+# not perfect but functional lmaooo
 
 class Cmd:
     def ls(self, *dir):
@@ -18,7 +19,9 @@ class Cmd:
         except NotADirectoryError:
             return dir
 
-    def conv(self, filepath, quality=75):
+    def conv(self, filepath, quality=95):
+        global total_reduction
+
         webp_fname = filepath.split(".png")[0] + ".webp"
         webp_fname = webp_fname.replace(" ", "_")
 
@@ -29,16 +32,24 @@ class Cmd:
                 cmd, shell=False, stdout=subprocess.PIPE, stderr=subprocess.PIPE
             ).communicate()
 
-        return
+            png_stat = os.stat(filepath).st_size / 1024
+            webp_stat = os.stat(webp_fname).st_size / 1024
+
+            total_reduction += (png_stat - webp_stat)
+
+            print(f'[*] Filesize reduced from {png_stat}kB to {webp_stat}kB')
+
+        return stdout
 
     def rm(self, filepath):
         cmd = shlex.split(f"rm {filepath}")
         subprocess.call(cmd)
 
-        # print(cmd)
+        return f'[-] Removal ok -> {filepath}'
 
 
 def main():
+
     cmd = Cmd()
     IMG_DIRS = cmd.ls()
 
@@ -78,16 +89,21 @@ def main():
             )
             for img in imgs:
                 filepath = f"{dir}/{img}"
-                res = cmd.conv(filepath)
+                res = cmd.conv(filepath, args.quality)
                 print(f"[ok] filepath -> {filepath}")
 
 
 parser = argparse.ArgumentParser(prog="converter")
 parser.add_argument("--remove", "-r", action="store_true")
+parser.add_argument("--quality", "-q", action="store")
 
 args = parser.parse_args()
 remove = args.remove
+quality = args.quality
+
+total_reduction = 0  # measures total savings in kilobytes (i think idk)
 
 if __name__ == "__main__":
 
     main()
+    print(f'[*] Saved {total_reduction / 1024}MB overall.')

@@ -16,7 +16,7 @@
 
 	const SCALE_INCREMENT = 0.1;
 	const INITIAL_SCALE = 1;
-	const MAX_SCALE_VALUE = 5;
+	const MAX_SCALE_VALUE = 3;
 	// let scaleOrigin: number; // get this scale origin garbage to work
 
 	let imageContainer: HTMLElement;
@@ -121,8 +121,8 @@
 	}
 
 	function changeScale(event?: WheelEvent, diff?: number) {
-		// need to adjust the origin based on the the scale, translation, and rect dimensions,
-		// don't really know how atm
+		// need to adjust the origin based on the the scale, translation, and rect
+        // dimensions for this to feel 'natural', however i don't really know how to do that atm
 		rect = imageContainer.getBoundingClientRect();
 
 		// increment scale percent higher/lower depending on deltaY diff
