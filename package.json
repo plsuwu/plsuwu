@@ -44,7 +44,7 @@
   },
   "type": "module",
   "dependencies": {
-    "mdsvex": "^0.11.2",
+    "mdsvex": "^0.12.2",
     "rehype-autolink-headings": "^7.1.0",
     "rehype-slug": "^6.0.0",
     "remark-gfm": "^4.0.0"
