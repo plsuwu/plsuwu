@@ -69,14 +69,15 @@ def main():
         if remove:
             confirm = input(
                 f"""
-[+] This will delete all files with the `.webp` extension in the static dir.
+[+] This will delete all files with the `.png` extension in the static dir.
     continue Y/n?
                 """
             )
             if confirm.lower() in ["y", ""]:
 
-                for img in webp:
-                    filepath = f"{dir}/{img}"
+                # for img in webp:
+                for img in png:
+                    filepath = f"'{dir}/{img}'"
 
                     res = cmd.rm(filepath)
                     print(res)
