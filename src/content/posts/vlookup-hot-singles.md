@@ -26,26 +26,26 @@ looks like this is some kind of dating site for nerds? weird, figure out who the
 Presented with a challenge URL ('[https://vlookup-hot-singles.jellyc.tf/](https://vlookup-hot-singles.jellyc.tf/)') and a zip archive containing the
 site's source code, we are shown a little Bootstrap template chat webapp:
 
-![site-initial](/img/vlookup_hot_singles_img/site_init.png)
+![site-initial](/img/vlookup_hot_singles_img/site_init.webp)
 
 We know from the challenge description that we want to get to the `/admin` endpoint (a link to which is also the only interactive element on the page),
 but we are forbade from accessing the endpoint without authentication:
 
-![admin-endpoint](/img/vlookup_hot_singles_img/admin_endpoint_init.png)
+![admin-endpoint](/img/vlookup_hot_singles_img/admin_endpoint_init.webp)
 
 A quick look at the source code not only tells us that proof of identity is supplied to the server via a JWT cookie, but also the secret used to sign
 the token alongside the credentials we will need to supply (`user: starknight` -> `user: jelly`):
 
-![source-jwt-endpoint-function](/img/vlookup_hot_singles_img/source_code_token.png)
+![source-jwt-endpoint-function](/img/vlookup_hot_singles_img/source_code_token.webp)
 
 We can now perform the painfully complicated task of dumping our `token` cookie into an [online JWT decoder like this one](https://token.dev/) so that we can
 sign our modified token with the secret we saw in the server's source code (`singaQu5aeWoh1vuoJuD]ooJ9aeh2soh`):
 
-![jwt-debug](/img/vlookup_hot_singles_img/jwt_decode.png)
+![jwt-debug](/img/vlookup_hot_singles_img/jwt_decode.webp)
 
 We can then replace our issued token with the modified one and navigate to the `/admin` endpoint without issue, grasping the first `vlookup-hot-singles` challenge flag:
 
-![authed-admin-endpoint](/img/vlookup_hot_singles_img/flag_one.png)
+![authed-admin-endpoint](/img/vlookup_hot_singles_img/flag_one.webp)
 
 ## vlookup-hot-singles (chal 2)
 <aside>
@@ -57,7 +57,7 @@ I instantly jumped to the idea of a potential XXE injection vulnerability in thi
 I think that it's best if we quickly test out the response we should expect given an unmodified/known-good `xlsx` file, which we can procure by downloading
 a blank spreadsheet from Google Docs. Gauging the server's response:
 
-![openoffice-location-recorded-xlsx](/img/vlookup_hot_singles_img/test_upload_blank.png)
+![openoffice-location-recorded-xlsx](/img/vlookup_hot_singles_img/test_upload_blank.webp)
 > website output
 
 ... we can cross-reference this with the `/spreadsheet` route's source code:
@@ -99,7 +99,7 @@ def spreadsheet():
 The file we just downloaded is an edited spreadsheet with some additional columns appended to the end. There are also a few base cases that return us to `/admin`
 if we don't supply a file or the file's name is empty.
 
-![burp-output](/img/vlookup_hot_singles_img/burpsuite_post.png)
+![burp-output](/img/vlookup_hot_singles_img/burpsuite_post.webp)
 > the request in burpsuite, with the headers and data that Chrome automatically populates when we submit the form.
 
 So my initial plan here seems reasonably straightfoward:
@@ -143,7 +143,7 @@ We can then edit in our payload in a text editor of your choosing (I use Neovim 
 
 Uploading this spreadsheet, we get a promising (but still broken) response, maybe indicating that we're on the right track:
 
-![resulting-response-p1](/img/vlookup_hot_singles_img/werkzeug_debug.png)
+![resulting-response-p1](/img/vlookup_hot_singles_img/werkzeug_debug.webp)
 
 When this didn't work as expected, I reset `workbook.xml` to its original state and tried a similar payload in `sharedStrings.xml`:
 ```xml
@@ -166,25 +166,25 @@ I'll spare the details of what I tried here, but over the course of a few days I
 (i.e, Google Sheets vs. Microsoft Office) and the possible format differentials between the two, but I kind of decided that this _surely_ isn't the case, so
 I tried to see if I could find my way into the debug mode console.
 
-![debugger](/img/vlookup_hot_singles_img/shit.png)
+![debugger](/img/vlookup_hot_singles_img/shit.webp)
 
 This was a rabbit hole that didn't yield a single meaningful result, so after a number of excruciating days and some rest, I turned to Google. According to [this report @ bugs.debian.org](https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=854442),
 the version of `openpyxl` (2.4.1) the server runs is definitely vulnerable external entity inclusion via the exact `file:///path/to/file` method we were trying,
 but the MS Office `xlsx` format includes a `docProps` directory NOT present in the Google Sheets format.
 The report seems to indicate that the `docProps/core.xml` file is pretty integral in getting `lxml` to actually parse our external entity:
 
-![oh-mb](/img/vlookup_hot_singles_img/cve_payload.png)
+![oh-mb](/img/vlookup_hot_singles_img/cve_payload.webp)
 
 Modifying this sheet to grab the file at `/app/flag.txt` instead, we can update our spreadsheet's payload and then uploading this to the server.
 
 And we download the `your_location_has_been_recorded.xlsx`. Incredible.
 
-![downloaded-file](/img/vlookup_hot_singles_img/payload_result.png)
+![downloaded-file](/img/vlookup_hot_singles_img/payload_result.webp)
 
 We don't see a visible plaintext flag when we open the file normally, but this was kind of expected given where the entity is parsed. Extracting the spreadsheet and
 opening `docProps/core.xml` again, we get our flag:
 
-![oo-sheet-extracted](/img/vlookup_hot_singles_img/flag_two.png)
+![oo-sheet-extracted](/img/vlookup_hot_singles_img/flag_two.webp)
 
 ### addendum
 

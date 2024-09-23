@@ -54,14 +54,14 @@ Seems like this isn't ACTUALLY a Zip archive.
 
 My assumption then is that this is a VBA Macro for MS Word, though loading this into Word’s VB editor tool throws an error:
 
-![Untitled](/img/tragedy_redux_img/Untitled.png)
+![Untitled](/img/tragedy_redux_img/Untitled.webp)
 
 And attempting to load `word/vbaProject.bin` by itself yields another error:
 
-![Untitled](/img/tragedy_redux_img/Untitled%201.png)
+![Untitled](/img/tragedy_redux_img/Untitled_1.webp)
 
 I make another guess that the standalone `.bin` would contain file header info - in this case, `ÐÏà¡±á`; I make a lot of assumptions, but at the end of the day I suppose that's kind of what this is all
-about. Regardless, that seems pretty cursed, even for file headers, so I thought it was a bit unlikely. Turns out this was a pretty solid guess as it IS header info - its a mangled hex-to-ASCII conversion for an [Object Linking and Embedding (OLE) Compound File](https://sceweb.sce.uhcl.edu/abeysekera/itec3831/labs/FILE%20SIGNATURES%20TABLE.pdf).
+about. Regardless, that seems pretty cursed, even for file headers, so I thought it was a bit unlikely. Turns out this was a pretty solid guess as it IS header info - its a mangled hex-to-ASCII conversion for an [Object Linking and Embedding (OLE) Compound File](https://sceweb.sce.uhcl.edu/abeysekera/itec3831/labs/FILE_SIGNATURES_TABLE.pdf).
 There are also numerous references to the `OLE` file format scattered throughout the compiled `tragedy_redux` code, too, which is a very promising outcome.
 
 I couldn't figure out a way to actually _run_ the code (doesn't seem like a great way to distribute a malware stager), but with the `OLE` keyword as part of my vocab I was able to pretty quickly find a

@@ -67,7 +67,7 @@ reference to the encryption *method*, but we might as well start by running some
 
 So, using Cyberchef with the string `bhUlIshutrea98liOp` as the key, we can test one of the encrypted files:
 
-![Untitled](/img/lockpick_img/Untitled.png)
+![Untitled](/img/lockpick_img/Untitled.webp)
 
 That’s Task 1 confirmed, but I’ll decrypt the other files to make upcoming tasks a little easier.
 
@@ -130,7 +130,7 @@ trading-firebase_bkup.json.24bes
 trading-firebase_bkup.json.24bes_note.txt
 ```
 
-![Untitled](/img/lockpick_img/Untitled%201.png)
+![Untitled](/img/lockpick_img/Untitled_1.webp)
 
 ### Task 2
 
@@ -138,19 +138,19 @@ Task 2-4 are kind of just `ctrl+f` jobs, so nothing particularly interesting to 
 
 For Task 2, a simple search can be performed with in the decrypted applicants database file to find the email address `wbevansn1@cocolog-nifty.com`.
 
-![Untitled](/img/lockpick_img/Untitled%202.png)
+![Untitled](/img/lockpick_img/Untitled_2.webp)
 
 ### Task 3
 
 Again, we can do a quick search to find `Hart Manifould` in the `it_assets.xml` spreadsheet:
 
-![Untitled](/img/lockpick_img/Untitled%203.png)
+![Untitled](/img/lockpick_img/Untitled_3.webp)
 
 ### Task 4
 
 The attacker’s email is in the ransom note:
 
-![Untitled](/img/lockpick_img/Untitled%204.png)
+![Untitled](/img/lockpick_img/Untitled_4.webp)
 
 ### Task 5
 
@@ -198,30 +198,30 @@ at some point, and it will be truncated at this point anyway.
 Rather than continue to waste time on figuring out how to get my script to output the correct value, we can just copy the email string and `ctrl+f` for it with VS C*de to find
 the correct profit percentage:
 
-![Untitled](/img/lockpick_img/Untitled%205.png)
+![Untitled](/img/lockpick_img/Untitled_5.webp)
 
-![Untitled](/img/lockpick_img/Untitled%206.png)
+![Untitled](/img/lockpick_img/Untitled_6.webp)
 
 ### Task 6
 
 We find the IP address for Karylin O'Hederscoll in `sales_forecast.xlsx` - this is unfortunately *not* a quick `ctrl+f` as Office files store their
 content in what is essentially a compressed zip archive (note the magic bytes `PK..`):
 
-![Untitled](/img/lockpick_img/Untitled%207.png)
+![Untitled](/img/lockpick_img/Untitled_7.webp)
 
 It’s always handy to have Office around for malware analysis, so I wind up downloading & installing MS365 - allowing me to (get this) find Karylin’s IP with `ctrl+f`:
 
-![Untitled](/img/lockpick_img/Untitled%208.png)
+![Untitled](/img/lockpick_img/Untitled_8.webp)
 
 ### Task 7
 
 The extensions targeted by the binary require us to jump back into IDA - there's a section of contiguous memory that stores a sequence of strings (I think the kids call this an "array") - these are very clearly file extensions -
 the binary calls these as part of the `process_directory` function, and we can see that 24bes isn’t looking to target `.ppt` files:
 
-![Untitled](/img/lockpick_img/Untitled%209.png)
+![Untitled](/img/lockpick_img/Untitled_9.webp)
 
 ### Task 8, 9, and 10
 
 And finally, we can just run `md5sum` the requested decrypted files (Task 8 is `applications.sql`, 9 is `firebase_bkup.json`, and 10 is `complaints.csv`) to get the hashes for the final three tasks:
 
-![Untitled](/img/lockpick_img/Untitled%2010.png)
+![Untitled](/img/lockpick_img/Untitled_10.webp)

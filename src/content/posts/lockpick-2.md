@@ -48,15 +48,15 @@ Would be giveaways as to a packed binary.
 Here, the output from `strings` indicates that the binary is packed with UPX (which is the answer for task 8). I’m going to detonate it with `Wireshark` monitoring the traffic (over an internal VM network with `inetsim`),
 and then I want to unpack it and load into IDA.
 
-![Untitled](/img/lockpick_2_img/Untitled.png)
+![Untitled](/img/lockpick_2_img/Untitled.webp)
 
 Nothing super obvious yet, but that’s currently on account of the compression hiding away most of the functionality. I’ll quickly mark it as executable and run it and see what happens.
 
-![Untitled](/img/lockpick_2_img/Untitled%201.png)
+![Untitled](/img/lockpick_2_img/Untitled_1.webp)
 
 Wireshark indicates the binary reaches out to an endpoint, seemingly via `curl` (though these could just as easily be hard-coded strings):
 
-![Untitled](/img/lockpick_2_img/Untitled%202.png)
+![Untitled](/img/lockpick_2_img/Untitled_2.webp)
 
 This binary is starting to seem a bit suspicious...
 
@@ -67,15 +67,15 @@ so I feel like this is just printing some junk URLs and doing funny malware stuf
 
 Unpacking it and running it through IDA now...
 
-![Untitled](/img/lockpick_2_img/Untitled%203.png)
+![Untitled](/img/lockpick_2_img/Untitled_3.webp)
 
-![Untitled](/img/lockpick_2_img/Untitled%204.png)
+![Untitled](/img/lockpick_2_img/Untitled_4.webp)
 
 > *from ~10K to ~24K*
 
 With the program decompressed, we can take a much better look at its internals. In the symbol table, we can note that the binary is most likely using AES to encrypt the files (with AES being the answer for Task 1):
 
-![Untitled](/img/lockpick_2_img/Untitled%205.png)
+![Untitled](/img/lockpick_2_img/Untitled_5.webp)
 
 In the read-only data section, there are several interesting constants pertinent given the context of ransomware:
 
@@ -83,9 +83,9 @@ In the read-only data section, there are several interesting constants pertinent
 - The target directory (`/share/`), and a list of file extensions,
 - And finally, the ransom note output, which links to a `pastes.io` URL containing raw ascii - this is the ransom text:
 
-![Untitled](/img/lockpick_2_img/Untitled%206.png)
+![Untitled](/img/lockpick_2_img/Untitled_6.webp)
 
-![Untitled](/img/lockpick_2_img/Untitled%207.png)
+![Untitled](/img/lockpick_2_img/Untitled_7.webp)
 
 > *`xyzf3jv6xq3d7w5e.onion` looks too short to be a valid onion URL so I’m ignoring it.*
 
@@ -99,26 +99,26 @@ After a bit of digging to try to find out how the binary is encrypting files, my
     - The second string from `unk_3010`, which is a chunk of the `.rodata` segment that is housing some hex values.
 3.  `get_key_from_url` calls `xor_cipher`, where it performs an `XOR` operation on the two strings:
 
-![Untitled](/img/lockpick_2_img/Untitled%208.png)
+![Untitled](/img/lockpick_2_img/Untitled_8.webp)
 
 > *Diagram is a little messy and hard to follow but I don’t really know how to make assembly function calls readable.*
 
 As the function name indicates an XOR cipher, we can perform some manual decryption using these strings and Cyberchef. It seems the binary is using the `get_key_from_url` function to print the strings (URLs) to the terminal:
 
-![Untitled](/img/lockpick_2_img/Untitled%209.png)
+![Untitled](/img/lockpick_2_img/Untitled_9.webp)
 
-![Untitled](/img/lockpick_2_img/Untitled%2010.png)
+![Untitled](/img/lockpick_2_img/Untitled_10.webp)
 
 > *`https://rb.gy/ehec6` is similar enough to the `Https://rb.gy/ehec` in the manual decryption.*
 
 It's worth noting that it might be worth exercizing even a small amount of caution before opening sites referenced in *real* malware. In this instance, its kind of unlikely that HTB will do
 anything insane and malicious to my network or VM, and having mentally assessed the risks, I'm happy to go ahead and open the URL. We find out that the service returns a 301 status and redirects to Google.
 
-![Untitled](/img/lockpick_2_img/Untitled%2011.png)
+![Untitled](/img/lockpick_2_img/Untitled_11.webp)
 
 However, the domain seems to belong to a URL shortening service, so maybe the other links direct to some kind of service?
 
-![Untitled](/img/lockpick_2_img/Untitled%2012.png)
+![Untitled](/img/lockpick_2_img/Untitled_12.webp)
 
 They don’t!
 
@@ -135,24 +135,24 @@ Instead of trying to figure out the exact XOR methodology here, I opt to use `gd
 
 In the `xor_cipher` function, we hit an instruction where our `HESB` key is loaded into `$rdx`:
 
-![Untitled](/img/lockpick_2_img/Untitled%2013.png)
+![Untitled](/img/lockpick_2_img/Untitled_13.webp)
 
 Taking another step, we can see the following (previously unseen) URL as the result of the `xor_cipher` function call:
 
-![Untitled](/img/lockpick_2_img/Untitled%2014.png)
+![Untitled](/img/lockpick_2_img/Untitled_14.webp)
 
 Navigating to that URL, a tiny 48-byte payload is dropped (Task 4 is this file's name, and Task 5 requires us to run `md5sum` on it):
 
-![Untitled](/img/lockpick_2_img/Untitled%2015.png)
+![Untitled](/img/lockpick_2_img/Untitled_15.webp)
 
 Opening it with Vim, the content seems like it could be the AES-encrypted string:
 
-![Untitled](/img/lockpick_2_img/Untitled%2016.png)
+![Untitled](/img/lockpick_2_img/Untitled_16.webp)
 
 > *`file` command output*
 
 
-![Untitled](/img/lockpick_2_img/Untitled%2017.png)
+![Untitled](/img/lockpick_2_img/Untitled_17.webp)
 
 > *the file’s actual content*
 
@@ -161,26 +161,26 @@ I’m not really sure what should be used as the key, but I am kind of sick of l
 
 Luckily, we quickly land on converting the dropped payload to hex, and then cutting the 48-byte payload to AES key specification of `16`/`24`/`32` bytes.
 
-![Untitled](/img/lockpick_2_img/Untitled%2018.png)
+![Untitled](/img/lockpick_2_img/Untitled_18.webp)
 
 Truncating it to the first 32 bytes (i.e, removing some characters from the end of the key) returns some promising results when we run it against the encrypted PDF document:
 
-![Untitled](/img/lockpick_2_img/Untitled%2019.png)
+![Untitled](/img/lockpick_2_img/Untitled_19.webp)
 
 While the output in Cyberchef seems like PDF content, it unfortunately doesn’t result in a readable PDF document when I actually try to open it.
 
-![Untitled](/img/lockpick_2_img/Untitled%2020.png)
+![Untitled](/img/lockpick_2_img/Untitled_20.webp)
 
 I try this again against the `takeover.docx` file, where Word automatically performed some kind of auto-repair function, producing a working Word document:
 
-![Untitled](/img/lockpick_2_img/Untitled%2021.png)
+![Untitled](/img/lockpick_2_img/Untitled_21.webp)
 
 Not exactly sure what is wrong here - my guess is that there is possibly something off with the `CR`/`LF` encoding given how close I was; my VM host here is running on a Windows machine whereas the victim runs Linux,
 which both use different line separator encodings. Ultimately, following Word’s example, we can get a perfectly functional PDF document after running it through an online PDF repair service:
 
-![Untitled](/img/lockpick_2_img/Untitled%2022.png)
+![Untitled](/img/lockpick_2_img/Untitled_22.webp)
 
-![Untitled](/img/lockpick_2_img/Untitled%2023.png)
+![Untitled](/img/lockpick_2_img/Untitled_23.webp)
 
 ## Finally,
 

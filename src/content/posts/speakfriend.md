@@ -17,7 +17,7 @@ It seems like this website was compromised. We found this file that seems to be 
 We are handed a containerized webserver instance, and some required files in a zipped archive, `main.7z`. I suspect there is nothing surface-level to see on this web application's frontend - a
 cursory glance through the source and various pages indicates that this assumption is *probably* correct.
 
-![Standard Bootstrap template stuff](/img/speakfriend_img/Untitled.png)
+![Standard Bootstrap template stuff](/img/speakfriend_img/Untitled.webp)
 
 > Gunicorn aside (before you ask - yes! it runs atrociously!!), this is pretty standard Bootstrap+jQuery template stuff
 
@@ -36,7 +36,7 @@ $ curl --insecure 'https://chal.ctf.games:32032'
   <meta name="keywords" content="" />
   <meta name="description" content="" />
   <meta name="from" content="" />
-  <link rel="shortcut icon" href="/static/images/favicon.png" type="image/x-icon">
+  <link rel="shortcut icon" href="/static/images/favicon.webp" type="image/x-icon">
 
   <title>Guarder</title>
 
@@ -143,11 +143,11 @@ Nothing happened at all!!
 We could try passing some arguments to it - I go with `-h`, to see if it has a `help` command/usage info. Something is happening in the background as `stdin` gets
 hijacked, but ultimately I wound up aborting here with `<C-c>`.
 
-![Untitled](/img/speakfriend_img/Untitled%201.png)
+![Untitled](/img/speakfriend_img/Untitled_1.webp)
 
 Suspecting an internal call for some `curl` functionality - and therefore probably reaching out to the internet - we might get something on `Wireshark`:
 
-![Untitled](/img/speakfriend_img/Untitled%202.png)
+![Untitled](/img/speakfriend_img/Untitled_2.webp)
 
 It’s a little tough to say exactly what is what traffic is outbound from what application as nothing is immediately obvious here. Also, the challenge uses TLS, so it’s possible for basically any of
 these to be relevant, as opposed to the bright green packets of unencrypted HTTP. Turning on hostnames was also pretty unhelpful - I really should set up a proper internalised lab with REMnux
@@ -156,7 +156,7 @@ to limit network traffic when I get the chance.
 So instead, maybe we can give it a specific point to reach out to - why don’t we try running a specific IP through it? In fact, we can grab the IP of the remote machine with the Network tab
 of Chrome’s Dev Tools and throw it in as an argument to see if the binary produces any network activity when we filter Wireshark results to contain only the target machine's IP:
 
-![Untitled](/img/speakfriend_img/Untitled%203.png)
+![Untitled](/img/speakfriend_img/Untitled_3.webp)
 
 ```bash
 pls@RUBY~$ ./main 34.123.197.237:32032
@@ -167,9 +167,9 @@ We can filter the Wireshark output for requests/responses containing that IP, an
 
 It seems like the binary makes an unencrypted request to the server, meaning we can _also_ see the data attached to the request:
 
-![Untitled](/img/speakfriend_img/Untitled%204.png)
+![Untitled](/img/speakfriend_img/Untitled_4.webp)
 
-![Untitled](/img/speakfriend_img/Untitled%205.png)
+![Untitled](/img/speakfriend_img/Untitled_5.webp)
 
 Let’s use those in our own curl request and see what happens:
 

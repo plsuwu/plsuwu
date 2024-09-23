@@ -82,7 +82,7 @@ Upon initial inspection, it seems the `checkCredentials` function ensures the fo
 
 We can run some requests through Burp Suite to make some modifications to the request's POST data - we see that the default value for `compareLength` is `32`.
 
-![burp_post_test](/img/confusing_passwords_img/burp_post_test.png)
+![burp_post_test](/img/confusing_passwords_img/burp_post_test.webp)
 
 Given this, the final line of the login form's code:
 ```php
@@ -169,7 +169,7 @@ This ultimately means `strncmp()` will only be called to compare the first chara
 
 We can check that our interpretation of the request is correct by submitting a post request with the `password` and `compareLength` params as arrays:
 
-![burp_post_test](/img/confusing_passwords_img/burp_post_test_4.png)
+![burp_post_test](/img/confusing_passwords_img/burp_post_test_4.webp)
 
 The page throws a `strncmp` warning, so we know that it tried to parse the arrays as strings.
 

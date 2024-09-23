@@ -110,7 +110,7 @@ $ feroxbuster --url <http://dev.devvortex.htb/> --smart -t 20 -w ~/git/red_tools
 
 This scan winds up returning an `/administrator/` endpoint, which is always very interesting. The contents of this endpoint indicate the web application is running a Joomla! CMS under the hood:
 
-![Untitled](/img/devvortex_img/Untitled.png)
+![Untitled](/img/devvortex_img/Untitled.webp)
 
 This means we can run `droopescan` to gather some more information; we know the server is running Joomla! version `4.2.6`, as indicated by the document at the
 `/administrator/manifests/files/joomla.xml` endpoint:
@@ -160,7 +160,7 @@ DB encryption 0
 
 At this point, I kept getting the following error, alongside repeated invalidation of my session cookie and being kicked out of the CMS:
 
-![Untitled](/img/devvortex_img/Untitled%201.png)
+![Untitled](/img/devvortex_img/Untitled_1.webp)
 
 As this issue was persistent through VM instance resets, I thought this was part of the box (it wasn’t) so I wound up losing a lot of time.
 Ultimately, I had to swap HTB server regions before I could continue as intended.
@@ -170,7 +170,7 @@ easily; in this case, we can use the classic PentestMonkey PHP reverse shell scr
 start up a netcat listener, and finally, make a GET request for `http://dev.devvortex.htb/templates/cassiopeia/error.php` to execute the script, initiating the remote machine to call back
 to our local `netcat` listener.
 
-![Untitled](/img/devvortex_img/Untitled%202.png)
+![Untitled](/img/devvortex_img/Untitled_2.webp)
 
 To improve our shell interaction, we can execute a series of commands to upgrade from a basic shell session to a fully interactive tty terminal - this is more a matter of convenience than necessity, but it allows
 us to, for example, hit `<C-c>` to send `SIGINT` to a process on the remote machine, rather than `SIGINT`ing our local netcat process. There's a handful of other benefits to this but signal hotkeys are the first thing

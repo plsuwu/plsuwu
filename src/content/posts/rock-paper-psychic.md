@@ -19,7 +19,7 @@ cheesy exploits from similarly-named CTF challenges - unfortunately it's not goi
 
 Loading the binary into IDA, we are able to perform a quick search for the term `flag` and make a quick note of relevant functions or symbols:
 
-![Interesting functions](/img/rock_paper_psychic_img/Untitled.png)
+![Interesting functions](/img/rock_paper_psychic_img/Untitled.webp)
 > IDA's function search results
 
 Checking out our `printFlag` function, I have a pretty solid interpretation of what I'm looking at, but the mangled Nim disasm took me a bit off-guard:
@@ -34,10 +34,10 @@ Checking out our `printFlag` function, I have a pretty solid interpretation of w
 
 To summarize, it seems like the flag is RC4-encrypted, and is stored in the read-only `.rdata` section. Once a player wins, and the program will decrypt the flag and then print it to STDOUT.
 
-![IDA graph view](/img/rock_paper_psychic_img/Untitled%201.png)
+![IDA graph view](/img/rock_paper_psychic_img/Untitled_1.webp)
 > IDA's graph view of the program's call flow
 
-![Text view](/img/rock_paper_psychic_img/Untitled%202.png)
+![Text view](/img/rock_paper_psychic_img/Untitled_2.webp)
 > `.text` view
 
 Moving to the addresses referenced by `TM__V45tF8B8NBcxFcjfe7lhBw_38` & `TM__V45tF8B8NBcxFcjfe7lhBw_39` in the `.rdata` section - this means the variables are constants (i.e, read-only; not used to store dynamic data).
@@ -103,9 +103,9 @@ Digging a little into the RC4 decryption function, we will find some child funct
 - `genKeystream__OOZOnimbleZpkgsZ8267524548O49O48Z826752_2`,
 - `fromHex__OOZOnimbleZpkgsZ8267524548O49O48Z826752_83`.
 
-![Untitled](/img/rock_paper_psychic_img/Untitled%203.png)
+![Untitled](/img/rock_paper_psychic_img/Untitled_3.webp)
 
-![Untitled](/img/rock_paper_psychic_img/Untitled%204.png)
+![Untitled](/img/rock_paper_psychic_img/Untitled_4.webp)
 
 `genKeystream` seems to just utilize a plaintext value, and it is fairly safe to assume `fromHex` will convert a string from its hex representation to ASCII. I also am assuming that the
 `L L @...` & `P P @...` portions of each string are use to identify the key from the input, and that we should remove them before trying to descrypt anything.
@@ -119,4 +119,4 @@ The function from this library expects
 
 The example closely aligns with the function calls and values in this program, so let's test this theory and run it through cyberchef:
 
-![Untitled](/img/rock_paper_psychic_img/Untitled%205.png)
+![Untitled](/img/rock_paper_psychic_img/Untitled_5.webp)
