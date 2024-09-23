@@ -37,10 +37,10 @@ the _actual_ content (though nothing indicates this explicitly).
 After briefly reviewing WebDAV documentation alongside the tech stack used on the WebDAV endpoint, we can see the server accepts authentication via a `Basic` Authorization header, which we can craft by running
 `echo -n <username>:<password> | base64 --wrap=0` in a bash terminal, replacing the `<username>` and `<password>` strings with the user's authentication info.
 
-![1](/img/operation_eradication_img/Untitled.png)
+![1](/img/operation_eradication_img/Untitled.webp)
 >The root endpoint
 
-![Untitled](/img/operation_eradication_img/Untitled%201.png)
+![Untitled](/img/operation_eradication_img/Untitled_1.webp)
 >The `/webdav` endpoint
 
 To me, those `user` and `pass` strings look like they've been hashed or encrypted, but we can try to make a GET request using the strings as the username and password anyway:
@@ -55,7 +55,7 @@ curl http://chal.ctf.games:30236/webdav
 
 As expected, this isn't correct.
 
-![Untitled](/img/operation_eradication_img/Untitled%202.png)
+![Untitled](/img/operation_eradication_img/Untitled_2.webp)
 
 We can try to do a bit of hashcracking & decryption, but we have no idea how these strings have been hashed - the `user` and `pass` strings are 72 characters long (i.e they don't look like a common hash type), and online hash analysis tools, Google, and ChatGPT similarly have no clue.
 We can instead Google the config file's layout, and find that it (probably) belongs to a WebDAV client CLI tool named `Rclone`.
@@ -193,5 +193,5 @@ Content-Type: text/html; charset=UTF-8
 
 We can go back and refresh the webapp's root directory, where we are presented with our flag:
 
-![Untitled](/img/operation_eradication_img/Untitled%203.png)
+![Untitled](/img/operation_eradication_img/Untitled_3.webp)
 
