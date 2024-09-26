@@ -1,8 +1,5 @@
-# taken _mostly_ from the bun containerization guide
-# https://bun.sh/guides/ecosystem/docker
-
 FROM oven/bun:alpine AS base
-WORKDIR /usr/src/app
+WORKDIR /usr/src/main
 
 # caching dependencies like this allegedly speeds up
 # future builds
@@ -29,7 +26,7 @@ RUN bun run build
 # copy production dependencies, source code into image
 FROM base AS release
 COPY --from=install /tmp/prod/node_modules node_modules
-COPY --from=prerelease /usr/src/app .
+COPY --from=prerelease /usr/src/main .
 
 # expose tcp port and run
 USER bun
