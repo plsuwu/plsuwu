@@ -32,7 +32,7 @@
 	};
 </script>
 
-<div class="flex w-full flex-col items-center p-5">
+<div class="bg-l-bgf/65 flex w-full flex-col items-center p-3">
 	<ul use:handleCheckClick class="flex flex-row space-x-8 font-bold">
 		{#each pages as page}
 			{#if 'children' in page}
@@ -76,5 +76,8 @@
 				</NavigationLink>
 			{/if}
 		{/each}
+        <a href='https://tiles.plsuwu.com' target='_blank' referrerpolicy="no-referrer">
+            tiles
+        </a>
 	</ul>
 </div>

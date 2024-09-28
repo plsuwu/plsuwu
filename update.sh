@@ -21,5 +21,5 @@ git pull
 # and prune old image
 docker compose build
 docker compose down
-docker compose up -d --remove-orphans --build
+docker compose up -d --remove-orphans --no-deps
 docker image prune -f

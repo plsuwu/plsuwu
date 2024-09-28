@@ -1,7 +1,7 @@
 <script lang="ts">
 	import SquareBraceButton from '$components/ui/squarebrace/SquareBraceButton.svelte';
-    import type { Param } from '$utils/param';
-    import { page } from '$app/stores';
+	import type { Param } from '$utils/param';
+	import { page } from '$app/stores';
 	import { updateParams, paramsContain } from '$utils/param';
 
 	export let ctfs;
@@ -22,10 +22,10 @@
 </script>
 
 <div
-	class="-ml-38 fixed mt-14 hidden w-1/5 flex-col items-end text-right xl:flex 3xl:w-1/4"
+	class="-ml-38 fixed mt-14 hidden w-1/5 flex-col items-start self-end text-left xl:flex 3xl:w-1/4"
 >
 	<div class="mb-2 text-lg font-bold">ctf events {'&'} sites</div>
-	<div class="flex flex-col items-end self-end text-right">
+	<div class="flex flex-col items-start self-start text-left">
 		{#each ctfs as from}
 			<SquareBraceButton
 				handleParentEvent={() => setRoute({ type: 'ctf', from })}
@@ -41,7 +41,7 @@
 	</div>
 
 	<div class="mb-2 mt-8 text-lg font-bold">tags</div>
-	<div class="flex flex-col items-end self-end text-right">
+	<div class="flex flex-col items-start self-start text-left">
 		{#each tags as tag}
 			<SquareBraceButton
 				handleParentEvent={() => setRoute({ type: 'ctf', tag })}

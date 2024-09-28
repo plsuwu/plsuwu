@@ -1,6 +1,6 @@
 <script lang="ts">
 	// needs some implementation tweaks + serious tidying, but functional
-    // (for the most part)
+	// (for the most part)
 	//   - would also be good to have a doubletap-to-zoom
 	//      function
 	import HeroiconsXMark from '~icons/heroicons/x-mark';
@@ -42,8 +42,8 @@
 		let clientX;
 		let clientY;
 
-        // might not need this check as we use mostly custom PointerEvent handlers rather
-        // than checking for TouchEvents
+		// might not need this check as we use mostly custom PointerEvent handlers rather
+		// than checking for TouchEvents
 		if (event.type !== 'touchstart') {
 			({ clientX, clientY } = event as MouseEvent);
 		} else {
@@ -58,13 +58,24 @@
 		event.preventDefault();
 		event.stopPropagation();
 		if (!isPanning) return;
-
+		rect = imageContainer.getBoundingClientRect();
 		let clientX;
 		let clientY;
+
 		if (event.type !== 'touchmove') {
 			({ clientX, clientY } = event as MouseEvent);
 		} else {
 			({ clientX, clientY } = event as PointerEvent);
+		}
+
+		if (
+			clientY + 1 > rect.bottom ||
+			clientY  < rect.top ||
+			clientX + 1 > rect.right ||
+			clientX  < rect.left
+		) {
+			mouseUp();
+            pointerUp();
 		}
 
 		translateX = clientX - startX;
@@ -100,11 +111,10 @@
 
 		eventBuffer[index] = event;
 
-        // single touch - perform translation rather than scaling
+		// single touch - perform translation rather than scaling
 		if (eventBuffer.length === 1) {
 			mouseMove(event);
-		} else
-        if (eventBuffer.length === 2) {
+		} else if (eventBuffer.length === 2) {
 			// translatePointer();
 			const diff = Math.abs(eventBuffer[0].clientY - eventBuffer[1].clientY);
 
@@ -121,8 +131,10 @@
 	}
 
 	function changeScale(event?: WheelEvent, diff?: number) {
+		// if (isPanning && event ) return;
+
 		// need to adjust the origin based on the the scale, translation, and rect
-        // dimensions for this to feel 'natural', however i don't really know how to do that atm
+		// dimensions for this to feel 'natural', however i don't really know how to do that atm
 		rect = imageContainer.getBoundingClientRect();
 
 		// increment scale percent higher/lower depending on deltaY diff
@@ -133,7 +145,7 @@
 					Math.max(SCALE_INCREMENT, scale - SCALE_INCREMENT)
 				:	Math.min(MAX_SCALE_VALUE, scale + SCALE_INCREMENT);
 		}
-        // same thing but we use the manually-calculated deltaY
+		// same thing but we use the manually-calculated deltaY
 		if (diff) {
 			scale =
 				diff < 0 ?
@@ -143,7 +155,7 @@
 	}
 
 	function resetViewport() {
-        // run the mouseUp handler func
+		// run the mouseUp handler func
 		mouseUp();
 
 		// pop all items from the buffer
@@ -151,7 +163,7 @@
 			eventBuffer.pop();
 		});
 
-        // initial values
+		// initial values
 		scale = INITIAL_SCALE;
 		startX = 0;
 		startY = 0;
@@ -159,7 +171,7 @@
 		translateX = 0;
 	}
 
-    // reactive style var for <img /> element
+	// reactive style var for <img /> element
 	$: imgStyle = `transform: translate(${translateX}px, ${translateY}px) scale(${scale}); transform-origin: 50%; border-radius: 6px;`;
 </script>
 

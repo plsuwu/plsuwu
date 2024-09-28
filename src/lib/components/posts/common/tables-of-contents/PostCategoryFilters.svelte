@@ -24,14 +24,13 @@
 </script>
 
 <div
-	class="-ml-38 fixed mt-14 hidden w-1/5 flex-col items-start self-end text-left xl:flex 3xl:w-1/4"
+	class="-ml-38 fixed mt-14 hidden w-1/5 flex-col items-end text-right xl:flex 3xl:w-1/4"
 >
-<div class="mb-8 flex flex-col items-start self-start text-left">
+<div class="flex flex-col items-end self-end text-right -mr-8 mb-8 mt-2">
 <Search />
 </div>
 	<div class="mb-2 text-lg font-bold">categories</div>
-	<div class="flex flex-col items-start self-start text-left">
-
+	<div class="flex flex-col items-end self-end text-right">
 		{#each postLocations as { name, href, param }}
 			{#if param}
 				<SquareBraceButton

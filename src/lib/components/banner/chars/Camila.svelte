@@ -37,6 +37,4 @@ xxxXxx+xxxxx+x;;..:;;.:::::;::....:.       ....  .;;;;;.  .;;;:+$$$$$$$;;;++++++
                   :.   ;+xx++xx+;;;;;;;;;;;                    .x+++x:xxxxxX$$$XXXx
                    .;;  .+x+++xx;;;;;;;;;::                     ;xx+++:xxxxxX$$XXXXx.
                    :;;;++;xx+;+x+;;;;;;; :.                      xxx++++XXxxXXXXxxXXx.
-                   ;;;;;++xx++;;+;;;;;;;  .                      :xxx+xxXXXxxXXXXXxxXX;
-                   .:;+;;;++;+;;;;.       .                       xXxxxxxXXXxXXXXXXXXXX;
 </pre>

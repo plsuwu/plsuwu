@@ -19,8 +19,8 @@
 	const hasAppliedFilter = [ctfTagsParam, ctfFromParam].some((item) => item !== null);
 </script>
 
-{#if postTypeParam && postTypeParam.includes('ctf')}
-	<PostsCtfEvents {ctfs} {tags} />
+{#if $page.url.pathname.includes('posts')}
+	<PostCategoryFilters />
 {/if}
 
 <div
@@ -82,6 +82,7 @@
 	{/if}
 </div>
 
-{#if $page.url.pathname.includes('posts')}
-	<PostCategoryFilters />
+{#if postTypeParam && postTypeParam.includes('ctf')}
+	<PostsCtfEvents {ctfs} {tags} />
 {/if}
+
