@@ -1,6 +1,7 @@
 build/
 node_modules/
 .svelte-kit/
+.mypy_cache/
 nginx.conf
 
 logs
