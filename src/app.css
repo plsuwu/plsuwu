@@ -5,8 +5,8 @@
 @tailwind utilities;
 
 body {
-    /* always display y-scrollbar to avoid layout shift
-     * when the bar is actually necessary */
+    /* always display y-scrollbar to avoid layout shift when we actually need the
+     * scrollbar */
 	@apply w-full overflow-y-scroll text-l-darkpink bg-l-bgf/5;
 }
 

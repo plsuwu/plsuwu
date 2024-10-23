@@ -3,10 +3,14 @@
 	import Dropdown from './submodules/Dropdown.svelte';
 	import NavigationLink from './submodules/NavigationLink.svelte';
 	import ButtonNavigation from './submodules/ButtonNavigation.svelte';
-    import { updateParams, type Param } from '$utils/param';
-	import { pages } from '$utils/navigation';
+	import { updateParams, type Param } from '$utils/param';
+	import { fetchIcon, pages } from '$utils/navigation';
 
 	let active = '';
+	const aElemAttrs = {
+		target: '_blank',
+	};
+
 	const route = (name: string, param?: Param, path?: string) => {
 		if (param) {
 			updateParams({ type: param.type }, path);
@@ -32,7 +36,7 @@
 	};
 </script>
 
-<div class="bg-l-bgf/65 flex w-full flex-col items-center p-3">
+<div class="flex w-full flex-col items-center bg-l-bgf/65 p-3">
 	<ul use:handleCheckClick class="flex flex-row space-x-8 font-bold">
 		{#each pages as page}
 			{#if 'children' in page}
@@ -40,6 +44,7 @@
 					{#each page.children as child}
 						{#if !child.param && child.href}
 							<NavigationLink
+								attrs={undefined}
 								handleParentEvent={() =>
 									route(page.name, child.param, child.href)}
 								href={child.href}
@@ -71,13 +76,36 @@
 					{/each}
 				</Dropdown>
 			{:else if page.href}
-				<NavigationLink handleParentEvent={() => route(active)} href={page.href}>
-					{page.name}
-				</NavigationLink>
+				{#if page.icon}
+					<NavigationLink
+						attrs={aElemAttrs}
+						handleParentEvent={() => route(active)}
+						href={page.href}
+					>
+						<div class="flex flex-row">
+							<div class="mr-1">
+								{page.name}
+							</div>
+								{#await fetchIcon(page.icon.fetchIcon)}
+									{page.icon.loading}
+								{:then Icon}
+                                <div class="text-[10px]">
+									<svelte:component this={Icon.default}
+									></svelte:component>
+                                </div>
+								{/await}
+						</div>
+					</NavigationLink>
+				{:else}
+					<NavigationLink
+						attrs={undefined}
+						handleParentEvent={() => route(active)}
+						href={page.href}
+					>
+						{page.name}
+					</NavigationLink>
+				{/if}
 			{/if}
 		{/each}
-        <a href='https://tiles.plsuwu.com' target='_blank' referrerpolicy="no-referrer">
-            tiles
-        </a>
 	</ul>
 </div>
