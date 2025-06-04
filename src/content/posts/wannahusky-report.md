@@ -4,7 +4,7 @@ title: "Wannahusky Analysis"
 link: "https://academy.tcm-sec.com/courses/1547503"
 description: "Final report for TCM Security's 'Practical Malware Analysis and Triage' course."
 from: "TCM Security"
-date: "2025-06-04"
+date: "2025-06-05"
 type: "report"
 tags: ["rev", "crypto", "malware"]
 ---
