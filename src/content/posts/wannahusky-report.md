@@ -128,11 +128,11 @@ Executing the sample without `cosmo.jpeg` present at the expected filepath yield
 'cannot open: C:\Users\Peas\Desktop\cosmo'):
 
 ```powershell
-PS C:\Users\Peas\Desktop\Ransomware.wannahusky.exe.malz> .\Ransomware.wannahusky.exe
-cannot open: C:\Users\Peas\Desktop\cosmo.jpeg
+PS C:\\Users\\Peas\\Desktop\\Ransomware.wannahusky.exe.malz> .\\Ransomware.wannahusky.exe
+cannot open: C:\\Users\\Peas\\Desktop\\cosmo.jpeg
 Folder PATH listing
 Volume serial number is 00000009 1054:D946
-C:\
+C:\\
 ├───inetpub
 ├───PerfLogs
 ├───Program Files
@@ -144,10 +144,10 @@ Creating an empty 'dummy' file with the name `cosmo.jpeg` also triggers an error
 bounds, the container is empty'):
 
 ```powershell
-PS C:\Users\Peas\Desktop> New-Item -Name cosmo.jpeg
+PS C:\\Users\\Peas\\Desktop> New-Item -Name cosmo.jpeg
 
 
-    Directory: C:\Users\Peas\Desktop
+    Directory: C:\\Users\\Peas\\Desktop
 
 
 Mode                 LastWriteTime         Length Name
@@ -155,12 +155,12 @@ Mode                 LastWriteTime         Length Name
 -a----         1/06/2025   1:19 AM              0 cosmo.jpeg
 
 
-PS C:\Users\Peas\Desktop> cd .\Ransomware.wannahusky.exe.malz\
-PS C:\Users\Peas\Desktop\Ransomware.wannahusky.exe.malz> .\Ransomware.wannahusky.exe
+PS C:\\Users\\Peas\\Desktop> cd .\\Ransomware.wannahusky.exe.malz\\
+PS C:\\Users\\Peas\\Desktop\\Ransomware.wannahusky.exe.malz> .\\Ransomware.wannahusky.exe
 index out of bounds, the container is empty
 Folder PATH listing
 Volume serial number is 00000009 1054:D946
-C:\
+C:\\
 ├───inetpub
 ├───PerfLogs
 ├───Program Files
@@ -174,14 +174,14 @@ Ultimately, WannaHusky requires the existence of a `cosmo.jpeg` with a content l
 allows WannaHusky to execute its entire encryption routine. The final output is written to `cosmo.WANNAHUSKY` encoded as a base64 string.
 
 ```powershell
-PS C:\Users\Peas\Desktop> echo 'AAAA' | Out-File -FilePath cosmo.jpeg
-PS C:\Users\Peas\Desktop> Get-Content .\cosmo.jpeg
+PS C:\\Users\\Peas\\Desktop> echo 'AAAA' | Out-File -FilePath cosmo.jpeg
+PS C:\\Users\\Peas\\Desktop> Get-Content .\\cosmo.jpeg
 AAAA
-PS C:\Users\Peas\Desktop> cd .\Ransomware.wannahusky.exe.malz\
-PS C:\Users\Peas\Desktop\Ransomware.wannahusky.exe.malz> .\Ransomware.wannahusky.exe
+PS C:\\Users\\Peas\\Desktop> cd .\\Ransomware.wannahusky.exe.malz\\
+PS C:\\Users\\Peas\\Desktop\\Ransomware.wannahusky.exe.malz> .\\Ransomware.wannahusky.exe
 Folder PATH listing
 Volume serial number is 00000009 1054:D946
-C:\
+C:\\
 ├───inetpub
 
 [...]
@@ -189,11 +189,11 @@ C:\
 │   │           └───misc
 SIGINT: Interrupted by Ctrl-C.
 ^C
-PS C:\Users\Peas\Desktop\Ransomware.wannahusky.exe.malz> cd ..
-PS C:\Users\Peas\Desktop> la
+PS C:\\Users\\Peas\\Desktop\\Ransomware.wannahusky.exe.malz> cd ..
+PS C:\\Users\\Peas\\Desktop> la
 
 
-    Directory: C:\Users\Peas\Desktop
+    Directory: C:\\Users\\Peas\\Desktop
 
 
 Mode                 LastWriteTime         Length Name
@@ -204,9 +204,9 @@ d-----        20/05/2025   5:28 AM                Ransomware.wannahusky.exe.malz
 -a----         1/06/2025   1:23 AM          32478 WANNAHUSKY.png
 
 
-PS C:\Users\Peas\Desktop> Get-Content .\cosmo.WANNAHUSKY
+PS C:\\Users\\Peas\\Desktop> Get-Content .\\cosmo.WANNAHUSKY
 I2uBeONAyInsSK8UmIQ=
-PS C:\Users\Peas\Desktop>
+PS C:\\Users\\Peas\\Desktop>
 ```
 
 The above base64 is simply an encoded representation of the encrypted bytes, however.
@@ -220,15 +220,15 @@ WannaHusky appears to implement a very naive encryption method; the output is de
 it should be not only possible, but potentially quite straightforward to reverse engineer a decryption key.
 
 ```powershell
-PS C:\Users\Peas\Desktop> echo 'A' | Out-File -FilePath cosmo.jpeg
-PS C:\Users\Peas\Desktop> .\wannahusky.exe > $null
-PS C:\Users\Peas\Desktop> Get-Content .\cosmo.WANNAHUSKY
+PS C:\\Users\\Peas\\Desktop> echo 'A' | Out-File -FilePath cosmo.jpeg
+PS C:\\Users\\Peas\\Desktop> .\\wannahusky.exe > $null
+PS C:\\Users\\Peas\\Desktop> Get-Content .\\cosmo.WANNAHUSKY
 I2uBeK9Ag4k=
-PS C:\Users\Peas\Desktop> echo 'A' | Out-File -FilePath cosmo.jpeg
-PS C:\Users\Peas\Desktop> .\wannahusky.exe > $null
-PS C:\Users\Peas\Desktop> Get-Content .\cosmo.WANNAHUSKY
+PS C:\\Users\\Peas\\Desktop> echo 'A' | Out-File -FilePath cosmo.jpeg
+PS C:\\Users\\Peas\\Desktop> .\\wannahusky.exe > $null
+PS C:\\Users\\Peas\\Desktop> Get-Content .\\cosmo.WANNAHUSKY
 I2uBeK9Ag4k=
-PS C:\Users\Peas\Desktop>
+PS C:\\Users\\Peas\\Desktop>
 ```
 
 
@@ -306,14 +306,14 @@ The ransom note PNG is also embedded in plaintext within the binary - note the `
 after the `Desktop\WANNAHUSKY.png` filepath, and the `IEND` trailer.
 
 ```powershell
-@Desktop\WANNAHUSKY.png
+@Desktop\\WANNAHUSKY.png
 IHDR
 sRGB
 gAMA
-\tpHYs
+\\tpHYs
 ~rIDATx^
 }1JsPt.:
-~-F\t!{
+~-F\\t!{
 F</@
 ?!My
 ?!dM0
