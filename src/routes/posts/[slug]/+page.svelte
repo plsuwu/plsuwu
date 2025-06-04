@@ -50,7 +50,7 @@
 	<!-- -->
 
 	<!-- main page content -> handled via mardown-to-markup preprocessor -->
-	<div class="w-full px-4 transition-all xl:w-[65%] 3xl:w-[45%]">
+	<div class="w-full px-4 transition-all xl:w-[55%] 2xl:w-[55%] 3xl:w-[40%]">
 		<div class="prose">
 			<svelte:component this={component} />
 			<slot />

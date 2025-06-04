@@ -12,7 +12,7 @@ export default {
 					pink: '#ff99be',
 					lightpink: '#ffc8dd',
 					whitepink: '#fff0fc',
-                    bgf: '#fff0ff',
+					bgf: '#fff0ff',
 				},
 			},
 			fontFamily: {
@@ -36,14 +36,56 @@ export default {
 						'font-size': '1rem',
 						'line-height': '1.25rem',
 					},
+					table: {
+						border: '1px solid',
+						'border-radius': '10px !important',
+						'font-size': '1.1rem',
+					},
+					'th, td': {
+						'border-bottom': '1px solid',
+					},
+					td: {
+						'text-align': 'right !important',
+						'font-size': '14px !important',
+						'@media(min-width: 2235px)': {
+							'font-size': '1rem !important',
+						},
+					},
+					th: {
+						padding: '10px',
+					},
+					td: {
+						padding: '5px 10px',
+						// 'padding': '5px',
+					},
+					'td > code': {
+						'@media(min-width: 850px)': {
+							'word-break': 'keep-all !important',
+						},
+					},
+					table: {
+						'text-align': 'left',
+						border: '1px solid',
+						'border-radius': '10px !important',
+						width: '100%',
+						'max-width': '100%',
+                        'min-width': '100%',
+						'@media(min-width: 850px)': {
 
-                    // 'p:(blockquote:has(> p))': {
-                    //     // 'font-family': "'Noto Sans', sans-serif",
-                    //     margin: '0rem',
-                    //     padding: '0em',
-                    //     'font-size': '1rem',
-                    //     'line-height': '1.25rem',
-                    // },
+							'max-width': 'max-content',
+							'font-size': '1rem !important',
+						},
+						'margin-top': '1rem',
+						'margin-bottom': '2rem',
+					},
+
+					// 'p:(blockquote:has(> p))': {
+					//     // 'font-family': "'Noto Sans', sans-serif",
+					//     margin: '0rem',
+					//     padding: '0em',
+					//     'font-size': '1rem',
+					//     'line-height': '1.25rem',
+					// },
 
 					// reset bottom margin on <p/> elements that wrap an <img/>
 					// apparently these `:has` selectors are not particularly well-supported across browsers
@@ -75,9 +117,9 @@ export default {
 						color: '#884461',
 						'background-color': '#f6d1e7',
 						'font-weight': '550',
-                        'font-size': '0.9rem',
-                        'letter-spacing': '0px',
-                        'line-height': '1.2em',
+						'font-size': '0.9rem',
+						'letter-spacing': '0px',
+						'line-height': '1.2em',
 					},
 
 					// <aside/> should realistically only appear at the top of our docs
@@ -94,16 +136,28 @@ export default {
 						margin: '2rem 0',
 					},
 
+					'blockquote': {
+                        'display': 'flex',
+                        'padding': '0.8em 1.5em',
+						'line-height': '1rem',
+                        'margin-bottom': '1em',
+                        // 'margin-left': '5%',
+                        'margin-right': '10%',
+                        'border-radius': '10px',
+						color: '#884461',
+						'background-color': '#ffeeff',
+						'font-style': 'italic',
+					},
 					// markdown that uses the `> ...` quote element are parsed to
 					// <blockquote/> elements by mdsvex in our svelte markup
-					blockquote: {
+					'blockquote:not(:not(p + blockquote))': {
 						display: 'flex',
-                        'margin-left': '12%',
-						'margin-right': '12%',
-                        '@media (min-width: 640px)': {
-                            'margin-left': '27%',
-                            'margin-right': '27%',
-                        },
+						'margin-left': '10%',
+						'margin-right': '10%',
+						'@media (min-width: 640px)': {
+							'margin-left': '15%',
+							'margin-right': '15%',
+						},
 						'max-width': '100%',
 						padding: '0.6em 1.5em',
 						color: '#884461',
@@ -113,22 +167,24 @@ export default {
 						'border-radius': '0px 0px 10px 10px',
 						'font-size': '0.85rem',
 					},
-					'blockquote > p': {
-						'line-height': '1rem',
-					},
-					'blockquote ::before': {
+                    'blockquote::before': {
 						padding: '0 1.5em 0 0',
 						content: "''",
 						'border-left': '3px solid #d99cc1',
-					},
-                    'button': {
-                        'width': '100%',
-                        'display': 'flex',
-                        'flex-wrap': 'nowrap',
-                        'justify-items': 'center',
-                        'margin': '0',
-                        'padding': '0',
                     },
+					// 'blockquote > p::before': {
+					// 	padding: '0 1.5em 0 0',
+					// 	content: "''",
+					// 	'border-left': '3px solid #d99cc1',
+					// },
+					button: {
+						width: '100%',
+						display: 'flex',
+						'flex-wrap': 'nowrap',
+						'justify-items': 'center',
+						margin: '0',
+						padding: '0',
+					},
 					// TODO:
 					// fix this general <img/> --> not quite the right selector so we're just
 					// using this to clobber everything, but we want to only remove the
@@ -137,7 +193,7 @@ export default {
 					// ```
 					// <p><img/><p>
 					// ```)
-					'img:not(blockquote img)': {
+					img: {
 						padding: '0.2em',
 						display: 'flex',
 						'z-index': '-5',
@@ -146,24 +202,24 @@ export default {
 						'margin-bottom': '0',
 						border: '3px solid #d99cc1',
 						'border-radius': '5px',
-                        // smallest
+						// smallest
 						width: '99%',
 						height: '99%',
-                        // small non-mobile
-                        '@media (min-width: 640px)': {
-						    width: '75%',
-						    height: '75%',
-                        },
-                        // med non-mobile; kind of an awkward resolution
-                        '@media (min-width: 1024px)': {
-						    width: '55%',
-						    height: '55%',
-                        },
-                        // reg desktop
-                        '@media (min-width: 1280px)': {
-						    width: '65%',
-						    height: '65%',
-                        },
+						// small non-mobile
+						'@media (min-width: 640px)': {
+							width: '85%',
+							height: '85%',
+						},
+						// med non-mobile; kind of an awkward resolution
+						'@media (min-width: 1024px)': {
+							width: '75%',
+							height: '75%',
+						},
+						// reg desktop
+						'@media (min-width: 1280px)': {
+							width: '75%',
+							height: '75%',
+						},
 						overflow: 'visible',
 					},
 					ul: {

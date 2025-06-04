@@ -25,12 +25,15 @@ class Cmd:
         webp_fname = filepath.split(".png")[0] + ".webp"
         webp_fname = webp_fname.replace(" ", "_")
 
-        if not os.listdir().__contains__(webp_fname):
+        if webp_fname not in os.listdir():
             cmd = shlex.split(f"cwebp -q {quality} '{filepath}' -o {webp_fname}")
 
             stdout, stderr = subprocess.Popen(
                 cmd, shell=False, stdout=subprocess.PIPE, stderr=subprocess.PIPE
             ).communicate()
+
+            if stderr is not None:
+                print(stderr)
 
             png_stat = os.stat(filepath).st_size / 1024
             webp_stat = os.stat(webp_fname).st_size / 1024
@@ -51,10 +54,13 @@ class Cmd:
 def main():
 
     cmd = Cmd()
-    IMG_DIRS = cmd.ls()
+    IMG_DIRS = ['wannahusky-report']
+    # IMG_DIRS = cmd.ls()
+    print(IMG_DIRS)
 
     for dir in IMG_DIRS:
         imgs = cmd.ls(dir)
+        print(imgs)
 
         webp = []
         png = []
@@ -82,16 +88,21 @@ def main():
                     res = cmd.rm(filepath)
                     print(res)
 
-        elif len(webp) != len(png):
+        elif len(png) > 0:
             print(
                 f"""
 [*] Differing number of webps ({len(webp)} webps) vs pngs ({len(png)} pngs)
                 """
             )
-            for img in imgs:
-                filepath = f"{dir}/{img}"
-                res = cmd.conv(filepath, args.quality)
-                print(f"[ok] filepath -> {filepath}")
+            for img in png:
+                test_webp = img.split(".png")[0]
+                print(test_webp)
+                print(img)
+                if test_webp not in webp:
+                    filepath = f"{dir}/{img}"
+                    print(filepath)
+                    res = cmd.conv(filepath, args.quality)
+                    print(f"[ok] filepath -> {filepath}")
 
 
 parser = argparse.ArgumentParser(prog="converter")
