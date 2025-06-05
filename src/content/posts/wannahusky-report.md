@@ -245,8 +245,8 @@ Observing the `FLOSS` output, the `COSMO` string below instinctually stands out 
 
 ```c
 @COSMO
-@Desktop\target\cosmo.WANNAHUSKY
-@Desktop\cosmo.jpeg
+@Desktop\\target\\cosmo.WANNAHUSKY
+@Desktop\\cosmo.jpeg
 ```
 
 Disassembling the sample, the `COSMO` string was indeed intended for use as a key - the `COSMO` string is passed to a key digest generation function to generate a 32-byte key
@@ -283,7 +283,7 @@ API function from `user32.dll` into the script. Below, `ps1.ps1` uses this API f
 
 ```powershell
 @powershell 
-@Desktop\ps1.ps1
+@Desktop\\ps1.ps1
 @$code = @'
 using System.Runtime.InteropServices;
 namespace Win32{
@@ -297,7 +297,7 @@ namespace Win32{
     }
 add-type $code
 $currDir = Get-Location
-$wallpaper = ".\WANNAHUSKY.PNG"
+$wallpaper = ".\\WANNAHUSKY.PNG"
 $fullpath = Join-Path -path $currDir -ChildPath $wallpaper
 [Win32.Wallpaper]::SetWallpaper($fullpath)
 ```
