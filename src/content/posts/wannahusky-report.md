@@ -84,9 +84,12 @@ some runtime setup. The binary is compiled with the following partially-mangled 
 - Retrieves and executes a Powershell script from the `.rdata` section 
 - Additionally, executes the script to alter the user's desktop background.
 
+The last function call highlighted below - `@nosexecShellCmd@4` - runs the `tree.exe` command. It appears that the command is passed in as a string to a Nim built-in function,
+and is executed by `cmd.exe`.
+
 ![nim-main-module](/img/wannahusky-report/NimMainModule_primary-functions.webp)
 
-> The `@nosexecShellCmd@4` function runs the `tree.exe` command.
+As such, these three functions work to perform the following routine:
 
 1. WannaHusky first checks whether it can execute its payload by checking for the existence of a file named `cosmo.jpeg` on the user's desktop (i.e., `%USERPROFILE%\Desktop\cosmo.jpeg`).
     - If the file does not exist, the binary returns early from the `wannaHusky` function here.
@@ -118,7 +121,7 @@ and a Powershell script modifies the victim's desktop background to display this
 
 
 The failure state bails out of the encryption function early (without dropping the ransom PNG). A Powershell script modifies the victim's 
-desktop background to display a non-existent ransom PNG - a fallack, a solid black color, is set instead:
+desktop background to display a non-existent ransom PNG - a fallback option (a solid black color) is set by the operating system in this instance:
 
 ![wannahusky-failure-state](/img/wannahusky-report/wannahusky-failure.webp)
 
