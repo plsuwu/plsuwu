@@ -1,0 +1,49 @@
+@import "tailwindcss";
+
+@font-face {
+	font-family: "Iosevka";
+	font-style: normal;
+	font-weight: normal;
+	src: url("/font/iosevka/IosevkaCustom-Regular.woff2") format("woff2");
+}
+
+@font-face {
+	font-family: "Iosevka";
+	font-style: italic;
+	font-weight: normal;
+	src: url("/font/iosevka/IosevkaCustom-Italic.woff2") format("woff2");
+}
+
+@font-face {
+	font-family: "Iosevka";
+	font-style: normal;
+	font-weight: bold;
+	src: url("/font/iosevka/IosevkaCustom-Bold.woff2") format("woff2");
+}
+
+@font-face {
+	font-family: "Iosevka";
+	font-style: italic;
+	font-weight: bold;
+	src: url("/font/iosevka/IosevkaCustom-BoldItalic.woff2") format("woff2");
+}
+
+@font-face {
+	font-family: "Jacquard";
+	font-style: normal;
+	font-weight: normal;
+	src: url("/font/jacquard/Jacquard24-Regular.ttf") format("truetype");
+}
+
+@plugin "@tailwindcss/forms";
+@plugin "@tailwindcss/typography";
+
+@theme {
+	--font-iosevka: "Iosevka", Courier, monospace;
+	--font-jacquard: "Jacquard", serif;
+	--color-bg-pink: #ffeeee;
+}
+
+body {
+	background-color: var(--color-bg-pink);
+}
