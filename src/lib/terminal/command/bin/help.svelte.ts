@@ -4,11 +4,19 @@ import type {
 	CommandRegistry
 } from "terminal/command";
 import { Command } from "terminal/command";
+import HelpComponent from "terminal/components/HelpComponent.svelte";
 
+export interface HelpItem {
+	name: string;
+	description: string;
+	aliases?: string[];
+}
+
+export const HELP_ALIASES = ["?"];
 export class HelpCommand extends Command {
 	name = "help";
 	description = "command help";
-	aliases = ["?", "h"];
+	aliases = HELP_ALIASES;
 
 	constructor(private registry: CommandRegistry) {
 		super();
@@ -16,18 +24,11 @@ export class HelpCommand extends Command {
 
 	execute(_: CommandContext): CommandResult {
 		const commands = this.registry.getAllCommands();
+		commands.sort((a, b) => a.name.localeCompare(b.name));
 
-		let output = "commands: \n";
-		commands
-			.sort((a, b) => a.name.localeCompare(b.name))
-			.forEach((cmd) => {
-				const aliases =
-					cmd.aliases && cmd.aliases.length > 0
-						? `( ${cmd.aliases.join(", ")} )`
-						: "";
-				output += `${cmd.name.padEnd(6)}${aliases.padEnd(15)} - ${cmd.description}\n`;
-			});
-
-		return { output };
+		return {
+			output: "_",
+			render: { items: commands, BindComponent: HelpComponent }
+		};
 	}
 }

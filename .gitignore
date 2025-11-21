@@ -1,4 +1,7 @@
 .direnv
+target
+wasm/pkg
+
 
 node_modules
 

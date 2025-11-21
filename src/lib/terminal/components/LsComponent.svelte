@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { DateTime } from "luxon";
+	import type { ListMultiOutput } from "terminal/command/bin/ls.svelte";
 	import type { ChildItem } from "terminal/fs";
 
 	interface FormattedChildItem extends ChildItem {
@@ -8,12 +9,18 @@
 		th: string | number;
 	}
 
-	let { items }: { items: ChildItem[] } = $props();
+	let {
+		items
+	}: {
+		items: ChildItem[] | string | ListMultiOutput;
+	} = $props();
 	let formattedItems = $derived(
-		items.map((item) => ({
-			...formatTimeYearCol(item.mod),
-			...item
-		}))
+		items.listAll
+			? (items as ChildItem[]).map((item) => ({
+					...formatTimeYearCol(item.mod),
+					...item
+				}))
+			: items
 	);
 
 	const ONE_YEAR_MS = 8760 * 3600 * 1000;
@@ -38,7 +45,21 @@
 	}
 </script>
 
-{#snippet lsla(item: FormattedChildItem)}
+{#snippet ls(item: string)}
+	<div class="w-full max-w-full">
+		<span>aaaaaaaaaaa</span>
+		<span>aaaaaaaaaaa</span>
+		<span>aaaaaaaaaaa</span>
+		<span>aaaaaaaaaaa</span>
+		<span>aaaaaaaaaaa</span>
+		<span>aaaaaaaaaaa</span>
+		<span>aaaaaaaaaaa</span>
+		<span>aaaaaaaaaaa</span>
+		<span>aaaaaaaaaaa</span>
+	</div>
+{/snippet}
+
+{#snippet la(item: FormattedChildItem)}
 	<tr class="w-full overflow-hidden text-nowrap">
 		<td class="pr-1 text-left tracking-[0.07em]">{item.perms}</td>
 		<td class="pr-2 pl-4 text-right">{item.links}</td>
@@ -52,10 +73,20 @@
 	</tr>
 {/snippet}
 
-<table class="max-w-full min-w-3/5">
-	<tbody>
-		{#each formattedItems as item}
-			{@render lsla(item)}
-		{/each}
-	</tbody>
-</table>
+{#if dir}
+	<div>{dir}</div>
+{/if}
+{#if listAll}
+	<table class="max-w-full min-w-3/5">
+		<tbody>
+			{#each formattedItems as item}
+				{@render la(item as FormattedChildItem)}
+			{/each}
+		</tbody>
+	</table>
+{:else}
+	{#each formattedItems as item}
+		{@render ls(item as string)}
+		<div></div>
+	{/each}
+{/if}

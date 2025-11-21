@@ -1,38 +1,86 @@
 import { Command } from "terminal/command";
 import type { CommandContext, CommandResult } from "terminal/command";
-import type { FSDirectory } from "terminal/fs";
+import type { ChildItem, FSDirectory, TreeNode } from "terminal/fs";
 import type { TerminalState } from "terminal/terminal-state.svelte";
+import LsComponent from "terminal/components/LsComponent.svelte";
+
+export type ListMultiOutput = {
+	itemsInner: any[];
+	extra: string;
+	listAll?: boolean;
+};
+export const LS_ALIASES = ["dir", "la", "l"];
 
 export class LsCommand extends Command {
 	name = "ls";
-	description = "list contents of current directory";
-	aliases = ["dir", "la", "l"];
+	description = "list current directory";
+	aliases = LS_ALIASES;
 
 	constructor(private state: TerminalState) {
 		super();
 	}
 
 	execute(ctx: CommandContext): CommandResult {
-		const verbose = ctx.rawInput.trim() == "la" || ctx.args.includes("-la");
-		let lsTarget =
-			ctx.args.length > 0
-				? (ctx.args.find((arg) => !arg.startsWith("-")) ?? null)
-				: null;
-
-		let target = lsTarget
-			? (this.state.fs.getNode(lsTarget).output as FSDirectory)
-			: this.state.fs.pwd;
-
-		let items = this.state.fs.listDir(target);
-		if (!verbose) {
-			const itemNames = items
-				.map((item) => item.name)
-				.filter((item) => item != "." && item != "..")
-				.join(" ");
-
-			return { output: itemNames };
+		const { flags, remaining } = this.parseFlags(ctx.args);
+		if (!flags.la && ctx.rawInput.trim() === "la") {
+			flags.la = true;
 		}
 
-		return { output: "_", shouldRender: true, extra: items };
+		if (remaining.length === 0) {
+			return this.listSingle(this.state.fs.pwd, flags.la);
+		}
+
+		return this.listMulti(remaining, flags.la);
+	}
+
+	listSingle(dir: FSDirectory, la: string | boolean): CommandResult {
+		const items = this.state.fs.listDir(dir);
+
+		if (!la) {
+			const itemNames = items
+				.filter((item) => item.name !== "." && item.name !== "..")
+				.map((item) => item.name);
+
+			return {
+				output: "_",
+				render: { items: itemNames, BindComponent: LsComponent }
+			};
+		}
+
+		return {
+			output: "_",
+			render: {
+				items,
+				BindComponent: LsComponent
+			}
+		};
+	}
+
+	listMulti(targets: string[], la: string | boolean): CommandResult {
+		const results: CommandResult = {
+			output: "_",
+			render: {
+				items: new Array<ListMultiOutput>(),
+				BindComponent: LsComponent
+			}
+		};
+
+		for (const target of targets) {
+			const dir = this.state.fs.getNode(target);
+			if (dir.error || !dir.output) {
+				// idk
+				console.error("recv `dir.error` OR no `dir.output`:", dir);
+				continue;
+			}
+
+			const { render } = this.listSingle(dir.output as FSDirectory, la);
+			results.render!.items.push({
+				itemsInner: render!.items,
+				extra: target,
+				listAll: la
+			});
+		}
+
+		return results;
 	}
 }

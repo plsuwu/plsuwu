@@ -5,7 +5,7 @@ import { Command } from "terminal/command";
 export class CdCommand extends Command {
 	name = "cd";
 	description = "change directory";
-	aliases = [""];
+    aliases = undefined;
 
 	constructor(private state: TerminalState) {
 		super();

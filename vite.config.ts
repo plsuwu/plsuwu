@@ -2,9 +2,25 @@ import devtoolsJson from "vite-plugin-devtools-json";
 import { defineConfig } from "vitest/config";
 import tailwindcss from "@tailwindcss/vite";
 import { sveltekit } from "@sveltejs/kit/vite";
+import wasm from "vite-plugin-wasm";
+import topLevelAwait from "vite-plugin-top-level-await";
 
 export default defineConfig({
-	plugins: [tailwindcss(), sveltekit(), devtoolsJson()],
+	plugins: [
+		tailwindcss(),
+		sveltekit(),
+		devtoolsJson(),
+		wasm(),
+		topLevelAwait()
+	],
+	server: {
+		fs: {
+			allow: [".", "./wasm"]
+		}
+	},
+	// optimizeDeps: {
+	// 	exclude: ["wasm"]
+	// },
 	test: {
 		expect: { requireAssertions: true },
 		projects: [

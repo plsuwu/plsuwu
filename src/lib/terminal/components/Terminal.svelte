@@ -4,7 +4,7 @@
 	import { CommandRegistry, HelpCommand, ClearCommand } from "terminal/command";
 	import { CdCommand } from "terminal/command/bin/cd.svelte";
 	import { LsCommand } from "terminal/command/bin/ls.svelte";
-	import LsLa from "./LsLa.svelte";
+	import { HELP_ALIASES } from "terminal/command/bin/help.svelte";
 
 	let {
 		initialDir = "~"
@@ -72,13 +72,17 @@
 			});
 
 			if (input !== "clear" && input !== "cls") {
-				if (input.includes("ls -la") || input === "la") {
+				if (
+					input.includes("ls -la") ||
+					input === "la" ||
+					input === "help" ||
+					HELP_ALIASES.includes(input)
+				) {
 					termState.pushHistory({
 						prompt: frozenState,
 						command: input,
 						output: result.output,
-						shouldRender: true,
-						extra: result.extra,
+                        render: result.render,
 						error: result.error,
 						timestamp: new Date()
 					});
@@ -170,8 +174,8 @@
 				</div>
 			{/if}
 			{#if entry.output}
-				{#if entry.shouldRender && entry.extra}
-					<LsLa items={entry.extra} />
+				{#if entry.render}
+					<entry.render.BindComponent items={entry.render.items} />
 				{:else}
 					<div
 						class="command-history wrap-break-word whitespace-pre-wrap text-[#cccccc]"

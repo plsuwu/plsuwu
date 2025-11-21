@@ -1,12 +1,17 @@
 import type { Component } from "svelte";
 
+export interface Renderable {
+	items: any[];
+	BindComponent?: Component;
+    extraItems?: any | any[];
+}
+
 export interface CommandHistoryEntry {
 	prompt: string;
 	command: string;
 	output: string;
-    shouldRender?: boolean;
-    extra?: any[];
 	error?: boolean;
+	render?: Renderable;
 	timestamp: Date;
 }
 
@@ -18,8 +23,7 @@ export interface Result<T, E> {
 export interface CommandResult<T = string, E = string> extends Result<T, E> {
 	output: T | E;
 	error?: boolean;
-    shouldRender?: boolean;
-    extra?: any[];
+	render?: Renderable;
 }
 
 export interface CommandContext {
@@ -33,9 +37,7 @@ export abstract class Command<R = CommandResult> {
 	abstract description: string;
 	abstract aliases?: string[];
 
-	abstract execute(
-		context: CommandContext
-	): Promise<R> | R;
+	abstract execute(context: CommandContext): Promise<R> | R;
 
 	protected parseFlags(args: string[]): {
 		flags: Record<string, boolean | string>;

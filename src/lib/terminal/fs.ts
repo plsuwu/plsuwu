@@ -91,41 +91,46 @@ const PWD_CURR_NAME = ".";
 const PWD_UP_NAME = "..";
 
 function displayDirContents(dir: TreeNode) {
-	const childItems: ChildItem[] = new Array();
+	const children = dir.children;
+	const childCount = children.length;
+	const childItems: ChildItem[] = new Array(childCount + 2);
 
-	childItems.push({
-		perms: displayPerms(dir.permissions),
-		links: dir.children?.length ?? 1,
-		owner: dir.creator,
-		group: dir.group,
+	const dirPerms = dir.permissions;
+	const dirCreator = dir.creator;
+	const dirGroup = dir.group;
+	const dirModified = dir.modified;
+	const parent = dir.parent;
+	childItems[0] = {
+		perms: displayPerms(dirPerms),
+		links: childCount || 1,
+		owner: dirCreator,
+		group: dirGroup,
 		size: getReadableSize(DEFAULT_DIRSIZE),
 		name: PWD_CURR_NAME,
-		mod: dir.modified
-	});
-	childItems.push({
-		perms: displayPerms(
-			(dir.parent?.permissions ?? DEFAULT_FILE_PERMISSIONS) | DF
-		),
-		links: dir.children?.length ?? 1,
-		owner: dir.parent?.creator ?? dir.creator,
-		group: dir.parent?.group ?? dir.group,
+		mod: dirModified
+	};
+
+	childItems[1] = {
+		perms: displayPerms((parent?.permissions ?? DEFAULT_FILE_PERMISSIONS) | DF),
+		links: parent?.children.length ?? 1,
+		owner: parent?.creator ?? dirCreator,
+		group: parent?.group ?? dirGroup,
 		size: getReadableSize(DEFAULT_DIRSIZE),
 		name: PWD_UP_NAME,
-		mod: dir.parent?.modified ?? dir.modified
-	});
+		mod: parent?.modified ?? dirModified
+	};
 
-	if (dir.children.length != 0) {
-		dir.children.forEach((child) => {
-			childItems.push({
-				perms: displayPerms(child.permissions),
-				links: child.children.length,
-				owner: child.creator,
-				group: child.group,
-				size: getReadableSize(child.size),
-				name: child.nodeName,
-				mod: child.modified
-			});
-		});
+	for (let i = 0; i < childCount; i++) {
+		const child = children[i];
+		childItems[i + 2] = {
+			perms: displayPerms(child.permissions),
+			links: child.children.length,
+			owner: child.creator,
+			group: child.group,
+			size: getReadableSize(child.size),
+			name: child.nodeName,
+			mod: child.modified
+		};
 	}
 
 	return childItems;
@@ -148,7 +153,7 @@ enum FailReason {
 
 function getCanonicalPathFromAlias(alias: string): string | null {
 	let path = ALIASED_DIRS.get(alias);
-	return path ? path.valueOf() : null;
+	return path ?? null;
 }
 
 function getFailureReason(value: string, reason: FailReason): string {
@@ -166,8 +171,8 @@ export abstract class TreeNode {
 	private _nodeType: NodeType;
 	private _nodeName: string;
 	private _children: TreeNode[];
+	private _childMap: Map<string, TreeNode>;
 	private _parent: TreeNode | null;
-	private _files: TreeNode[];
 
 	abstract readonly size: number;
 	abstract readonly href: string;
@@ -185,35 +190,55 @@ export abstract class TreeNode {
 		permissions: number = DEFAULT_FILE_PERMISSIONS
 	) {
 		this._children = new Array();
-		this._files = new Array();
+		this._childMap = new Map();
 
 		this._nodeName = nodeName;
 		this._nodeType = nodeType;
 		this._parent = parent;
-
 		this.permissions = permissions;
+
+		if (parent) {
+			parent.addChild(this);
+		}
 	}
 
-	get nodeType(): string {
+	public get nodeType(): string {
 		return this._nodeType.toString();
 	}
 
-	get nodeName(): string {
+	public get nodeName(): string {
 		return this._nodeName;
 	}
 
-	get children(): TreeNode[] {
+	public get children(): TreeNode[] {
 		return this.isFile() ? new Array() : this._children;
 	}
 
-	get parent(): TreeNode | null {
+	public get parent(): TreeNode | null {
 		return this._parent ?? null;
 	}
 
-	protected addChild(node: TreeNode) {
+	public get childMap(): ReadonlyMap<string, TreeNode> {
+		return this._childMap;
+	}
+
+	protected addChild(node: TreeNode): void {
 		if (!this.isFile()) {
 			this._children.push(node);
+			this._childMap.set(node.nodeName, node);
 		}
+	}
+
+	protected removeChild(nodeName: string): boolean {
+		const idx = this._children.findIndex((node) => node.nodeName === nodeName);
+		if (idx !== -1) {
+			this._children.splice(idx, 1);
+			this._childMap.delete(nodeName);
+
+			return true;
+		}
+
+		return false;
 	}
 
 	protected addChildren(nodes: TreeNode[]) {
@@ -222,11 +247,11 @@ export abstract class TreeNode {
 		}
 	}
 
-	protected isDir(): boolean {
+	public isDir(): boolean {
 		return this._nodeType === NODE_TYPE_DIRECTORY;
 	}
 
-	protected isFile(): boolean {
+	public isFile(): boolean {
 		return !this.isDir();
 	}
 
@@ -310,10 +335,6 @@ export class FSDirectory extends TreeNode {
 		// nodes) though i can see the benefits of implementing this even
 		// if we don't care about it straight away.
 		this.href = `/${nodeName}`;
-
-		if (parent != null) {
-			parent.addChild(this);
-		}
 	}
 
 	public addSubdir(child: FSDirectory) {
@@ -367,7 +388,7 @@ export class FSFile extends TreeNode {
 }
 
 export class FileSystem {
-	public pwd: FSDirectory;
+	public children: TreeNode[] = new Array();
 	private _root: FSDirectory = new FSDirectory(
 		"",
 		new Date(FIRST_POST_DATE.toLocaleString()),
@@ -377,6 +398,7 @@ export class FileSystem {
 		ROOT_USER
 	);
 
+	public pwd: FSDirectory;
 	constructor() {
 		this.pwd = this.initDirectoryTree(this._root);
 	}
@@ -384,11 +406,6 @@ export class FileSystem {
 	get root(): FSDirectory {
 		return this._root;
 	}
-
-	// public listPwd() {
-	// 	const items = displayDirContents(this.pwd);
-	// 	return items;
-	// }
 
 	public listDir(dir: FSDirectory) {
 		return displayDirContents(dir);
@@ -402,144 +419,88 @@ export class FileSystem {
 		return this.pwd.getPath().replace("/home/please", "~");
 	}
 
-	public getNode(path: string): Result<TreeNode, string> {
-		const aliased = getCanonicalPathFromAlias(path);
-		if (aliased) {
-			path = aliased;
-		}
-
-		if (path === "/") {
-			return { output: this.root };
-		}
-
-		if (path === ".." || path === "../") {
-			return { output: this.pwd.parent ?? this.root };
-		}
-		if (path === "." || path === "./") {
-			return { output: this.pwd };
-		}
-
-		let curr = this.root;
-		if (path.startsWith("./")) {
-			curr = this.pwd;
-		}
+	private getStartNode(path: string): FSDirectory {
 		if (path.startsWith("../")) {
-			curr = (this.pwd.parent as FSDirectory) ?? this.pwd;
+			return (this.pwd.parent as FSDirectory) ?? this.pwd;
 		}
 
-		const parts = path.split("/");
+		if (path.startsWith("./") || !path.startsWith("/")) {
+			return this.pwd;
+		}
+
+		return this.root;
+	}
+
+	public getNode(path: string): Result<TreeNode, string> {
+		const trimmedPath =
+			path.endsWith("/") && path.length > 1 ? path.slice(0, -1) : path;
+		switch (trimmedPath) {
+			case "/":
+				return { output: this.root };
+			case "..":
+				return { output: this.pwd.parent ?? this.root };
+			case ".":
+				return { output: this.pwd };
+		}
+
+		let parts = path.split("/");
+		let current = this.getStartNode(path);
+		const aliased = getCanonicalPathFromAlias(parts[0]);
+		if (aliased != null) {
+			parts = aliased.split("/").concat(parts.slice(1));
+		}
+
 		if (parts[0] === "") {
 			parts.shift();
-			curr = this._root;
 		}
 
-		let idx = 0;
-		let maxDepth = parts.length - 1;
-		let result: Result<TreeNode, string> = {
-			output: getFailureReason(path, FailReason.NotFound),
-			error: true
-		};
-
-		while (true) {
-			if (curr.nodeName === parts[maxDepth]) {
-				if (!curr.isDirectory()) {
-					return {
-						output: getFailureReason(path, FailReason.NotDirectory),
-						error: true
-					};
-				} else if (!curr.canRead()) {
-					return {
-						output: getFailureReason(path, FailReason.NotAllowed),
-						error: true
-					};
-				} else {
-					this.pwd = curr;
-					return { output: curr };
-				}
+		// traverse child map
+		for (let idx = 0; idx < parts.length; idx++) {
+			if (parts[idx] === "" || parts[idx] === ".") {
+				continue;
 			}
 
-			let next = curr.children.find((node) => node.nodeName === parts[idx]);
-			if (!next || idx > maxDepth) {
-				return result;
+			if (parts[idx] === "..") {
+				current = (current.parent as FSDirectory) ?? current;
+				continue;
 			}
 
-			curr = next as FSDirectory;
-			idx += 1;
+			const next = current.childMap?.get(parts[idx]);
+			if (!next) {
+				return {
+					output: getFailureReason(path, FailReason.NotFound),
+					error: true
+				};
+			}
+
+			if (next.isFile() && idx < parts.length - 1) {
+				return {
+					output: getFailureReason(path, FailReason.NotDirectory),
+					error: true
+				};
+			}
+
+			current = next as FSDirectory;
 		}
+
+		if (!current.canRead()) {
+			return {
+				output: getFailureReason(path, FailReason.NotAllowed),
+				error: true
+			};
+		}
+
+		this.pwd = current;
+		return { output: current };
 	}
 
 	public setPwd(path: string): Result<TreeNode, string> {
-		const aliased = getCanonicalPathFromAlias(path);
-		if (aliased) {
-			path = aliased;
-		}
-
-		// if (path === ".." || path === "../") {
-		// 	if (this.pwd.parent) {
-		// 		this.pwd = this.pwd.parent as FSDirectory;
-		// 	}
-		// 	return { output: this.pwd };
-		// }
-		//
-		// if (path === "." || path === "./") {
-		// 	return { output: this.pwd };
-		// }
-		// if (path === "/") {
-		// 	this.pwd = this._root as FSDirectory;
-		// 	return { output: this.pwd };
-		// }
-		//
-		// if (path == "" || !path) {
-		// 	path = DEFAULT_HOME_DIRECTORY;
-		// }
-
 		const foundNode = this.getNode(path);
 		if (!foundNode.error) {
 			this.pwd = foundNode.output as FSDirectory;
 		}
 
 		return foundNode;
-
-		// const parts = path.split("/");
-		// let curr: FSDirectory = this.pwd;
-		// if (parts[0] === "") {
-		// 	parts.shift();
-		// 	curr = this._root;
-		// }
-		//
-		// let idx = 0;
-		// let maxDepth = parts.length - 1;
-		// let result: Result<TreeNode, string> = {
-		// 	output: getFailureReason(path, FailReason.NotFound),
-		// 	error: true
-		// };
-		//
-		// while (true) {
-		// 	if (curr.nodeName === parts[maxDepth]) {
-		// 		if (!curr.isDirectory()) {
-		// 			return {
-		// 				output: getFailureReason(path, FailReason.NotDirectory),
-		// 				error: true
-		// 			};
-		// 		} else if (!curr.canRead()) {
-		// 			return {
-		// 				output: getFailureReason(path, FailReason.NotAllowed),
-		// 				error: true
-		// 			};
-		// 		} else {
-		// 			this.pwd = curr;
-		// 			return { output: curr };
-		// 		}
-		// 	}
-		//
-		// 	let next = curr.children.find((node) => node.nodeName === parts[idx]);
-		// 	if (!next || idx > maxDepth) {
-		// 		return result;
-		// 	}
-		//
-		// 	curr = next as FSDirectory;
-		// 	idx += 1;
-		// }
 	}
 
 	private initDirectoryTree(rootNode: FSDirectory): FSDirectory {
@@ -554,7 +515,7 @@ export class FileSystem {
 			UR | UW | UX | GR | GX | OR | OX
 		);
 
-		// ... maybe the other filesystem dirs here idk idk
+		// ... the other filesystem directories ...
 
 		const userPath = new FSDirectory(DEFAULT_USER, created, homePath, ["~"]);
 		const postsPath = new FSDirectory("posts", created, userPath);
