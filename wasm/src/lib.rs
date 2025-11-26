@@ -1,10 +1,22 @@
-mod command;
-mod fs;
+#![no_std]
 
-pub use fs::node::FileSystem;
-pub use fs::wrapper::JsNode;
+extern crate alloc;
+extern crate wee_alloc;
 
+use alloc::boxed::Box;
+use alloc::rc::Rc;
+use alloc::string::String;
+use alloc::vec::Vec;
+use core::cell::RefCell;
 use wasm_bindgen::prelude::*;
+
+mod acl;
+mod fs;
+mod js;
+mod util;
+
+#[global_allocator]
+static ALLOC: wee_alloc::WeeAlloc = wee_alloc::WeeAlloc::INIT;
 
 #[wasm_bindgen]
 extern "C" {
@@ -16,13 +28,8 @@ macro_rules! console_log {
     ($($t:tt)*) => (log(&format_args!($($t)*).to_string()))
 }
 
-#[wasm_bindgen(start)]
-pub fn main() {
-    #[cfg(feature = "console_error_panic_hook")]
-    console_error_panic_hook::set_once();
-}
-
-#[wasm_bindgen]
-pub fn create_fs() -> FileSystem {
-    FileSystem::new()
-}
+// #[wasm_bindgen(start)]
+// pub fn main() {
+//     #[cfg(feature = "console_error_panic_hook")]
+//     console_error_panic_hook::set_once();
+// }

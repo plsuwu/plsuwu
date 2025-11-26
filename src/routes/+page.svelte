@@ -1,21 +1,26 @@
 <script lang="ts">
 	import { Banner } from "components/landing";
 	import { onMount } from "svelte";
-	import init, { FileSystem, create_fs } from "wasm";
+	import init, { WasmFs } from "wasm";
 
-	let fs: FileSystem | undefined = $state(undefined);
+	let fs: WasmFs | undefined = $state(undefined);
 	onMount(async () => {
 		await init();
 
-		fs = new FileSystem();
-		const node = fs.get_node("/home");
+		fs = new WasmFs();
+		const node = fs.getNode("/home");
+		console.log(node);
 
-		console.log(node.name());
-		// console.log(fs.list_dir("/"));
-        const children = fs.list_dir("/");
-        children.forEach((child) => {
-            console.log(child.metadata());
-        });
+        const pwd = fs.getPwd();
+		let lsOutput = fs.listDir(pwd);
+		console.log(lsOutput);
+
+        const chdir = fs.changeDir("posts");
+        console.log(chdir);
+
+        lsOutput = fs.listDir(fs.getPwd());
+
+		console.log(lsOutput);
 	});
 </script>
 
