@@ -2,4 +2,4 @@
 
 please uwu
 
-~~https://plsuwu.com~~ back later...
+https://plsuwu.com
