@@ -1,0 +1,22 @@
+{
+  "name": "plsuwu-astro-test",
+  "module": "index.ts",
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview"
+  },
+  "private": true,
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^6.0.3"
+  },
+  "dependencies": {
+    "@astrojs/svelte": "^9.0.1",
+    "astro": "^7.1.4",
+    "svelte": "^5.56.8"
+  }
+}
