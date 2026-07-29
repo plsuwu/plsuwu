@@ -1,11 +1,12 @@
 {
+  "extends": "astro/tsconfigs/base",
+  "include": [".astro/types.d.ts", "**/*"],
   "compilerOptions": {
     // Environment setup & latest features
     "lib": ["ESNext"],
     "target": "ESNext",
     "module": "Preserve",
     "moduleDetection": "force",
-    "jsx": "react-jsx",
     "allowJs": true,
     "types": ["bun"],
 
@@ -25,6 +26,13 @@
     // Some stricter flags (disabled by default)
     "noUnusedLocals": false,
     "noUnusedParameters": false,
-    "noPropertyAccessFromIndexSignature": false
+    "noPropertyAccessFromIndexSignature": false,
+    "paths": {
+        "$components/*": ["./src/components/*"],
+        "$content/*": ["./src/content/*"],
+        "$layouts/*": ["./src/layouts/*"],
+        "$scripts/*": ["./src/scripts/*"],
+        "$scripts": ["./src/scripts"]
+    }
   }
 }

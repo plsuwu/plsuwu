@@ -1,0 +1,26 @@
+---
+import "../styles/global.css";
+
+import { SITE_TITLE } from "$scripts";
+import Nav from "$components/Nav.astro";
+
+const { pageName } = Astro.props;
+const page = Astro.url;
+
+const currentTitle =
+	pageName !== "" ? `${pageName} | ${SITE_TITLE}` : SITE_TITLE;
+---
+
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>{currentTitle}</title>
+	</head>
+	<body class="bg-background text-foreground max-w-full">
+		<div>
+			<Nav {page} />
+			<slot />
+		</div>
+	</body>
+</html>

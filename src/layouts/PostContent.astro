@@ -1,0 +1,61 @@
+---
+import dayjs from "dayjs";
+import localizedFormat from "dayjs/plugin/localizedFormat";
+
+dayjs.extend(localizedFormat);
+
+import type { CollectionEntry } from "astro:content";
+import BaseLayout from "./BaseLayout.astro";
+import ProseWrapper from "$components/ProseWrapper.astro";
+
+type Props = CollectionEntry<"posts">["data"];
+
+const { title, created_at, updated_at, tags } = Astro.props;
+
+const date = {
+	createdAt: dayjs(created_at).format("ll"),
+	updatedAt: dayjs(updated_at).format("ll"),
+};
+---
+
+<BaseLayout pageName={title}>
+	<div class="w-full flex flex-col items-center justify-center">
+		<ProseWrapper>
+			<div class="flex flex-col border-b pb-2 mb-12 px-4">
+				<div class="md:text-6xl text-3xl mb-5">
+					{title}
+                </div>
+                <div class="flex flex-row items-center justify-between">
+				    <div class="flex flex-col mt-2">
+				    	<div class="text-foreground-accent text-xs md:text-base font-semibold">
+				    		{date.createdAt}
+				    	</div>
+				    	{
+				    		updated_at &&
+				    			created_at &&
+                                updated_at.valueOf() !== created_at.valueOf() && (
+                                    <div class="border-r border-collapse mx-4"></div>
+				    				<div class="text-xs md:text-sm italic">
+				    					(updated {date.updatedAt})
+				    				</div>
+				    			)
+				    	}
+                    </div>
+                    <div>
+                        <div class="text-xs">
+                        [
+                            {tags && (
+                                tags.map((tag) => <span>{tag}</span>
+                            ))}
+                        ]
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+			<article>
+				<slot />
+			</article>
+		</ProseWrapper>
+	</div>
+</BaseLayout>

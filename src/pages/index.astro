@@ -1,15 +1,27 @@
 ---
-console.log("Hello from terminal and not the browser");
+import BaseLayout from "$layouts/BaseLayout.astro";
+import PostsView from "$layouts/PostsView.astro";
+import { getProcessedPosts } from "$scripts";
+const postsCollection = await getProcessedPosts();
 ---
 
-<html>
-    <body>
-        <h1>Hello, World!</h1>
-    </body>
-</html>
-
-<style>
-    h1 {
-        color: orange;
-    }
-</style>
+<BaseLayout pageName={"posts"}>
+	<section class="w-full flex flex-col items-center justify-center">
+		<ul>
+			{
+				postsCollection.map((post) => (
+					<li class="">
+						<a
+							href={`/post/${post.params.year}/${post.params.month}/${post.params.day}/`}
+							class="p-3 border rounded flex flex-row"
+						>
+							<div>{`${post.params.year}-${post.params.month}-${post.params.day}`}</div>
+							<div class="h-5 border-l border-collapse mx-4" />
+							<div>{post.data.title}</div>
+						</a>
+					</li>
+				))
+			}
+		</ul>
+	</section>
+</BaseLayout>

@@ -1,0 +1,10 @@
+---
+import type { CollectionEntry } from "astro:content";
+import BaseLayout from "./BaseLayout.astro";
+
+type Props = CollectionEntry<"posts">["data"];
+---
+
+<div class="w-full flex flex-col items-center justify-center">
+	<slot />
+</div>

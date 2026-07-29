@@ -1,0 +1,33 @@
+---
+import { SITE_PAGES } from "$scripts";
+
+const pathname = Astro.url.href;
+---
+
+<div
+	class="w-full py-3.5 mb-10 flex flex-row items-center md:justify-start justify-between
+    border-b border-b-foreground/25 font-sans text-lg space-x-16 px-8 md:px-16"
+>
+	<a
+		href="/"
+        class="text-foreground flex flex-row items-center
+        transition-opacity duration-150 ease-out"
+	>
+		<span
+			class="font-semibold text-2xl md:text-4xl hover:bg-background-secondary text-foreground transition-all duration-200 ease-out"
+			>plsuwu</span
+		>
+	</a>
+	<div class="space-x-4 text-lg md:text-base md:pt-1">
+		{
+			SITE_PAGES.map((item) => (
+				<a
+					href={item.href}
+					class="hover:opacity-65 transition-opacity duration-150 ease-out"
+				>
+					{item.title}
+				</a>
+			))
+		}
+	</div>
+</div>

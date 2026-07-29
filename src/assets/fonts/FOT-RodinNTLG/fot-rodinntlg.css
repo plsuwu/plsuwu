@@ -1,0 +1,48 @@
+/* fot-rodinntlg-pro-full-500-normal */
+@font-face {
+    font-family: 'FOT-RodinNTLG Pro';
+    font-style: normal italic;
+    font-display: swap;
+    font-weight: 900;
+    src: url('./FOT-RodinNTLG Pro EB.woff2') format('woff2');
+}
+
+@font-face {
+    font-family: 'FOT-RodinNTLG Pro';
+    font-style: normal italic;
+    font-display: swap;
+    font-weight: 800;
+    src: url('./FOT-RodinNTLG Pro B.woff2') format('woff2');
+}
+
+@font-face {
+    font-family: 'FOT-RodinNTLG Pro';
+    font-style: normal italic;
+    font-display: swap;
+    font-weight: 700;
+    src: url("./FOT-RodinNTLG Pro UB.woff2") format('woff2');
+}
+
+@font-face {
+    font-family: 'FOT-RodinNTLG Pro';
+    font-style: normal italic;
+    font-display: swap;
+    font-weight: 600;
+    src: url("FOT-RodinNTLG Pro DB.woff2") format('woff2');
+}
+
+@font-face {
+    font-family: 'FOT-RodinNTLG Pro';
+    font-style: normal italic;
+    font-display: swap;
+    font-weight: 500;
+    src: url("./FOT-RodinNTLG Pro M.woff2") format('woff2');
+}
+
+@font-face {
+    font-family: 'FOT-RodinNTLG Pro';
+    font-style: normal italic;
+    font-display: swap;
+    font-weight: 300;
+    src: url(./fot-rodinntlg-pro-full-300-normal.woff2) format('woff2');
+}
