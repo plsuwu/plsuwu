@@ -9,21 +9,29 @@ import icon from "astro-icon";
 import rehypeSlug from "rehype-slug";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
 
+import node from "@astrojs/node";
+
 // https://astro.build/config
 export default defineConfig({
-	integrations: [icon()],
-	markdown: {
-		processor: unified({
-			remarkPlugins: [remarkTableOfContents],
-			rehypePlugins: [
-				transformVideo,
-				rehypeSlug,
-				[rehypeAutolinkHeadings, { behavior: "append" }],
-			],
-			smartypants: false,
-		}),
+  integrations: [icon()],
+
+  markdown: {
+      processor: unified({
+          remarkPlugins: [remarkTableOfContents],
+          rehypePlugins: [
+              transformVideo,
+              rehypeSlug,
+              [rehypeAutolinkHeadings, { behavior: "append" }],
+          ],
+          smartypants: false,
+      }),
 	},
-	vite: {
-		plugins: [tailwindcss()],
+
+  vite: {
+      plugins: [tailwindcss()],
 	},
+
+  adapter: node({
+    mode: "standalone",
+  }),
 });
