@@ -1,0 +1,18 @@
+---
+import Icon from "./Icon.astro";
+
+const { href, title } = Astro.props;
+---
+
+<div class="px-2 my-px">
+	<a
+		rel="noopener noreferrer"
+		class="text-link hover:brightness-40 transition-all duration-200 ease-out"
+		target="_blank"
+		{href}
+	>
+		<div class="flex flex-col space-x-2 underline w-65">
+			<div class="text-nowrap">{title}</div>
+		</div>
+	</a>
+</div>

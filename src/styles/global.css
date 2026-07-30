@@ -26,7 +26,7 @@
 }
 
 @theme {
-    --font-sans: "FOT-RodinNTLG Pro", "Mori", ui-sans-serif, system-ui, sans-serif;
+    --font-sans: "FOT-RodinNTLG Pro", ui-sans-serif, system-ui, sans-serif;
     --font-mono: "Iosevka", ui-monospace, monospace;
 
     --color-foreground: var(--foreground);
@@ -40,6 +40,11 @@
 }
 
 @layer utilities {
+    ::selection {
+        background: var(--foreground-secondary);
+        color: var(--background-secondary);
+    }
+
     .prose {
         max-width: 95%;
         overflow-x: hidden;
@@ -105,16 +110,13 @@
         color: var(--color-link);
     }
 
-    /* .prose :where(p):not(:where([class~="not-prose"] *)) { */
-    /*     font-size: 1.1rem; */
-    /*     line-height: 1.45rem; */
-    /*     text-align: justify; */
-    /* } */
-
     .prose :where(ul, ol):not(:where([class~="not-prose"] *)) {
         line-height: 1.5rem;
-        list-style-position: inside;
-        padding-inline-start: 2.1em;
+
+        @media (min-width: 768px) {
+            list-style-position: inside;
+            padding-inline-start: 2.1em;
+        }
     }
 
     .prose :where(img):not(:where([class~="not-prose"] *)) {
@@ -126,12 +128,4 @@
         list-style: decimal;
         display: block;
     }
-
-
-    /* class="prose */
-    /*    prose-h2:text-3xl */
-    /*    prose-img:rounded-sm */
-    /*    prose-p:leading-snug prose-p:text-justify */
-    /*    prose-headings:font-semibold */
-    /*    prose-a:text-underline prose-a:text-link" */
 }

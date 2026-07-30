@@ -1,3 +1,6 @@
+// this could be reimplemented to function more like the video
+// transform plugin
+
 import { promises as fs } from "node:fs";
 
 async function globMarkdown() {
@@ -7,7 +10,7 @@ async function globMarkdown() {
 		try {
 			const content = await fs.readFile(file, "utf-8");
 			const newContent = await parseContent(file, content);
-            await fs.writeFile(file, newContent);
+			await fs.writeFile(file, newContent);
 			// await fs.copyFile(file, `${file}.backup`);
 		} catch (e) {
 			console.error("failed to read file:", e);

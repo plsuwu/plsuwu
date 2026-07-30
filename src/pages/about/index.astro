@@ -1,0 +1,42 @@
+---
+import BaseLayout from "$layouts/BaseLayout.astro";
+import Icon from "$components/Icon.astro";
+import ExternalLink from "$components/ExternalLink.astro";
+import { OFFSITE_PAGES } from "$scripts";
+---
+
+<BaseLayout pageName={"about"}>
+	<div class="flex flex-col items-center mt-24 mb-14">
+		<div class="text-3xl font-semibold">vagueposting</div>
+	</div>
+	<div class="flex flex-col place-self-center">
+		<div class="text-lg text-center mb-4">
+			my <span class="pr-1">"work"</span>
+			{"&"} other places:
+		</div>
+		<ul
+			class="w-62.5 lg:w-87.5 self-center items-center mt-4 border rounded-sm p-3"
+		>
+			{
+				OFFSITE_PAGES.map(
+					({
+						href,
+						title,
+						icon,
+					}: {
+						href: string;
+						title: string;
+						icon: string;
+					}) => (
+						<li>
+							<div class="flex flex-row items-center justify-between">
+								<Icon ref={icon} />
+								<ExternalLink {href} {title} />
+							</div>
+						</li>
+					)
+				)
+			}
+		</ul>
+	</div>
+</BaseLayout>

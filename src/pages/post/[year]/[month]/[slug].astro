@@ -3,6 +3,7 @@ import type { GetStaticPaths } from "astro";
 import { render } from "astro:content";
 import { getProcessedPosts } from "$scripts";
 import PostContent from "$layouts/PostContent.astro";
+import ImageModal from "$components/media/ImageModal.astro";
 
 export const getStaticPaths = (async () => {
 	const posts = await getProcessedPosts();
