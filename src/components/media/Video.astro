@@ -1,0 +1,8 @@
+---
+const { src, caption } = Astro.props;
+---
+
+<figure>
+	<video controls preload="metadata" src={src}></video>
+	{caption && <figcaption>{caption}</figcaption>}
+</figure>

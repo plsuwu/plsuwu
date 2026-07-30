@@ -4,33 +4,37 @@
 @import "tailwindcss";
 @plugin '@tailwindcss/typography';
 
-
-@custom-variant dark (&:where(.dark, .dark *));
-
 :root {
-    --background: #ffffea;
-    --background-secondary: #f2ddee;
-    --foreground: #110b1b;
-    --foreground-secondary: #2f2142;
-    --link: #106fff;
-    --link-visited: #2f0070;
+    --background: #fff0e9;
+    --background-secondary: #fedde2;
+    --foreground: #1e1816;
+    --foreground-secondary: #383838;
+    --foreground-accent: #be294c;
+    --foreground-accent-muted: #641220;
+    --link: #60a6a8;
+    --link-visited: #3c545c;
+    --code-transparent: 80%;
 }
 
 .dark {
-    --background: #110b1b;
-    --background-secondary: #221c38;
-    --foreground: #ffffea;
-    --foreground-secondary: #f2ddee;
-    --link: #506fff;
-    --link-visited: #2c0a6f;
+    --background-secondary: #39101a;
+    --background: #100f0f;
+    --foreground: #fff0e9;
+    --foreground-secondary: #b1b1b1;
+    --foreground-accent: #be294c;
+    --foreground-accent-muted: #641220;
+    --link: #d4eade;
+    --link-visited: #3c545c;
+    --code-transparent: 20%;
 }
 
-@theme {
+@theme inline {
     --font-sans: "FOT-RodinNTLG Pro", ui-sans-serif, system-ui, sans-serif;
     --font-mono: "Iosevka", ui-monospace, monospace;
 
     --color-foreground: var(--foreground);
     --color-foreground-secondary: var(--foreground-secondary);
+    --color-foreground-accent: var(--foreground-accent);
 
     --color-background: var(--background);
     --color-background-secondary: var(--background-secondary);
@@ -39,17 +43,21 @@
     --color-link-visited: var(--link-visted);
 }
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 @layer utilities {
     ::selection {
-        background: var(--foreground-secondary);
+        background: var(--foreground-accent);
         color: var(--background-secondary);
     }
 
     .prose {
         max-width: 95%;
         overflow-x: hidden;
+        color: var(--foreground);
 
         :where(p):not(:where([class~="not-prose"] *)) {
+            font-weight: 500;
             font-size: 0.95rem;
             line-height: 1.45rem;
             text-align: justify;
@@ -61,7 +69,7 @@
             max-width: 650px;
 
             :where(p):not(:where([class~="not-prose"] *)) {
-                font-size: 1.1rem;
+                font-size: 1rem;
             }
         }
     }
@@ -80,9 +88,17 @@
     .prose :where(code):not(:where([class~="not-prose"] *)) {
         font-weight: 500;
         font-size: 15px;
-        background: color-mix(in srgb, var(--foreground-secondary), transparent 70%);
-        padding: 0rem 0.4rem;
-        border-radius: 1rem;
+        background: color-mix(in srgb, var(--foreground-secondary), transparent var(--code-transparent));
+        padding: 0 0.25rem;
+        border-radius: 0.8rem;
+        line-height: 0.5rem;
+    }
+
+    .prose :where(blockquote code):not(:where([class~="not-prose"] *)) {
+        background: color-mix(in srgb, var(--foreground), transparent var(--code-transparent));
+        font-style: normal;
+        color: var(--foreground-accent-muted);
+        padding: 0 0.3rem;
     }
 
     .prose :where(blockquote p):first-of-type::before,
@@ -92,9 +108,19 @@
 
     .prose :where(blockquote):not(:where([class~="not-prose"] *)) {
         font-weight: 400;
-        padding: 0rem 1rem;
-        color: color-mix(in srgb, var(--foreground-secondary), transparent 25%);
+        padding: 0rem 1.1rem;
+        border-left-color: var(--foreground-accent-muted);
+
+        margin: 0.5rem 0.75rem;
+        color: var(--foreground-accent);
+        filter: brightness(110%);
         quotes: none;
+
+    }
+
+    .prose :where(blockquote p):not(:where([class~="not-prose"] *)) {
+        line-height: 1.1rem;
+        font-size: 0.9rem;
     }
 
     .prose :where(h2):not(:where([class~="not-prose"] *)) {
@@ -104,10 +130,16 @@
 
     .prose :where(h1, h2, h3, h4, h5, h6, th):not(:where([class~="not-prose"] *)) {
         font-weight: 600;
+        color: var(--foreground-secondary);
     }
 
     .prose :where(a):not(:where([class~="not-prose"] *)) {
         color: var(--color-link);
+        transition: filter 0.2s ease-in-out;
+
+        &:hover {
+            filter: brightness(20%);
+        }
     }
 
     .prose :where(ul, ol):not(:where([class~="not-prose"] *)) {
@@ -121,6 +153,20 @@
 
     .prose :where(img):not(:where([class~="not-prose"] *)) {
         border-radius: 0.3rem;
+    }
+
+    .prose :where(citation p):not(:where([class~="not-prose"] *)) {
+        margin: 0rem 2rem;
+        margin-bottom: 1rem;
+        text-indent: 2rem;
+        font-family: var(--font-serif);
+        text-align: left;
+        line-height: 1.45rem;
+    }
+
+    .prose :where(code):not(:where([class~="not-prose"] *))::before,
+    .prose :where(code):not(:where([class~="not-prose"] *))::after {
+        content: none;
     }
 
     .footnotes {

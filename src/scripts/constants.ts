@@ -12,27 +12,27 @@ export const OFFSITE_PAGES: {
 	{
 		title: 'twitch "stat" leaderboard',
 		href: "https://piss.fan/",
+		icon: "ph:drop",
+	},
+	{
+		title: "please @ lcolonq pubnix",
+		href: "https://pub.colonq.computer/~please",
 		icon: "ph:globe-hemisphere-west",
 	},
 	{
-		title: 'github',
+		title: "github",
 		href: "https://github.com/plsuwu",
 		icon: "ph:github-logo",
 	},
 	{
-		title: 'twitter',
+		title: "twitter",
 		href: "https://x.com/owoplsuwu",
 		icon: "ph:twitter-logo",
 	},
 	{
-		title: 'twitch',
+		title: "twitch",
 		href: "https://twitch.tv/plss",
 		icon: "ph:twitch-logo",
-	},
-	{
-		title: 'please@colonq.computer',
-		href: "https://pub.colonq.computer/~please",
-		icon: "ph:globe-hemisphere-west",
 	},
 ];
 

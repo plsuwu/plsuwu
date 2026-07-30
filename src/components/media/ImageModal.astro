@@ -1,0 +1,113 @@
+---
+type Props = {
+	target?: string;
+	clickScale?: number;
+	maxScale?: number;
+};
+
+const {
+	target = ".post-content",
+	clickScale = 2.5,
+	maxScale = 5,
+}: Props = Astro.props;
+---
+
+<script>
+	import { init } from "$scripts/img-modal";
+	init();
+</script>
+
+<dialog
+	class="image-modal"
+	data-target={target}
+	data-click-scale={clickScale}
+	data-max-scale={maxScale}
+>
+	<button class="image-modal-close" type="button"> x </button>
+	<img class="image-modal-img" alt="" draggable="false" />
+</dialog>
+
+<style>
+	.image-modal {
+		width: 100vw;
+		height: 100vw;
+		height: 100dvh;
+		max-width: none;
+		max-height: none;
+		margin: 0;
+		padding: 0;
+		border: 0;
+		background: transparent;
+		overflow: hidden;
+		align-items: center;
+		justify-content: center;
+	}
+
+	.image-modal[open] {
+		display: flex;
+		backdrop-filter: blur(3px);
+	}
+
+	.image-modal::backdrop {
+		background: color-mix(in srgb, black, transparent 30%);
+	}
+
+	.image-modal-img {
+		display: block;
+		max-width: 94vw;
+		max-height: 94vw;
+		max-height: 94dvw;
+		transform-origin: 0 0;
+
+		touch-action: none;
+		user-select: none;
+		-webkit-user-select: none;
+		cursor: zoom-in;
+		will-change: transform;
+	}
+
+	.image-modal-img.is-zoomed {
+		cursor: zoom-out;
+	}
+
+	.image-modal-img.is-animated {
+		transition: transform 0.2s ease-out;
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.image-modal-img.is-animated {
+			transition: none;
+		}
+	}
+
+	.image-modal-close {
+		position: fixed;
+		top: max(2.5rem, env(safe-area-inset-top));
+		right: max(2.5rem, env(safe-area-inset-right));
+		z-index: 1;
+		display: grid;
+		place-items: center;
+		width: 2rem;
+		height: 2rem;
+		border: 0;
+		border-radius: 100%;
+		background: color-mix(
+			in srgb,
+			var(--foreground-secondary),
+			transparent,
+			80%
+		);
+		color: var(--background-secondary);
+		font-size: 1.1rem;
+		cursor: pointer;
+		transition: all 0.2s ease-out;
+	}
+
+	.image-modal-close:hover {
+		background: var(--foreground-secondary);
+	}
+
+	:global(body:has(.image-modal[open])) {
+		overflow: hidden;
+	}
+</style>
