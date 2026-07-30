@@ -35,6 +35,7 @@
     --color-foreground: var(--foreground);
     --color-foreground-secondary: var(--foreground-secondary);
     --color-foreground-accent: var(--foreground-accent);
+    --color-foreground-accent-muted: var(--foreground-accent-muted);
 
     --color-background: var(--background);
     --color-background-secondary: var(--background-secondary);

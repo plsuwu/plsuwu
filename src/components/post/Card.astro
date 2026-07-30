@@ -6,20 +6,22 @@ const date = `${params.year}-${params.month}-${params.day}`;
 
 <a
 	{href}
-	class="w-[95%] grid grid-cols-3 p-1 md:mb-px mb-6 border-2 border-accent
+	class="w-[95%] grid grid-cols-3 p-1 md:mb-px mb-6 border border-foreground-accent-muted
 		hover:-translate-y-3 duration-200 transition-all ease-out bg-background z-30
         shadow-container group justify-self-center"
 >
 	<div
 		class="flex flex-row w-full col-span-3 md:col-span-2 items-center px-4 py-2 border-accent"
 	>
-		<div
-			class="text-xs md:text-sm border-r border-collapse h-4 pr-4 border-accent/40 text-nowrap"
-		>
+		<div class="text-xs md:text-sm text-nowrap">
 			{date}
 		</div>
 		<div
-			class="xl:text-xl pl-4 w-full group-hover:underline
+			class="border-r border-collapse h-5 w-0 pr-4 border-foreground-accent"
+		>
+		</div>
+		<div
+			class="md:text-lg text-sm md:text-nowrap pl-4 w-full group-hover:underline
         transition-all duration-200 ease-in-out underline-offset-4"
 		>
 			{title}
@@ -28,7 +30,9 @@ const date = `${params.year}-${params.month}-${params.day}`;
 	<div
 		class="hidden md:flex flex-row items-center md:justify-end text-sm md:col-span-1"
 	>
-		<div class="text-xs px-3 py-1">[{tags.join(", ")}]</div>
+		<div class="text-xs lg:text-sm px-3 py-1 font-light">
+			[{tags.join(", ")}]
+		</div>
 	</div>
 </a>
 
