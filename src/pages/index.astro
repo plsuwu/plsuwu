@@ -1,6 +1,7 @@
 ---
 import BaseLayout from "$layouts/BaseLayout.astro";
-import PostsView from "$layouts/PostsView.astro";
+// import PostsView from "$layouts/PostsView.astro";
+import PostCard from "$components/post/Card.astro";
 import { getProcessedPosts } from "$scripts";
 const postsCollection = await getProcessedPosts();
 ---
@@ -10,16 +11,21 @@ const postsCollection = await getProcessedPosts();
 		<ul>
 			{
 				postsCollection.map((post) => (
-					<li class="">
-						<a
-							href={`/post/${post.params.year}/${post.params.month}/${post.params.day}/`}
-							class="p-3 border rounded flex flex-row"
-						>
-							<div>{`${post.params.year}-${post.params.month}-${post.params.day}`}</div>
-							<div class="h-5 border-l border-collapse mx-4" />
-							<div>{post.data.title}</div>
-						</a>
-					</li>
+					<PostCard
+						params={post.params}
+						title={post.data.title}
+						tags={post.data.tags}
+					/>
+					// <li class="">
+					// 	<a
+					// 		href={``}
+					// 		class="p-3 border rounded flex flex-row"
+					// 	>
+					// 		<div>{`${post.params.year}-${post.params.month}-${post.params.day}`}</div>
+					// 		<div class="h-5 border-l border-collapse mx-4" />
+					// 		<div>{post.data.title}</div>
+					// 	</a>
+					// </li>
 				))
 			}
 		</ul>

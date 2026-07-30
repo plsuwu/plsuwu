@@ -1,0 +1,54 @@
+---
+const { title, params, tags } = Astro.props;
+const href = `/post/${params.year}/${params.month}/${params.day}/`;
+const date = `${params.year}-${params.month}-${params.day}`;
+---
+
+<a
+	{href}
+	class="w-[95%] grid grid-cols-3 p-1 md:mb-px mb-6 border-2 border-accent
+		hover:-translate-y-3 duration-200 transition-all ease-out bg-background z-30
+        shadow-container group justify-self-center"
+>
+	<div
+		class="flex flex-row w-full col-span-3 md:col-span-2 items-center px-4 py-2 border-accent"
+	>
+		<div
+			class="text-xs md:text-sm border-r border-collapse h-4 pr-4 border-accent/40 text-nowrap"
+		>
+			{date}
+		</div>
+		<div
+			class="xl:text-xl pl-4 w-full group-hover:underline
+        transition-all duration-200 ease-in-out underline-offset-4"
+		>
+			{title}
+		</div>
+	</div>
+	<div
+		class="hidden md:flex flex-row items-center md:justify-end text-sm md:col-span-1"
+	>
+		<div class="text-xs px-3 py-1">[{tags.join(", ")}]</div>
+	</div>
+</a>
+
+<style>
+	.shadow-container {
+		box-shadow: 5px 5px 0px 0px var(--foreground-secondary);
+		&:hover {
+			overflow: visible;
+			box-shadow: 5px 19px 0px 0px var(--foreground-secondary);
+		}
+		&::after {
+			content: "";
+			position: absolute;
+			left: 0;
+			right: 0;
+			top: 100%;
+			height: 0;
+		}
+		&:hover::after {
+			height: 0.7rem;
+		}
+	}
+</style>
