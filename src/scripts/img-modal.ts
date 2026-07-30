@@ -85,6 +85,12 @@ function setup(dialog: HTMLDialogElement) {
 	 */
 
 	const open = (source: HTMLImageElement) => {
+		const gutter = window.innerWidth - document.documentElement.clientWidth;
+		document.documentElement.style.setProperty(
+			"--modal-gutter",
+			`${gutter}px`
+		);
+
 		img.classList.remove("is-animated");
 		img.src = source.currentSrc || source.src;
 		img.alt = source.alt;
@@ -231,9 +237,9 @@ function setup(dialog: HTMLDialogElement) {
 
 	img.addEventListener("pointerup", release);
 	img.addEventListener("pointercancel", release);
-    
+
 	img.addEventListener("click", (event) => {
-        // avoid toggling zoom directly after a drag/pinch action
+		// avoid toggling zoom directly after a drag/pinch action
 		if (moved) {
 			moved = false;
 			return;

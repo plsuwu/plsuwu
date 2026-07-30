@@ -18,10 +18,26 @@ export const getStaticPaths = (async () => {
 }) satisfies GetStaticPaths;
 
 const post = Astro.props;
-const { Content } = await render(post);
+const { Content, remarkPluginFrontmatter } = await render(post);
 ---
 
+<script>
+    
+</script>
+
 <PostContent {...post.data}>
+	<!-- <aside> -->
+	<!--        <div class="text-lg underline">Contents</div> -->
+	<!-- 	<ul> -->
+	<!-- 		{ -->
+	<!-- 			remarkPluginFrontmatter.tableOfContents.map((chapter) => ( -->
+	<!-- 				<li style={{ marginLeft: `${(chapter.depth - 2) * 1}em` }}> -->
+	<!-- 					<a href={chapter.href}>{chapter.title}</a> -->
+	<!-- 				</li> -->
+	<!-- 			)) -->
+	<!-- 		} -->
+	<!-- 	</ul> -->
+	<!-- </aside> -->
 	<Content />
 	<ImageModal target=".prose" />
 </PostContent>

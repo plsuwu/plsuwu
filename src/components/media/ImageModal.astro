@@ -1,4 +1,6 @@
 ---
+import Icon from "$components/Icon.astro";
+
 type Props = {
 	target?: string;
 	clickScale?: number;
@@ -23,7 +25,9 @@ const {
 	data-click-scale={clickScale}
 	data-max-scale={maxScale}
 >
-	<button class="image-modal-close" type="button"> x </button>
+	<button class="image-modal-close" type="button">
+		<Icon icon="ph:x-bold" />
+	</button>
 	<img class="image-modal-img" alt="" draggable="false" />
 </dialog>
 
@@ -45,18 +49,18 @@ const {
 
 	.image-modal[open] {
 		display: flex;
-		backdrop-filter: blur(3px);
 	}
 
 	.image-modal::backdrop {
-		background: color-mix(in srgb, black, transparent 30%);
+		backdrop-filter: blur(2px);
+		background: rgb(0 0 0 / 0.88);
 	}
 
 	.image-modal-img {
 		display: block;
 		max-width: 94vw;
-		max-height: 94vw;
-		max-height: 94dvw;
+		max-height: 90vw;
+		max-height: 90dvw;
 		transform-origin: 0 0;
 
 		touch-action: none;
@@ -104,10 +108,11 @@ const {
 	}
 
 	.image-modal-close:hover {
-		background: var(--foreground-secondary);
+        background: rgb(255 255 255 / 0.25);
 	}
 
-	:global(body:has(.image-modal[open])) {
-		overflow: hidden;
+	:global(html:has(.image-modal[open])) {
+        overflow: hidden;
+        padding-right: var(--modal-gutter, 0px);
 	}
 </style>
