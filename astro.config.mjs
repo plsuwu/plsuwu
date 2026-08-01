@@ -3,13 +3,13 @@
 import { defineConfig } from "astro/config";
 import { unified } from "@astrojs/markdown-remark";
 import { transformVideo } from "./plugins/transformVideo.mjs";
+import rehypeAutolinkHeadings from "rehype-autolink-headings";
+import rehypeExternalLinks from "rehype-external-links";
 import remarkContents from "./plugins/remarkToc.mjs";
 import tailwindcss from "@tailwindcss/vite";
 import icon from "astro-icon";
 import rehypeSlug from "rehype-slug";
-import rehypeAutolinkHeadings from "rehype-autolink-headings";
 import node from "@astrojs/node";
-import rehypeExternalLinks from "rehype-external-links";
 
 // https://astro.build/config
 export default defineConfig({
