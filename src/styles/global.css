@@ -158,7 +158,6 @@
         line-height: 1.5rem;
 
         @media (min-width: 768px) {
-            list-style-position: inside;
             padding-inline-start: 2.1em;
         }
     }
@@ -184,6 +183,5 @@
     .footnotes {
         width: 100%;
         list-style: decimal;
-        display: block;
     }
 }

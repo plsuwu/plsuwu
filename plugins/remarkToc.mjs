@@ -6,11 +6,11 @@ function getNodeValue(node) {
     .join("");
 }
 
-export default function remarkTableOfContents() {
+export default function remarkContents() {
   return (tree, file) => {
     const toc = [];
 
-    visit(tree, "heading", (node, index, parent) => {
+    visit(tree, "heading", (node, _, parent) => {
       if (parent.type !== "root") return;
 
       const depth = node.depth;

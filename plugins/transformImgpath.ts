@@ -1,5 +1,4 @@
-// this could be reimplemented to function more like the video
-// transform plugin
+// this could be reimplemented to function using unist-util-visit
 
 import { promises as fs } from "node:fs";
 

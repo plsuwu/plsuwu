@@ -1,32 +1,24 @@
 ---
 import BaseLayout from "$layouts/BaseLayout.astro";
-// import PostsView from "$layouts/PostsView.astro";
 import PostCard from "$components/post/Card.astro";
+import PageTitle from "$components/PageTitle.astro";
 import { getProcessedPosts } from "$scripts";
 const postsCollection = await getProcessedPosts();
 ---
 
 <BaseLayout pageName={"posts"}>
 	<section class="w-full flex flex-col items-center justify-center">
-		<ul>
+		<PageTitle title="posts" />
+		<ul class="lg:w-3xl">
 			{
-				postsCollection.map((post) => (
-					<PostCard
-						params={post.params}
-						title={post.data.title}
-						tags={post.data.tags}
-					/>
-					// <li class="">
-					// 	<a
-					// 		href={``}
-					// 		class="p-3 border rounded flex flex-row"
-					// 	>
-					// 		<div>{`${post.params.year}-${post.params.month}-${post.params.day}`}</div>
-					// 		<div class="h-5 border-l border-collapse mx-4" />
-					// 		<div>{post.data.title}</div>
-					// 	</a>
-					// </li>
-				))
+				postsCollection &&
+					postsCollection.map((post) => (
+						<PostCard
+							params={post.params}
+							title={post.data.title}
+							tags={post.data.tags}
+						/>
+					))
 			}
 		</ul>
 	</section>

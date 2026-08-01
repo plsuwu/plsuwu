@@ -1,6 +1,9 @@
 import assert from "node:assert";
 
-export type PointerCoordinates = {
+export type PanCoordinates = { x: number; y: number; tx: number; ty: number };
+export type Pinch = { dist: number; midX: number; midY: number };
+
+export type Coordinates = {
 	x: number;
 	y: number;
 	startX: number;
@@ -29,10 +32,14 @@ function setup(dialog: HTMLDialogElement) {
 	let tx = 0;
 	let ty = 0;
 
-	const pointers = new Map<number, PointerCoordinates>();
-	let pinch: { dist: number; midX: number; midY: number } | null = null;
-	let pan: { x: number; y: number; tx: number; ty: number } | null = null;
+	const pointers = new Map<number, Coordinates>();
+
+	let pinch: Pinch | null = null;
+	let pan: PanCoordinates | null = null;
+
 	let moved = false;
+	let pointerPeak = 0;
+	let downTarget: Element | null = null;
 
 	const apply = () => {
 		img.style.transform = `translate(${tx}px, ${ty}px) scale(${scale})`;
@@ -43,12 +50,10 @@ function setup(dialog: HTMLDialogElement) {
 		scale = 1;
 		tx = 0;
 		ty = 0;
-
 		apply();
 	};
 
 	const layoutOrigin = () => ({ x: img.offsetLeft, y: img.offsetTop });
-
 	const constrain = () => {
 		const origin = layoutOrigin();
 		const width = img.offsetWidth * scale;
@@ -60,7 +65,6 @@ function setup(dialog: HTMLDialogElement) {
 			width <= vw
 				? (vw - width) / 2 - origin.x
 				: clamp(tx, vw - width - origin.x, -origin.x);
-
 		ty =
 			height <= vh
 				? (vh - height) / 2 - origin.y
@@ -80,21 +84,10 @@ function setup(dialog: HTMLDialogElement) {
 		apply();
 	};
 
-	/**
-	 * open/close handlers
-	 */
-
 	const open = (source: HTMLImageElement) => {
-		const gutter = window.innerWidth - document.documentElement.clientWidth;
-		document.documentElement.style.setProperty(
-			"--modal-gutter",
-			`${gutter}px`
-		);
-
 		img.classList.remove("is-animated");
 		img.src = source.currentSrc || source.src;
 		img.alt = source.alt;
-
 		reset();
 		dialog.showModal();
 	};
@@ -117,32 +110,23 @@ function setup(dialog: HTMLDialogElement) {
 		event.preventDefault();
 		open(source as HTMLImageElement);
 	};
-	document.addEventListener("click", onDocumentClick);
 
+	document.addEventListener("click", onDocumentClick);
 	closeButton.addEventListener("click", () => dialog.close());
-	dialog.addEventListener("click", (event) => {
-		if (event.target === dialog) {
-			// modal should close on backdrop click
-			dialog.close();
-		}
-	});
 
 	dialog.addEventListener("close", () => {
 		reset();
-		// prevent stale image flash when the next image is opened
 		img.removeAttribute("src");
 	});
 
-	/**
-	 * zoom/pan handlers
-	 */
-
-	img.addEventListener("pointerdown", (event) => {
+	dialog.addEventListener("pointerdown", (event) => {
+		if ((event.target as Element).closest(".image-modal-close")) {
+			return;
+		}
 		event.preventDefault();
-
 		img.classList.remove("is-animated");
-		img.setPointerCapture(event.pointerId);
 
+		dialog.setPointerCapture(event.pointerId);
 		pointers.set(event.pointerId, {
 			x: event.clientX,
 			y: event.clientY,
@@ -150,11 +134,17 @@ function setup(dialog: HTMLDialogElement) {
 			startY: event.clientY,
 		});
 
-		moved = false;
+		if (pointers.size === 1) {
+			moved = false;
+			pointerPeak = 1;
+			downTarget = event.target as Element;
 
-		if (pointers.size === 2) {
-			// NOTE this branch shouldn't yield falsy a/b vals, but typescript is (i assume)
-			// foolish, and so doesn't recognise the inherent precondition
+			if (scale > 1) {
+				pan = { x: event.clientX, y: event.clientY, tx, ty };
+			}
+		} else if (pointers.size === 2) {
+			pointerPeak = 2;
+
 			const [a, b] = [...pointers.values()];
 			assert(a && b);
 
@@ -165,12 +155,12 @@ function setup(dialog: HTMLDialogElement) {
 			};
 
 			pan = null;
-		} else if (pointers.size === 1 && scale > 1) {
-			pan = { x: event.clientX, y: event.clientY, tx, ty };
+		} else {
+			pointerPeak = Math.max(pointerPeak, pointers.size);
 		}
 	});
 
-	img.addEventListener("pointermove", (event) => {
+	dialog.addEventListener("pointermove", (event) => {
 		const pointer = pointers.get(event.pointerId);
 		if (!pointer) {
 			return;
@@ -181,7 +171,7 @@ function setup(dialog: HTMLDialogElement) {
 
 		const drift = Math.hypot(
 			pointer.x - pointer.startX,
-			pointer.y - event.clientY
+			pointer.y - pointer.startY
 		);
 
 		if (drift > 4) {
@@ -204,14 +194,8 @@ function setup(dialog: HTMLDialogElement) {
 			pinch = { dist, midX, midY };
 			moved = true;
 		} else if (pointers.size === 1 && pan) {
-			const dx = event.clientX - pan.x;
-			const dy = event.clientY - pan.y;
-			if (Math.hypot(dx, dy) > 4) {
-				moved = true;
-			}
-
-			tx = pan.tx + dx;
-			ty = pan.ty + dy;
+			tx = pan.tx + (event.clientX - pan.x);
+			ty = pan.ty + (event.clientY - pan.y);
 
 			constrain();
 			apply();
@@ -219,42 +203,60 @@ function setup(dialog: HTMLDialogElement) {
 	});
 
 	const release = (event: PointerEvent) => {
+		if (!pointers.has(event.pointerId)) {
+			return;
+		}
+
 		pointers.delete(event.pointerId);
 		if (pointers.size < 2) {
 			pinch = null;
 		}
 
-		// continues an existing pan action when one finger is lifted
 		if (pointers.size === 1 && scale > 1) {
 			const [p] = [...pointers.values()];
 			assert(p);
 
 			pan = { x: p.x, y: p.y, tx, ty };
-		} else if (pointers.size === 0) {
-			pan = null;
+			return;
+		}
+
+		if (pointers.size > 0) {
+			return;
+		}
+
+		pan = null;
+		if (!(!moved && pointerPeak === 1 && event.type === "pointerup")) {
+			return;
+		}
+
+		if (downTarget?.closest(".image-modal-img")) {
+			img.classList.add("is-animated");
+			scale > 1.01
+				? reset()
+				: zoomAt(event.clientX, event.clientY, clickScale);
+		} else {
+			dialog.close();
 		}
 	};
 
-	img.addEventListener("pointerup", release);
-	img.addEventListener("pointercancel", release);
+	dialog.addEventListener("pointerup", release);
+	dialog.addEventListener("pointercancel", release);
 
-	img.addEventListener("click", (event) => {
-		// avoid toggling zoom directly after a drag/pinch action
-		if (moved) {
-			moved = false;
-			return;
-		}
+	dialog.addEventListener(
+		"touchmove",
+		(event) => {
+			if (event.touches.length > 1) {
+				event.preventDefault();
+			}
+		},
+		{ passive: false }
+	);
 
-		img.classList.add("is-animated");
-		scale > 1.01
-			? reset()
-			: zoomAt(event.clientX, event.clientY, clickScale);
-	});
-
+	dialog.addEventListener("gesturestart", (event) => event.preventDefault());
 	window.addEventListener("resize", () => {
 		if (!dialog.open) {
-			return;
-		}
+            return;
+        }
 
 		constrain();
 		apply();
@@ -265,14 +267,12 @@ export const init = () => {
 	document
 		.querySelectorAll<HTMLDialogElement>("dialog.image-modal")
 		.forEach((dialog) => {
-			//
 			setup(dialog);
 			const selector = dialog.dataset.target;
 			if (!selector) {
-				return;
-			}
+                return;
+            }
 
-			// hint that content image can be clicked
 			document
 				.querySelectorAll<HTMLElement>(`:is(${selector}) img`)
 				.forEach((el) => (el.style.cursor = "zoom-in"));
