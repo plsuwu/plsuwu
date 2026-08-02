@@ -22,7 +22,7 @@
           src = ./.;
 
           # npmDepsHash = pkgs.lib.fakeHash;
-          npmDepsHash = "sha256-cUXar/mVqEVdy2B9OzsIUTrYklIs5X0YTuYxRBzCEl4=";
+          npmDepsHash = "sha256-EVdkBkP/Y9pE/pTrjJ7Fn5+Ygo8GC0wL8SApwE5tdSc=";
 
           buildPhase = ''
             npm install
