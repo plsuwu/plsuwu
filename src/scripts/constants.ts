@@ -35,32 +35,3 @@ export const OFFSITE_PAGES: {
 		icon: "ph:twitch-logo",
 	},
 ];
-
-// <!-- {@render OtherLink( -->
-// <!-- 	"https://piss.fan/", -->
-// <!-- 	'twitch "stats" leaderboard', -->
-// <!-- 	GlobeHemisphereEast -->
-// <!-- )} -->
-// <!-- {@render OtherLink( -->
-// <!-- 	"https://pub.colonq.computer/~please", -->
-// <!-- 	"pub.colonq / please", -->
-// <!-- 	GlobeHemisphereEast -->
-// <!-- )} -->
-// <!-- <div -->
-// <!-- 	class="my-6 self-center border-b w-8 border-accent/70 border-collapse" -->
-// <!-- ></div> -->
-// <!-- {@render OtherLink( -->
-// <!-- 	"https://github.com/plsuwu", -->
-// <!-- 	"github / plsuwu", -->
-// <!-- 	GithubLogo -->
-// <!-- )} -->
-// <!-- {@render OtherLink( -->
-// <!-- 	"https://x.com/owoplsuwu", -->
-// <!-- 	"twitter / owoplsuwu", -->
-// <!-- 	XLogo -->
-// <!-- )} -->
-// <!-- {@render OtherLink( -->
-// <!-- 	"https://soundcloud.com/plsuwu", -->
-// <!-- 	"soundcloud / plsuwu", -->
-// <!--           SoundcloudLogo -->
-// <!-- )} -->

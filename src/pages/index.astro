@@ -3,6 +3,7 @@ import BaseLayout from "$layouts/BaseLayout.astro";
 import PostCard from "$components/post/Card.astro";
 import PageTitle from "$components/PageTitle.astro";
 import { getProcessedPosts } from "$scripts";
+
 const postsCollection = await getProcessedPosts();
 ---
 

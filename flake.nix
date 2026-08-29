@@ -18,23 +18,19 @@
 
         default = pkgs.buildNpmPackage {
           pname = "plsuwu";
-          version = "2.0.0";
+          version = "2.1.1";
           src = ./.;
 
-          # npmDepsHash = pkgs.lib.fakeHash;
           npmDepsHash = "sha256-EVdkBkP/Y9pE/pTrjJ7Fn5+Ygo8GC0wL8SApwE5tdSc=";
 
           buildPhase = ''
             npm install
             npm run build -- --sourcemap
-
             rm -rf ./node_modules
-            npm install --omit dev
           '';
 
           installPhase = ''
             mkdir -p $out
-            cp -R ./node_modules $out/
             cp -R ./dist $out/
           '';
         };

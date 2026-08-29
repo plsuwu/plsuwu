@@ -5,6 +5,8 @@ import { getProcessedPosts } from "$scripts";
 import PostContent from "$layouts/PostContent.astro";
 import ImageModal from "$components/media/ImageModal.astro";
 
+export const prerender = true;
+
 export const getStaticPaths = (async () => {
 	const posts = await getProcessedPosts();
 	return posts.map((post) => ({
@@ -21,9 +23,7 @@ const post = Astro.props;
 const { Content, remarkPluginFrontmatter } = await render(post);
 ---
 
-<script>
-    
-</script>
+<script></script>
 
 <PostContent {...post.data}>
 	<!-- <aside> -->

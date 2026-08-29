@@ -14,7 +14,7 @@ import node from "@astrojs/node";
 // https://astro.build/config
 export default defineConfig({
 	integrations: [icon()],
-
+    output: 'static',
 	markdown: {
 		processor: unified({
 			remarkPlugins: [remarkContents],
@@ -34,8 +34,4 @@ export default defineConfig({
 	vite: {
 		plugins: [tailwindcss()],
 	},
-
-	adapter: node({
-		mode: "standalone",
-	}),
 });
