@@ -21,7 +21,7 @@
           version = "2.1.1";
           src = ./.;
 
-          npmDepsHash = "sha256-EVdkBkP/Y9pE/pTrjJ7Fn5+Ygo8GC0wL8SApwE5tdSc=";
+          npmDepsHash = "sha256-5h5CHiYIE7uXZn6I48VZoJrfTu+09EsPqAEhWl877as=";
 
           buildPhase = ''
             npm install
