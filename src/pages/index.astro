@@ -5,6 +5,8 @@ import PageTitle from "$components/PageTitle.astro";
 import { getProcessedPosts } from "$scripts";
 
 const postsCollection = await getProcessedPosts();
+
+console.log(postsCollection);
 ---
 
 <BaseLayout pageName={"posts"}>

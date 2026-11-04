@@ -1,0 +1,28 @@
+.huntress-challenge-ctr {
+    ::selection {
+        color: white;
+        background-color: dodgerblue;
+    }
+
+    color: rgb(201, 209, 217);
+    background-color: lab(1.90334 0.278696 -5.48866);
+    font-size: var(--text-lg);
+    font-family: ui-sans-serif,
+    system-ui,
+    sans-serif,
+    "Apple Color Emoji",
+    "Segoe UI Emoji",
+    "Segoe UI Symbol",
+    "Noto Color Emoji";
+}
+
+
+.huntress-challenge-prompt {
+    border-left-color: rgb(31, 111, 235);
+    border-left-width: 4px;
+    background-color: rgba(31, 111, 235, 0.1);
+}
+
+.coursestack-mono {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+}

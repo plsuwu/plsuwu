@@ -1,17 +1,18 @@
 ---
 const { title, params, tags } = Astro.props;
 const href = `/post/${params.year}/${params.month}/${params.day}`;
-const date = `${params.year}-${params.month}-${params.day}`;
----
+const date = `${params.year}-${Number(params.month) + 1}-${params.day}`;
 
+console.log(params);
+---
+<div class="w-[95%] shadow-container hover:-translate-y-3 duration-200 transition-all ease-out bg-background">
 <a
 	{href}
-	class="w-[95%] grid grid-cols-3 p-1 md:mb-px mb-6 border border-foreground-accent-muted
-		hover:-translate-y-3 duration-200 transition-all ease-out bg-background z-30
-        shadow-container group justify-self-center"
+	class="grid grid-cols-3 p-1 md:mb-px mb-6 border border-foreground-accent-muted
+		group justify-self-center z-30"
 >
 	<div
-		class="flex flex-row w-full col-span-3 md:col-span-2 items-center px-4 py-2 border-accent"
+		class="flex flex-row w-full col-span-3 md:col-span-2 items-center px-4 py-2 border-accent z-10"
 	>
 		<div class="text-xs md:text-sm text-nowrap">
 			{date}
@@ -35,24 +36,4 @@ const date = `${params.year}-${params.month}-${params.day}`;
 		</div>
 	</div>
 </a>
-
-<style>
-	.shadow-container {
-		box-shadow: 5px 5px 0px 0px var(--foreground-accent);
-		&:hover {
-			overflow: visible;
-			box-shadow: 5px 19px 0px 0px var(--foreground-accent);
-		}
-		&::after {
-			content: "";
-			position: absolute;
-			left: 0;
-			right: 0;
-			top: 100%;
-			height: 0;
-		}
-		&:hover::after {
-			height: 0.7rem;
-		}
-	}
-</style>
+</div>

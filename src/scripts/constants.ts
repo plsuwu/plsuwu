@@ -34,4 +34,9 @@ export const OFFSITE_PAGES: {
 		href: "https://twitch.tv/plss",
 		icon: "ph:twitch-logo",
 	},
+	{
+		title: "soundcloud",
+		href: "https://soundcloud.com/plsuwu",
+		icon: "ph:soundcloud-logo",
+	},
 ];
