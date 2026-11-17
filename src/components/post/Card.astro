@@ -5,35 +5,37 @@ const date = `${params.year}-${Number(params.month) + 1}-${params.day}`;
 
 console.log(params);
 ---
-<div class="w-[95%] shadow-container hover:-translate-y-3 duration-200 transition-all ease-out bg-background">
-<a
-	{href}
-	class="grid grid-cols-3 p-1 md:mb-px mb-6 border border-foreground-accent-muted
-		group justify-self-center z-30"
->
-	<div
-		class="flex flex-row w-full col-span-3 md:col-span-2 items-center px-4 py-2 border-accent z-10"
-	>
-		<div class="text-xs md:text-sm text-nowrap">
-			{date}
-		</div>
-		<div
-			class="border-r border-collapse h-5 w-0 pr-4 border-foreground-accent"
-		>
-		</div>
-		<div
-			class="md:text-lg text-sm md:text-nowrap pl-4 w-full group-hover:underline
-        transition-all duration-200 ease-in-out underline-offset-4 font-semibold"
-		>
-			"{title}"
-		</div>
-	</div>
-	<div
-		class="hidden md:flex flex-row items-center md:justify-end text-sm md:col-span-1"
-	>
-		<div class="text-xs lg:text-sm px-3 py-1 font-light">
-			[{tags.join(", ")}]
-		</div>
-	</div>
-</a>
+
+<div class="w-full duration-100 transition-all ease-out bg-background">
+    <a
+        {href}
+        class="grid grid-cols-3 p-1 md:mb-px mb-6 border border-foreground-accent-muted group justify-self-center
+    z-30 group-hover:bg-foreground-accent group-hover:text-foreground-accent"
+    >
+        <div
+            class="flex flex-row w-full col-span-3 md:col-span-2 items-center px-4 py-2 border-accent z-10"
+        >
+            <div class="text-xs md:text-sm text-nowrap">
+                {date}
+            </div>
+            <div
+                class="border-r border-collapse h-5 w-0 pr-4 border-foreground-accent"
+            >
+            </div>
+            <div
+                class="md:text-lg text-sm md:text-nowrap pl-2 w-full duration-100 underline-offset-4 font-semibold
+                group-hover:bg-foreground-accent group-hover:text-background-secondary text-foreground transition-colors
+                ease-out mx-2 py-1"
+            >
+                "{title}"
+            </div>
+        </div>
+        <div
+            class="hidden md:flex flex-row items-center md:justify-end text-sm md:col-span-1"
+        >
+            <div class="text-xs lg:text-sm px-3 py-1 font-light">
+                [{tags.join(", ")}]
+            </div>
+        </div>
+    </a>
 </div>
